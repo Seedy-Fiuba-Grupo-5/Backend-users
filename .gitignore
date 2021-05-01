@@ -1,1 +1,3 @@
 /flask-on-docker/services/web/env/
+/flask-on-docker/mypython/pyvenv.cfg
+/flask-on-docker/mypython/
