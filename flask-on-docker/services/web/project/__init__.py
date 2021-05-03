@@ -1,6 +1,6 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, render_template
 from flask_sqlalchemy import SQLAlchemy
-import psycopg2
+#from models import *
 
 app = Flask(__name__)
 app.config.from_object("project.config.Config")
@@ -29,13 +29,7 @@ def hello_world_brian():
     return jsonify(hello="Brian")
 
 
-"""@app.route("/imprimir_caso_actual")
+@app.route("/imprimir_caso_actual")
 def imprimir_base_de_datos():
-    conn = psycopg2.connect(database="users", user="postgres",
-                            password="postgres", host="localhost")
-    print("connected")
-    mycursor = conn.cursor()
-    mycursor.execute("SELECT * FROM hello_flask_dev")
-    data = mycursor.fetchall()
-    return render_template('v_timestamp.html', data=data)
-"""
+    db2 = User.query.all()
+    return render_template('users.html', db=db2)
