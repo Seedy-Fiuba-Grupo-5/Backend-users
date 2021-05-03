@@ -23,13 +23,13 @@ class User(db.Model):
 def hello_world():
     return jsonify(hello="world")
 
-
-@app.route("/prueba")
-def hello_world_brian():
-    return jsonify(hello="Brian")
-
-
-@app.route("/imprimir_caso_actual")
+@app.route("/users")
 def imprimir_base_de_datos():
     db2 = User.query.all()
     return render_template('users.html', db=db2)
+
+@app.route("/update")
+def update_db():
+    db.session.add(User(email="bzambelli2@fi.uba.ar"))
+    db.session.commit()
+    return "Ha sido actualizado"
