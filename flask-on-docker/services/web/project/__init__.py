@@ -29,7 +29,7 @@ def hello_world_brian():
     return jsonify(hello="Brian")
 
 
-@app.route("/imprimir_caso_actual")
+"""@app.route("/imprimir_caso_actual")
 def imprimir_base_de_datos():
     conn = psycopg2.connect(database="users", user="postgres",
                             password="postgres", host="localhost")
@@ -38,3 +38,4 @@ def imprimir_base_de_datos():
     mycursor.execute("SELECT * FROM hello_flask_dev")
     data = mycursor.fetchall()
     return render_template('v_timestamp.html', data=data)
+"""
