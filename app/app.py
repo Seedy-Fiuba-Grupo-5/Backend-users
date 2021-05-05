@@ -46,7 +46,7 @@ def hello_world():
 
 # Metodo para imprimir la tabla users de la base de datos
 # PRE: Es necesario que la base de datos db exista
-@app.route("/users")
+@app.route("/v1/users")
 def imprimir_base_de_datos():
     db2 = User.query.all()
     return render_template('users.html',
@@ -56,7 +56,7 @@ def imprimir_base_de_datos():
 # Metodo para actualizar con un valor hardcodeado la base de datos
 # PRE: Dada las caracteristicas de la base de datos, solo se puede
 # ejecutar una vez.
-@app.route("/update")
+@app.route("/v1/update")
 def update_db():
     db.session.add(User(email="bzambelli2@fi.uba.ar"))
     db.session.commit()
