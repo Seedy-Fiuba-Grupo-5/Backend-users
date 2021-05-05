@@ -1,9 +1,10 @@
 from flask import Flask, jsonify, request, render_template
 from flask_sqlalchemy import SQLAlchemy
+import os
 
 # TODO Englobar esto
 app = Flask(__name__)
-app.config.from_object("config.Config")
+#app.config.from_object("config.config.Config")
 db = SQLAlchemy(app)
 
 
@@ -26,6 +27,9 @@ class User(db.Model):
                  email):
         self.email = email
 
+db.drop_all()
+db.create_all()
+db.session.commit()
 
 @app.route("/")
 # Sanity check por defecto
