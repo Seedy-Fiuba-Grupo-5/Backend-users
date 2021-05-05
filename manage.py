@@ -1,5 +1,5 @@
 from flask.cli import FlaskGroup
-from project import app, db, User
+from __init__ import app, db, User
 
 # TODO Englobar clase
 cli = FlaskGroup(app)
@@ -24,4 +24,5 @@ def seed_db():
 # Ni idea. TODO Ver que es esto.
 if __name__ == "__main__":
     cli()
+    create_db()
 

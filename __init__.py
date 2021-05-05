@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 # TODO Englobar esto
 app = Flask(__name__)
-app.config.from_object("project.config.Config")
+app.config.from_object("config.Config")
 db = SQLAlchemy(app)
 
 
