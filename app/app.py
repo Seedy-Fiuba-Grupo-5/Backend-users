@@ -1,12 +1,12 @@
 from flask import Flask, jsonify, request, render_template
 from flask_sqlalchemy import SQLAlchemy
-import os
 
 # TODO Englobar esto
-app = Flask(__name__)
+app = Flask(__name__)   # Permite configurar la API
 #app.config.from_object("config.config.Config")
-db = SQLAlchemy(app)
+db = SQLAlchemy(app)    # Permite manipular la base de datos
 
+# === Definicion de tablas la base de datos ===
 
 # Clase que modela la base de datos user. Consta de un id, email y
 # si esta activa
@@ -27,9 +27,16 @@ class User(db.Model):
                  email):
         self.email = email
 
+# Elimina todas las tablas actuales
 db.drop_all()
+
+# Crea todas las tablas
 db.create_all()
+
+# Agrega los cambios a la base de datos
 db.session.commit()
+
+# === Definicion de la API ===
 
 @app.route("/")
 # Sanity check por defecto
