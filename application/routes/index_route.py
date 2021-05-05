@@ -1,7 +1,7 @@
-from flask import jsonify
+from flask import render_template
 from application import app
 
 
 @app.route("/") 
 def hello_world():
-    return jsonify(hello="world")
+    return render_template('pantalla_inicio.html')
