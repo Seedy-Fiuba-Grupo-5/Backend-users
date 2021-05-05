@@ -39,7 +39,7 @@ heroku container:push web
   
 Ejecutar la imagen subida en la instancia de heroku
 ```
-heroku
+heroku container:release web
 ```
 
 ### Prendido y apagado del servicio
