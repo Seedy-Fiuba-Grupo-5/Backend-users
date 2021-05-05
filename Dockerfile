@@ -12,7 +12,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Indica a Flask, que es lo que debe ejecutar primero
-ENV FLASK_APP=app/app.py
+ENV FLASK_APP=application
 
 # Instalar dependencias
 RUN pip install --upgrade pip
