@@ -7,9 +7,7 @@ app.config.from_object("application.config.Config")
 db = SQLAlchemy(app)
 
 # Importar endpoints
-from application.routes import index_route
-from application.routes import users_v1_route
-from application.routes import update_v1_route
+from application.routes import *
 
 
 # Elimina todas las tablas actuales
