@@ -1,5 +1,6 @@
 from application import db
 
+
 # Clase que modela la base de datos user. Consta de un id, email y
 # si esta activa
 class User(db.Model):
