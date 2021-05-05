@@ -1,30 +1,55 @@
+# Docker-Composer para uso local
 version: '3.7'
 
 services:
   web:
+    # Nombre del contenedor.
     container_name: seedy_users_web
+
+    # Info de construcción del contenedor.
     build:
+      # Directorio donde se encuentra el Dockerfile
       context: .
+      # Nombre del Dockerfile
       dockerfile: Dockerfile 
+    
+    # Primero: Espera hasta que la base de datos este lista.
+    # Segundo: Ejecutar el web server.
     command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; flask run --host=0.0.0.0 --port=5000'
+    
+    # TODO: Explicar esto
     volumes:
       - ./:/usr/src/app/
+    
+    # Mapear puerto 5000 del contenedor al puerto 5000 de sistema operativo.
     ports:
       - 5000:5000
+    
+    # Archivo con variables de entorno.
     env_file:
       - ./.env.dev
+
+    # Este servicio 'web' depende de el servicio de base datos 'db'
     depends_on:
       - db
 
   db:
+    # Nombre del contenedor 
     container_name: seedy_users_db
+
+    # Imagen de la base de datos (PostgreSQL)
     image: postgres:12-alpine
+
+    # TODO: Explicar esto
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+
+    # Información de acceso a la base de datos local
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=users
 
+# TODO: Explicar esto
 volumes:
   postgres_data:
