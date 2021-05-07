@@ -2,6 +2,22 @@
 - Flask (framework del servicio web)
 - Postgres (Base de datos)
 
+## Pruebas: pytest & flake8
+pytest: libreria de python para 'testing'.  
+flake8: 'linter' de python, basado en los lineamientos de pep8.  
+El siguiente comando ejecuta pytest seguido de flake8:
+```
+./run_tests.sh
+``` 
+
+### Autopep8
+autopep8: Formatea el codigo de python para que se adecuado a los
+lineamientos de pep8.  
+Ejecutar el siguiente comando auto-formatear el codigo.
+```
+./run_autopep8.sh
+```
+
 ## Entorno Heroku
 ### Informacion
 Nombre de la aplicacion Heroku (App): shrouded-meadow-59625  

@@ -2,6 +2,7 @@ import pytest
 
 from backend_users import create_app, db
 
+
 @pytest.fixture(scope="module")
 def test_app():
     app = create_app()
