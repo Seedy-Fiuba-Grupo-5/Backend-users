@@ -1,5 +1,5 @@
 # Imagen base de python 
-FROM python:3.8.1-slim-buster
+FROM python:3.8
 
 # Directorio de trabajo
 WORKDIR /usr/src/app
@@ -17,7 +17,7 @@ ENV FLASK_APP=application
 # Instalar dependencias
 RUN pip install --upgrade pip
 COPY ./requirements.txt /usr/src/app/requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install -Ur requirements.txt
 
 # Copiar archivos de proyecto al directorio de trabajo
 COPY . /usr/src/app/
