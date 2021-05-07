@@ -2,7 +2,9 @@
 
 echo "Waiting for postgres..."
 
-while !</dev/tcp/db/5432; do sleep 1; done;
+while ! nc -z service_db 5432; do
+  sleep 0.1
+done
 
 echo "PostgreSQL started"
 

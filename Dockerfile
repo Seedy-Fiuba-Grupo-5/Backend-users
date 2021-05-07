@@ -11,17 +11,16 @@ ENV PYTHONDONTWRITEBYTECODE 1
 # a la terminal, sin esperar en un buffer intermedio.
 ENV PYTHONUNBUFFERED 1
 
-# Indica a Flask, que es lo que debe ejecutar primero
-ENV FLASK_APP=application
+# Indica a Flask en que modulo se encuetra la aplicacion
+ENV FLASK_APP=manage
+
+# Instalar netcat para script de espera de postgres
+RUN apt-get update && apt-get install -y netcat
 
 # Instalar dependencias
 RUN pip install --upgrade pip
 COPY ./requirements.txt /usr/src/app/requirements.txt
 RUN pip install -Ur requirements.txt
-
-# Agregar 'entrypoint'
-COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
-RUN chmod +x /usr/src/app/entrypoint.sh
 
 # Copiar archivos de proyecto al directorio de trabajo
 COPY . /usr/src/app/

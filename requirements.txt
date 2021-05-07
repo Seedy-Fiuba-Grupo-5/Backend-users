@@ -7,5 +7,6 @@ requests==2.24.0
 Werkzeug==1.0.1
 
 # Requerido en desarrollo
+pytest==6.2.4
 pytest-cov==2.11.1
 flake8==3.9.1

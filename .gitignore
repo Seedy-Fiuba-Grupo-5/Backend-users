@@ -2,3 +2,5 @@
 /flask-on-docker/mypython/pyvenv.cfg
 /flask-on-docker/mypython/
 .idea/
+.coverage
+.pytest_cache/

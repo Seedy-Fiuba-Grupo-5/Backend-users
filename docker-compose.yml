@@ -2,9 +2,9 @@
 version: '3.7'
 
 services:
-  web:
+  service_users_web:
     # Nombre del contenedor.
-    container_name: seedy_users_web
+    container_name: container_users_web
 
     # Info de construcción del contenedor.
     build:
@@ -13,52 +13,46 @@ services:
       # Nombre del Dockerfile
       dockerfile: Dockerfile 
     
-    # Primero: Espera hasta que la base de datos este lista.
-    # Segundo: Ejecutar el web server.
-    #command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; flask run --host=0.0.0.0 --port=5000'
     entrypoint: ['/usr/src/app/entrypoint.sh']
+    
     # TODO: Explicar esto
     volumes:
       - .:/usr/src/app/
     
-    # Mapear puerto 5000 del contenedor al puerto 5000 de sistema operativo.
+    # Mapear puerto 5000 del contenedor al puerto 5000 de 
+    # sistema operativo.
     ports:
       - 5000:5000
     
-    # Archivo con variables de entorno.
-    #env_file:
-    #  - ./.env.dev
+    # Variables de entorno para desarrollo y pruebas
     environment: 
+      - FLASK_APP=manage
       - FLASK_ENV=development
       - APP_SETTINGS=backend_users.config.DevelopmentConfig
       - DATABASE_URL=postgresql://postgres:postgres@users-db:5432/users_dev
       - DATABASE_TEST_URL=postgresql://postgres:postgres@users-db:5432/users_test
 
-    # Este servicio 'web' depende de el servicio de base datos 'db'
+    # Este servicio 'service_users_web' depende de el servicio 
+    # de base datos 'service_db'
     depends_on:
-      - db
+      - service_users_db
 
-  db:
+  service_users_db:
     # Nombre del contenedor 
-    container_name: seedy_users_db
+    container_name: container_users_db
 
-    # Imagen de la base de datos (PostgreSQL)
-    # image: postgres:12-alpine
+    # Construccion personalizada de postgres
     build: 
+      # Directorio donde se encuentra el Dockerfile
       context: ./backend_users/db
+      # Nombre del Dockerfile
       dockerfile: Dockerfile 
-
-    # TODO: Explicar esto
-    #volumes:
-    #  - postgres_data:/var/lib/postgresql/data/
+    
+    # Exponemos puerto donde se ejecuta postgres
     expose:
       - 5432
+    
     # Información de acceso a la base de datos local
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      # - POSTGRES_DB=users
-
-# TODO: Explicar esto
-#volumes:
-#  postgres_data:

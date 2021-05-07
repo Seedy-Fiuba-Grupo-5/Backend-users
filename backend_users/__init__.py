@@ -17,7 +17,7 @@ def create_app(script_info=None):
     app.config.from_object(app_settings)
 
     # Enlazar la base de datos
-    db.init_db(app)
+    db.init_app(app)
 
     # Registrar 'blueprints'
     # TODO: Utilizar el siguiente loop adaptandolo:
@@ -26,8 +26,8 @@ def create_app(script_info=None):
         bp = import_string('myapp.{0}.views:{1}'.format(name, name))
         app.register_blueprint(bp, prefix='/{0}'.format(name))
     """
-    from .api import ping_v1_api
-    app.register_blueprint(ping_v1_api)
+    from .api.ping_v1_api import ping_v1_bp
+    app.register_blueprint(ping_v1_bp)
 
     # TODO: Revisar si lo siguiente es necesario
     # Contexto de la 'shell' para flask cli
