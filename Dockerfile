@@ -19,6 +19,10 @@ RUN pip install --upgrade pip
 COPY ./requirements.txt /usr/src/app/requirements.txt
 RUN pip install -Ur requirements.txt
 
+# Agregar 'entrypoint'
+COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
+RUN chmod +x /usr/src/app/entrypoint.sh
+
 # Copiar archivos de proyecto al directorio de trabajo
 COPY . /usr/src/app/
 

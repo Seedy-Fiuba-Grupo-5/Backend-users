@@ -15,19 +15,24 @@ services:
     
     # Primero: Espera hasta que la base de datos este lista.
     # Segundo: Ejecutar el web server.
-    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; flask run --host=0.0.0.0 --port=5000'
-    
+    #command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; flask run --host=0.0.0.0 --port=5000'
+    entrypoint: ['/usr/src/app/entrypoint.sh']
     # TODO: Explicar esto
     volumes:
-      - ./:/usr/src/app/
+      - .:/usr/src/app/
     
     # Mapear puerto 5000 del contenedor al puerto 5000 de sistema operativo.
     ports:
       - 5000:5000
     
     # Archivo con variables de entorno.
-    env_file:
-      - ./.env.dev
+    #env_file:
+    #  - ./.env.dev
+    environment: 
+      - FLASK_ENV=development
+      - APP_SETTINGS=backend_users.config.DevelopmentConfig
+      - DATABASE_URL=postgresql://postgres:postgres@users-db:5432/users_dev
+      - DATABASE_TEST_URL=postgresql://postgres:postgres@users-db:5432/users_test
 
     # Este servicio 'web' depende de el servicio de base datos 'db'
     depends_on:
@@ -38,18 +43,22 @@ services:
     container_name: seedy_users_db
 
     # Imagen de la base de datos (PostgreSQL)
-    image: postgres:12-alpine
+    # image: postgres:12-alpine
+    build: 
+      context: ./backend_users/db
+      dockerfile: Dockerfile 
 
     # TODO: Explicar esto
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-
+    #volumes:
+    #  - postgres_data:/var/lib/postgresql/data/
+    expose:
+      - 5432
     # Información de acceso a la base de datos local
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=users
+      # - POSTGRES_DB=users
 
 # TODO: Explicar esto
-volumes:
-  postgres_data:
+#volumes:
+#  postgres_data:
