@@ -45,7 +45,9 @@ def create_app(script_info=None):
 
 
 def import_blueprints(app):
-    from .api.ping_v1_api import ping_v1_bp
-    app.register_blueprint(ping_v1_bp)
-    from .api.index_v1_bp import index_v1_bp
-    app.register_blueprint(index_v1_bp)
+    from .api.ping_v1_api import ping_v1_api
+    app.register_blueprint(ping_v1_api)
+    from .api.index_v1_api import index_v1_api
+    app.register_blueprint(index_v1_api)
+    from .api.users_v1_api import users_v1_api
+    app.register_blueprint(users_v1_api)
