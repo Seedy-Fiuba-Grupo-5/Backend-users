@@ -1,5 +1,4 @@
 import os
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -24,12 +23,13 @@ def create_app(script_info=None):
     # Registrar 'blueprints'
     # TODO: Utilizar el siguiente loop adaptandolo:
     """
-    for name in ('users', 'posts'):
-        bp = import_string('myapp.{0}.views:{1}'.format(name, name))
-        app.register_blueprint(bp, prefix='/{0}'.format(name))
+    for name in ('users'):
+    bp = import_string('api.{0}'.format(name))
+    app.register_blueprint(bp, prefix='/{0}'.format(name))
+
     """
-    from .api.ping_v1_api import ping_v1_bp
-    app.register_blueprint(ping_v1_bp)
+
+    import_blueprints(app)
 
     # TODO: Revisar si lo siguiente es necesario
     # Contexto de la 'shell' para flask cli
@@ -42,3 +42,10 @@ def create_app(script_info=None):
         return {"app": app, "db": db}
 
     return app
+
+
+def import_blueprints(app):
+    from .api.ping_v1_api import ping_v1_bp
+    app.register_blueprint(ping_v1_bp)
+    from .api.index_v1_bp import index_v1_bp
+    app.register_blueprint(index_v1_bp)
