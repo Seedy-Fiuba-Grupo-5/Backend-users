@@ -1,5 +1,4 @@
 from flask import Blueprint
-#from flask_restful import Api, Resource
 
 ping_v1_bp = Blueprint("ping_v1_bp", __name__)
 

@@ -33,7 +33,7 @@ services:
       - DATABASE_TEST_URL=postgresql://postgres:postgres@users-db:5432/users_test
 
     # Este servicio 'service_users_web' depende de el servicio 
-    # de base datos 'service_db'
+    # de base datos 'service_users_db'
     depends_on:
       - service_users_db
 

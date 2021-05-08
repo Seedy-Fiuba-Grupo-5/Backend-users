@@ -4,6 +4,7 @@ import os
 class BaseConfig:
     """Configuracion base"""
 
+    # TODO: Usar otra clave secreta
     SECRET_KEY = "my_precious"
     TESTING = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
