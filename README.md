@@ -4,20 +4,44 @@
 
 ## Pruebas: pytest & flake8
 pytest: libreria de python para 'testing'.  
+pytest-cov: plugin de pytest para medir porcentaje de cobertura de las pruebas.  
 flake8: 'linter' de python, basado en los lineamientos de pep8.  
-El siguiente comando ejecuta pytest seguido de flake8:
+  
+1) Levantar los servicios:
+```
+docker-compose up -d --build --remove-orphans
+```
+Nota: Si no utilizan el flag '-d', podran ver los logs de los servicios en 
+ejecucion.  
+  
+2) Pytest + Flake8:
 ```
 ./run_tests.sh
-``` 
-
+```
+Nota 1: Este script requiere que los servicios se encuetren levantados.  
+Nota 2: Este script esperara hasta que la base de datos se haya inicializado.  
+  
+3) Se pueden realizar cambios en el codigo y los servicios (en ejecucion), los detectaran y se actualizaran, permaneciendo en ejecucion.  
+  
+4) Una vez terminado de realizar testear la aplicacion y corregir todos los errores, se recomiendo detener los servicios:  
+```
+docker-compose stop
+```
+  
+5) Para eliminar los servicios y toda la informacion que mantienen, ejecutar:
+```
+docker-compose down -v
+```
+  
 ### Autopep8
 autopep8: Formatea el codigo de python para que se adecuado a los
 lineamientos de pep8.  
-Ejecutar el siguiente comando auto-formatear el codigo.
+Ejecutar el siguiente comando para auto-formatear el codigo.
 ```
 ./run_autopep8.sh
 ```
-
+Nota: Los servicios deben estar levantados.  
+  
 ## Entorno Heroku
 ### Informacion
 Nombre de la aplicacion Heroku (App): shrouded-meadow-59625  
