@@ -18,22 +18,22 @@ def recreate_db():
 @cli.command("seed_db")
 def seed_db():
     """Seeds db with some initial data."""
-    db.session.add(UserDBModel( name="Brian", 
-                                last_name="Zambelli Tello", 
-                                email="bzambelli@fi.uba.ar"))
-    db.session.add(UserDBModel( name="Franco Martin", 
-                                last_name="Di Maria", 
-                                email="fdimaria@fi.uba.ar"))
-    db.session.add(UserDBModel( name="Hugo", 
-                                last_name="Larrea", 
-                                email="hlarrea@fi.uba.ar"))
-    db.session.add(UserDBModel( name="Juan Diego", 
-                                last_name="Balestieri", 
-                                email="jbalestieri@fi.uba.ar"))
-    db.session.add(UserDBModel( name="Kevin", 
-                                last_name="Mendoza", 
-                                email="kmendoza@fi.uba.ar"))
-    
+    db.session.add(UserDBModel(name="Brian",
+                               last_name="Zambelli Tello",
+                               email="bzambelli@fi.uba.ar"))
+    db.session.add(UserDBModel(name="Franco Martin",
+                               last_name="Di Maria",
+                               email="fdimaria@fi.uba.ar"))
+    db.session.add(UserDBModel(name="Hugo",
+                               last_name="Larrea",
+                               email="hlarrea@fi.uba.ar"))
+    db.session.add(UserDBModel(name="Juan Diego",
+                               last_name="Balestieri",
+                               email="jbalestieri@fi.uba.ar"))
+    db.session.add(UserDBModel(name="Kevin",
+                               last_name="Mendoza",
+                               email="kmendoza@fi.uba.ar"))
+
     db.session.commit()
 
 
