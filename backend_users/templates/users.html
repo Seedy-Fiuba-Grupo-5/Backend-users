@@ -8,7 +8,9 @@
   <table class="table table-striped">
   <thead>
   <tr>
+    <th>Id</th>
     <th>Nombre</th>
+    <th>Apellido</th>
     <th>Email</th>
     <th>Activo</th>
   </tr>
@@ -17,6 +19,8 @@
   {% for guest in db %}
     <tr>
     <td>{{ guest.id }}</td>
+    <td>{{ guest.name }}</td>
+    <td>{{ guest.last_name }}</td>
     <td>{{ guest.email }}</td>
     <td>{{ guest.active }}</td>
     </tr>
