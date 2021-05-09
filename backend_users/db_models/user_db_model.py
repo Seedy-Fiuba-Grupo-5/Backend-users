@@ -10,7 +10,7 @@ class UserDBModel(db.Model):
     name = db.Column(db.String(128),
                      nullable=False)
 
-    last_name = db.Column(db.String(128),
+    lastName = db.Column(db.String(128),
                           nullable=False)
 
     email = db.Column(db.String(128),
@@ -23,8 +23,17 @@ class UserDBModel(db.Model):
 
     def __init__(self,
                  name,
-                 last_name,
+                 lastName,
                  email):
         self.name = name
-        self.last_name = last_name
+        self.lastName = lastName
         self.email = email
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "lastName": self.lastName,
+            "email": self.email,
+            "active": self.active
+        }
