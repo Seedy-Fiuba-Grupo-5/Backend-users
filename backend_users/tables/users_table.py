@@ -4,7 +4,7 @@ from backend_users import db
 # Clase que modela la base de datos user. Consta de un id, email y
 # si esta activa
 class User(db.Model):
-    __tablename__ = "users_dev"
+    __tablename__ = "users"
 
     id = db.Column(db.Integer,
                    primary_key=True)

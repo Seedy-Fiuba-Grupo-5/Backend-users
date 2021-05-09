@@ -29,8 +29,8 @@ services:
       - FLASK_APP=manage
       - FLASK_ENV=development
       - APP_SETTINGS=backend_users.config.DevelopmentConfig
-      - DATABASE_URL=postgresql://postgres:postgres@users-db:5432/users_dev
-      - DATABASE_TEST_URL=postgresql://postgres:postgres@users-db:5432/users_test
+      - DATABASE_URL=postgresql://postgres:postgres@service_users_db:5432/users_dev
+      - DATABASE_TEST_URL=postgresql://postgres:postgres@service_users_db:5432/users_test
 
     # Este servicio 'service_users_web' depende de el servicio 
     # de base datos 'service_users_db'

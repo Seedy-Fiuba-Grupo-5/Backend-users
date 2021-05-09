@@ -3,6 +3,8 @@ from backend_users import create_app, db
 from backend_users.tables.users_table import User
 
 app = create_app()
+with app.app_context():
+    db.create_all()
 cli = FlaskGroup(create_app=create_app)
 
 
