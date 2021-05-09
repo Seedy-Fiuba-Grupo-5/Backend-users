@@ -11,7 +11,7 @@ class UserDBModel(db.Model):
                      nullable=False)
 
     lastName = db.Column(db.String(128),
-                          nullable=False)
+                         nullable=False)
 
     email = db.Column(db.String(128),
                       unique=True,
