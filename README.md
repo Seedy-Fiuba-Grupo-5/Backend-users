@@ -1,7 +1,7 @@
 # Seedy Fiuba Backend-Users
-[![Backend-Users main](https://github.com/Seedy-Fiuba-Grupo-5/Backend-users/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/Seedy-Fiuba-Grupo-5/Backend-Users/actions/workflows/github_actions.yml)
+[![Backend-Users main](https://github.com/Seedy-Fiuba-Grupo-5/Backend-users/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/Seedy-Fiuba-Grupo-5/Backend-users/actions/workflows/main.yml)
 
-[![Backend-Users develop](https://github.com/Seedy-Fiuba-Grupo-5/Backend-users/actions/workflows/develop.yml/badge.svg?branch=development-backend-users)](https://github.com/Seedy-Fiuba-Grupo-5/Backend-Users/actions/workflows/github_actions.yml)
+[![Backend-Users develop](https://github.com/Seedy-Fiuba-Grupo-5/Backend-users/actions/workflows/develop.yml/badge.svg?branch=development-backend-users)](https://github.com/Seedy-Fiuba-Grupo-5/Backend-users/actions/workflows/develop.yml)
 
 ## Tecnologias
 - Flask (framework del servicio web)
