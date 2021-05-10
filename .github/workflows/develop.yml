@@ -3,10 +3,10 @@ name: Backend-Users develop
 on:
   pull_request:
     branches:
-      - development-backend-users
+      - develop
   push:
     branches: 
-      - development-backend-users
+      - develop
 
 jobs:
   test:
