@@ -1,4 +1,7 @@
-# Servicio Web: Usuarios de SeedyFIUBA
+# Seedy Fiuba Backend-Users
+[![Backend-Users](https://github.com/Seedy-Fiuba-Grupo-5/Backend-users/actions/workflows/github_actions.yml/badge.svg)](https://github.com/Seedy-Fiuba-Grupo-5/Backend-Proyectos/actions/workflows/github_actions.yml)
+
+## Tecnologias
 - Flask (framework del servicio web)
 - Postgres (Base de datos)
 
