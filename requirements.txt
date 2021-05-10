@@ -9,5 +9,6 @@ Werkzeug==1.0.1
 # Requerido en desarrollo
 pytest==6.2.4
 pytest-cov==2.11.1
+codecov==2.1.11
 flake8==3.9.1
 autopep8==1.5.7
