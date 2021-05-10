@@ -53,7 +53,6 @@ la plataforma, agregada como add-on de la aplicacion)
   
 URL de la aplicacion: https://shrouded-meadow-59625.herokuapp.com/  
 
-
 # Despliegue
 Nota: Los siguientes comandos no han sido probados para usuarios que no han creado el respositorio de Heroku.  
 Conectarse a Heroku:
