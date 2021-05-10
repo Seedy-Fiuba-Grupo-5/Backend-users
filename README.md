@@ -9,7 +9,7 @@
 - Flask (framework del servicio web)
 - Postgres (Base de datos)
 
-## Pruebas: pytest & flake8
+# Pruebas: pytest & flake8
 pytest: libreria de python para 'testing'.  
 pytest-cov: plugin de pytest para medir porcentaje de cobertura de las pruebas.  
 flake8: 'linter' de python, basado en los lineamientos de pep8.  
@@ -40,7 +40,7 @@ docker-compose stop
 docker-compose down -v
 ```
   
-### Autopep8
+## Autopep8
 autopep8: Formatea el codigo de python para que se adecuado a los
 lineamientos de pep8.  
 Ejecutar el siguiente comando para auto-formatear el codigo.
@@ -49,8 +49,8 @@ Ejecutar el siguiente comando para auto-formatear el codigo.
 ```
 Nota: Los servicios deben estar levantados.  
   
-## Entorno Heroku
-### Informacion
+# Entorno Heroku
+## Informacion
 Nombre de la aplicacion Heroku (App): seedy-fiuba-backend-users
 Nombre del repositorio Heroku: https://git.heroku.com/seedy-fiuba-backend-users.git  
   
@@ -60,7 +60,7 @@ la plataforma, agregada como add-on de la aplicacion)
   
 URL de la aplicacion: https://seedy-fiuba-backend-users.herokuapp.com/  
 
-# Despliegue
+## Despliegue
 Nota: Los siguientes comandos no han sido probados para usuarios que no han creado el respositorio de Heroku.  
 Conectarse a Heroku:
 ```
@@ -88,7 +88,7 @@ Ejecutar la imagen subida en la instancia de heroku
 heroku
 ```
 
-### Prendido y apagado del servicio
+## Prendido y apagado del servicio
 Prendido del servicio :
 ```
 heroku ps:scale web=1
@@ -101,8 +101,8 @@ heroku ps:scale web=0
 ```
 
 
-## Entorno Local
-### Docker-Compose
+# Entorno Local
+## Docker-Compose
 (Re-) Ejecutar las imagenes de los servicios web y db, 
 y previamente construirlas: 
 ```
