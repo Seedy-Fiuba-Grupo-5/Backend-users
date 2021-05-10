@@ -23,16 +23,16 @@ jobs:
         docker-compose up -d
     - name: Wait database service initialization
       run: |
-        docker-compose exec -t service_users_web bash -c 'while ! nc -z service_users_db 5432; do sleep 1; done;'
+        docker-compose exec -T service_users_web bash -c 'while ! nc -z service_users_db 5432; do sleep 1; done;'
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
-        docker-compose exec service_users_web flake8 backend_users --count --select=E9,F63,F7,F82 --show-source --statistics
+        docker-compose exec -T service_users_web flake8 backend_users --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        docker-compose exec service_users_web flake8 backend_users --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        docker-compose exec -T service_users_web flake8 backend_users --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        docker-compose exec service_users_web pytest "backend_users/tests" --cov="backend_users"
-    - name: Turn off web and database services
+        docker-compose exec -T service_users_web pytest "backend_users/tests" --cov="backend_users"
+    - name: Stopping web and database services
       run: |
-        docker-compose down -v
+        docker-compose stop
