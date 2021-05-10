@@ -31,6 +31,16 @@ jobs:
     - name: Test with pytest
       run: |
         docker-compose exec -T service_users_web pytest "backend_users/tests" --cov="backend_users"
+    - name: Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        fail_ci_if_error: true
+      env:
+        CODECOV_TOKEN: '096a5049-264c-409d-af4e-b2b71a23fec4'
+      run: |
+        ci_env=`bash <(curl -s https://codecov.io/env)`
+        docker-compose exec -T $ci_env -e CI=true service_users_web bash <(curl -s https://codecov.io/env)
     - name: Stopping web and database services
       run: |
         docker-compose stop
+
