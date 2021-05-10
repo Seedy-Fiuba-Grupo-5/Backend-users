@@ -1,12 +1,12 @@
-name: Backend-Users main
+name: Backend-Users develop
 
 on:
   pull_request:
     branches:
-      - main
+      - development-backend-users
   push:
     branches: 
-      - main
+      - development-backend-users
 
 jobs:
   test:
