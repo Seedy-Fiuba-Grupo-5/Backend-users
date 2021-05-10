@@ -1,7 +1,7 @@
 # Seedy Fiuba Backend-Users
 ![Backend-Users main](https://github.com/Seedy-Fiuba-Grupo-5/Backend-users/actions/workflows/main.yml/badge.svg?branch=main)
 
-![Backend-Users develop](https://github.com/Seedy-Fiuba-Grupo-5/Backend-users/actions/workflows/main.yml/badge.svg?branch=development-backend-users)
+![Backend-Users develop](https://github.com/Seedy-Fiuba-Grupo-5/Backend-users/actions/workflows/develop.yml/badge.svg?branch=development-backend-users)
 
 
 
