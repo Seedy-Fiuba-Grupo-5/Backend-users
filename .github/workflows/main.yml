@@ -23,7 +23,7 @@ jobs:
         docker-compose up -d
     - name: Wait database service initialization
       run: |
-        docker-compose exec service_users_web bash -c 'while ! nc -z service_users_db 5432; do sleep 1; done;'
+        docker-compose exec -t service_users_web bash -c 'while ! nc -z service_users_db 5432; do sleep 1; done;'
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
