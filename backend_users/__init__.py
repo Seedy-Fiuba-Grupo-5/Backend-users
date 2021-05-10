@@ -36,3 +36,5 @@ def create_app(script_info=None):
 def import_blueprints(app):
     from .api.users_api import users_api
     app.register_blueprint(users_api)
+    from .api.index_api import index_api
+    app.register_blueprint(index_api)
