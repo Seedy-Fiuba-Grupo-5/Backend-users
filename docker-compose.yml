@@ -19,10 +19,10 @@ services:
     volumes:
       - .:/usr/src/app/
     
-    # Mapear puerto 5000 del contenedor al puerto 5000 de 
+    # Mapear puerto 5001 del contenedor al puerto 5000 de 
     # sistema operativo.
     ports:
-      - 5000:5000
+      - 5001:5001
     
     # Variables de entorno para desarrollo y pruebas
     environment: 
