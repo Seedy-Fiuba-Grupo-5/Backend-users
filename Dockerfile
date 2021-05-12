@@ -23,8 +23,12 @@ ENV FLASK_APP=backend_users/prod/manage
 # la aplicacion
 ENV APP_SETTINGS=prod.config.ProductionConfig
 
-# Instalar netcat para script de espera de postgres
-RUN apt-get update && apt-get install -y netcat
+# Actualizar repositorios de apt
+RUN apt-get update
+
+# Instalar cliente Postgres para poder esperar 
+# la inicializacion de la base de datos
+RUN apt-get -y install postgresql-client
 
 # Instalar dependencias
 RUN pip install --upgrade pip
