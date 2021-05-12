@@ -1,3 +1,5 @@
+# Dockerfile para produccion
+
 # Imagen base de python 
 FROM python:3.8
 
@@ -19,8 +21,8 @@ RUN apt-get update && apt-get install -y netcat
 
 # Instalar dependencias
 RUN pip install --upgrade pip
-COPY ./requirements.txt /usr/src/app/requirements.txt
-RUN pip install -Ur requirements.txt
+COPY ./requirements-prod.txt /usr/src/app/requirements-prod.txt
+RUN pip install -Ur requirements-prod.txt
 
 # Copiar archivos de proyecto al directorio de trabajo
 COPY . /usr/src/app/

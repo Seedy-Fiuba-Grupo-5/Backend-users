@@ -1,0 +1,5 @@
+# Requerido en produccion
+Flask==1.1.2
+Flask-SQLAlchemy==2.5.1
+Flask-RESTful==0.3.8
+psycopg2-binary==2.8.4
