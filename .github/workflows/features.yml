@@ -1,12 +1,10 @@
-name: Main
+name: Features
 
 on:
-  pull_request:
-    branches:
-      - main
   push:
-    branches: 
+    branches-ignore: 
       - main
+      - develop
 
 jobs:
   test:

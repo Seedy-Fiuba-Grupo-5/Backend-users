@@ -1,4 +1,4 @@
-name: Backend-Users develop
+name: Develop
 
 on:
   pull_request:
