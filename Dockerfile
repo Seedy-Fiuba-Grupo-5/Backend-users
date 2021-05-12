@@ -13,8 +13,15 @@ ENV PYTHONDONTWRITEBYTECODE 1
 # a la terminal, sin esperar en un buffer intermedio.
 ENV PYTHONUNBUFFERED 1
 
+# Indica a Flask que estamos en un ambiente de produccion
+ENV FLASK_ENV=production
+
 # Indica a Flask en que modulo se encuetra la aplicacion
-ENV FLASK_APP=manage
+ENV FLASK_APP=backend_users/prod/manage
+
+# Indica a Flask en que modulo se encuetra la configuracion de 
+# la aplicacion
+ENV APP_SETTINGS=src.config.ProductionConfig
 
 # Instalar netcat para script de espera de postgres
 RUN apt-get update && apt-get install -y netcat
@@ -24,8 +31,8 @@ RUN pip install --upgrade pip
 COPY ./requirements-prod.txt /usr/src/app/requirements-prod.txt
 RUN pip install -Ur requirements-prod.txt
 
-# Copiar archivos de proyecto al directorio de trabajo
-COPY . /usr/src/app/
+# Copiar archivos de produccion
+COPY /backend_users/src /usr/src/app/backend_users/src
 
 # Indica a Flask que levante un servidor
 # 0.0.0.0 : El servidor sera publicamente visible

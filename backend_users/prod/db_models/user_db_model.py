@@ -1,4 +1,4 @@
-from backend_users import db
+from prod import db
 
 
 class UserDBModel(db.Model):
