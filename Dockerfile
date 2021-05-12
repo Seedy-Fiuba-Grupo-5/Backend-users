@@ -21,7 +21,7 @@ ENV FLASK_APP=backend_users/prod/manage
 
 # Indica a Flask en que modulo se encuetra la configuracion de 
 # la aplicacion
-ENV APP_SETTINGS=src.config.ProductionConfig
+ENV APP_SETTINGS=prod.config.ProductionConfig
 
 # Instalar netcat para script de espera de postgres
 RUN apt-get update && apt-get install -y netcat
@@ -32,11 +32,7 @@ COPY ./requirements-prod.txt /usr/src/app/requirements-prod.txt
 RUN pip install -Ur requirements-prod.txt
 
 # Copiar archivos de produccion
-COPY /backend_users/src /usr/src/app/backend_users/src
+COPY /backend_users/prod /usr/src/app/backend_users/prod
 
-# Indica a Flask que levante un servidor
-# 0.0.0.0 : El servidor sera publicamente visible
-# ${PORT:-5000} : El puerto donde se bindea el server 
-# esta especificado por la variable de entorno PORT.  
-# PORT=5000, por defecto.
-CMD flask run --host=0.0.0.0 --port=${PORT:-5000}
+# Ejecutar el script entrypoint.sh
+ENTRYPOINT ["sh", "/usr/src/app/backend_users/prod/entrypoint.sh"] 
