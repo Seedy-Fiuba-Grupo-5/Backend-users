@@ -11,7 +11,7 @@ services:
       # Directorio donde se encuentra el Dockerfile
       context: .
       # Nombre del Dockerfile
-      dockerfile: Dockerfile 
+      dockerfile: Dockerfile.dev 
     
     entrypoint: ['/usr/src/app/entrypoint.sh']
     
