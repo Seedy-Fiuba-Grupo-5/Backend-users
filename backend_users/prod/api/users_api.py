@@ -8,7 +8,6 @@ api = Api(users_api)
 
 class UsersResource(Resource):
     def get(self):
-        response_object = {}
         response_object =\
             [user.serialize() for user in UserDBModel.query.all()]
         return response_object, 200
