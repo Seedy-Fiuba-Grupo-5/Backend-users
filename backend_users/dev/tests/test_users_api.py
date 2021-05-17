@@ -1,5 +1,5 @@
 import json
-from backend_users.db_models.user_db_model import UserDBModel
+from prod.db_models.user_db_model import UserDBModel
 
 
 def test_db_has_the_only_user_name_Franco_Martin_last_name_Di_Maria_and_fiuba_mail_fdimaria_GET_users_should_return_json_with_that_with_id_1(test_app, test_database):

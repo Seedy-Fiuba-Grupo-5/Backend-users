@@ -13,16 +13,35 @@ ENV PYTHONDONTWRITEBYTECODE 1
 # a la terminal, sin esperar en un buffer intermedio.
 ENV PYTHONUNBUFFERED 1
 
+# Indica a Flask que estamos en un ambiente de desarrallo
+ENV FLASK_ENV=development
+
 # Indica a Flask en que modulo se encuetra la aplicacion
-ENV FLASK_APP=manage
+ENV FLASK_APP=backend_users/prod/manage
+
+# Indica a Flask en que modulo se encuetra la configuracion de 
+# la aplicacion
+ENV APP_SETTINGS=dev.config_app.DevelopmentConfig
+
+# Actualizar repositorios de apt
+RUN apt-get update
 
 # Instalar netcat para script de espera de postgres
-RUN apt-get update && apt-get install -y netcat
+# Instalar netcat para poder esperar la inicializacion 
+# de la base de datos en el script run_test.sh
+RUN apt-get install -y netcat
+
+# Instalar cliente Postgres para poder esperar 
+# la inicializacion de la base de datos
+RUN apt-get -y install postgresql-client
+
 
 # Instalar dependencias
 RUN pip install --upgrade pip
+COPY ./requirements-prod.txt /usr/src/app/requirements-prod.txt
 COPY ./requirements-dev.txt /usr/src/app/requirements-dev.txt
+RUN pip install -Ur requirements-prod.txt
 RUN pip install -Ur requirements-dev.txt
 
-# Copiar archivos de proyecto al directorio de trabajo
-COPY . /usr/src/app/
+# Copiar archivos de produccion y desarrollo
+COPY /backend_users/ /usr/src/app/backend_users/

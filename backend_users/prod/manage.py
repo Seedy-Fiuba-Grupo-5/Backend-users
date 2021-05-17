@@ -1,13 +1,18 @@
 from flask.cli import FlaskGroup
-from backend_users import create_app, db
-from backend_users.db_models.user_db_model import UserDBModel
-from flask_cors import CORS
+from prod import create_app, db
+from prod.db_models.user_db_model import UserDBModel
+import os
 
 app = create_app()
 with app.app_context():
     db.create_all()
-CORS(app)
+
+if os.getenv("FLASK_ENV") == 'development':
+    from flask_cors import CORS
+    CORS(app)
+
 cli = FlaskGroup(create_app=create_app)
+
 
 @cli.command("recreate_db")
 def recreate_db():

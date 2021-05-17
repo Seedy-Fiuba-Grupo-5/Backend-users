@@ -28,7 +28,7 @@ jobs:
         docker-compose exec -T service_users_web flake8 backend_users --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        docker-compose exec -T service_users_web pytest "backend_users/tests" --cov="backend_users" --cov-report term --cov-report xml
+        docker-compose exec -T service_users_web pytest "backend_users/dev/tests" --cov="backend_users/prod" --cov-report term --cov-report xml
     - name: Codecov
       env:
         CODECOV_TOKEN: '096a5049-264c-409d-af4e-b2b71a23fec4'

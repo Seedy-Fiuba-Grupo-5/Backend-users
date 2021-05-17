@@ -1,12 +1,12 @@
 import pytest
 
-from backend_users import create_app, db
+from prod import create_app, db
 
 
 @pytest.fixture(scope="module")
 def test_app():
     app = create_app()
-    app.config.from_object("backend_users.config.TestingConfig")
+    app.config.from_object("dev.config_app.TestingConfig")
     with app.app_context():
         yield app  # testing happens here
 

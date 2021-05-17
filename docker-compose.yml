@@ -11,9 +11,9 @@ services:
       # Directorio donde se encuentra el Dockerfile
       context: .
       # Nombre del Dockerfile
-      dockerfile: Dockerfile.dev 
+      dockerfile: Dockerfile.dev
     
-    entrypoint: ['/usr/src/app/entrypoint.sh']
+    entrypoint: ['/usr/src/app/backend_users/prod/entrypoint.sh']
     
     # TODO: Explicar esto
     volumes:
@@ -26,9 +26,6 @@ services:
     
     # Variables de entorno para desarrollo y pruebas
     environment: 
-      - FLASK_APP=manage
-      - FLASK_ENV=development
-      - APP_SETTINGS=backend_users.config.DevelopmentConfig
       - DATABASE_URL=postgresql://postgres:postgres@service_users_db:5432/users_dev
       - DATABASE_TEST_URL=postgresql://postgres:postgres@service_users_db:5432/users_test
 
@@ -44,9 +41,9 @@ services:
     # Construccion personalizada de postgres
     build: 
       # Directorio donde se encuentra el Dockerfile
-      context: ./backend_users/db
+      context: .
       # Nombre del Dockerfile
-      dockerfile: Dockerfile 
+      dockerfile: Dockerfile.db
     
     # Exponemos puerto donde se ejecuta postgres
     expose:

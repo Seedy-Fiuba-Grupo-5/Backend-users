@@ -13,23 +13,30 @@ ENV PYTHONDONTWRITEBYTECODE 1
 # a la terminal, sin esperar en un buffer intermedio.
 ENV PYTHONUNBUFFERED 1
 
-# Indica a Flask en que modulo se encuetra la aplicacion
-ENV FLASK_APP=manage
+# Indica a Flask que estamos en un ambiente de produccion
+ENV FLASK_ENV=production
 
-# Instalar netcat para script de espera de postgres
-RUN apt-get update && apt-get install -y netcat
+# Indica a Flask en que modulo se encuetra la aplicacion
+ENV FLASK_APP=backend_users/prod/manage
+
+# Indica a Flask en que modulo se encuetra la configuracion de 
+# la aplicacion
+ENV APP_SETTINGS=prod.config.ProductionConfig
+
+# Actualizar repositorios de apt
+RUN apt-get update
+
+# Instalar cliente Postgres para poder esperar 
+# la inicializacion de la base de datos
+RUN apt-get -y install postgresql-client
 
 # Instalar dependencias
 RUN pip install --upgrade pip
 COPY ./requirements-prod.txt /usr/src/app/requirements-prod.txt
 RUN pip install -Ur requirements-prod.txt
 
-# Copiar archivos de proyecto al directorio de trabajo
-COPY . /usr/src/app/
+# Copiar archivos de produccion
+COPY /backend_users/prod /usr/src/app/backend_users/prod
 
-# Indica a Flask que levante un servidor
-# 0.0.0.0 : El servidor sera publicamente visible
-# ${PORT:-5000} : El puerto donde se bindea el server 
-# esta especificado por la variable de entorno PORT.  
-# PORT=5000, por defecto.
-CMD flask run --host=0.0.0.0 --port=${PORT:-5000}
+# Ejecutar el script entrypoint.sh
+ENTRYPOINT ["sh", "/usr/src/app/backend_users/prod/entrypoint.sh"] 
