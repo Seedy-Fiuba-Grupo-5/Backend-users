@@ -1,4 +1,6 @@
 from prod import db
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship
 
 
 class UserDBModel(db.Model):
@@ -21,13 +23,18 @@ class UserDBModel(db.Model):
                        default=True,
                        nullable=False)
 
+    password = db.Column(db.String(128),
+                         nullable=False)
+
     def __init__(self,
                  name,
-                 lastName,
-                 email):
+                 lastname,
+                 email,
+                 password):
         self.name = name
-        self.lastName = lastName
+        self.lastName = lastname
         self.email = email
+        self.password = password
 
     def serialize(self):
         return {
@@ -37,3 +44,9 @@ class UserDBModel(db.Model):
             "email": self.email,
             "active": self.active
         }
+
+    @staticmethod
+    def comprobar_relacion_usuario_pass(email,
+                                        password):
+        return UserDBModel.query.filter_by(email=email,
+                                           password=password) is not None

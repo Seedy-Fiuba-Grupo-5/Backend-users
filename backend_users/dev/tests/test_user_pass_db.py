@@ -1,4 +1,4 @@
-from prod.db_models.user_pass_db_model import UserPassDBModel
+from prod.db_models.user_db_model import UserDBModel
 
 
 def test_devuelve_true_cuando_la_relacion_usuario_pass_es_correcta(test_app,
@@ -8,9 +8,11 @@ def test_devuelve_true_cuando_la_relacion_usuario_pass_es_correcta(test_app,
     session.remove()
     test_database.drop_all()
     test_database.create_all()
-    session.add(UserPassDBModel(email="bzambelli@fi.uba.ar",
-                                password="hola"))
+    session.add(UserDBModel(name="Franco Martin",
+                            lastname="Di Maria",
+                            email="fdimaria@fi.uba.ar",
+                            password="hola"))
     session.commit()
-    assert UserPassDBModel.comprobar_relacion_usuario_pass(
+    assert UserDBModel.comprobar_relacion_usuario_pass(
         "bzambelli@fi.uba.ar",
         "hola") is True

@@ -9,8 +9,9 @@ def test_db_get_only_one_user_when_the_user_is_in_the_db(test_app,
     test_database.drop_all()
     test_database.create_all()
     session.add(UserDBModel(name="Franco Martin",
-                            lastName="Di Maria",
-                            email="fdimaria@fi.uba.ar"))
+                            lastname="Di Maria",
+                            email="fdimaria@fi.uba.ar",
+                            password = "hola"))
     session.commit()
     client = test_app.test_client()
     response = client.get("/users/1")
