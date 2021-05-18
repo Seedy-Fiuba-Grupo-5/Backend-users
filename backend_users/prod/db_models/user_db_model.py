@@ -1,6 +1,4 @@
 from prod import db
-from sqlalchemy import ForeignKey
-from sqlalchemy.orm import relationship
 
 
 class UserDBModel(db.Model):
