@@ -18,10 +18,10 @@ class UserResource(Resource):
     """
 
     def get(self, user_id):
-        project_model = UserDBModel.query.get(user_id)
-        if not project_model:
+        user = UserDBModel.query.get(user_id)
+        if not user:
             return 'The project requested could not be found', 404
-        response_object = project_model.serialize()
+        response_object = user.serialize()
         return response_object, 200
 
 
