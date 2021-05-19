@@ -10,7 +10,7 @@ def test_db_has_the_only_user_name_Franco_Martin_last_name_Di_Maria_and_fiuba_ma
     session.add(UserDBModel(name="Franco Martin",
                             lastname="Di Maria",
                             email="fdimaria@fi.uba.ar",
-                            password = "hola"))
+                            password="hola"))
     session.commit()
     client = test_app.test_client()
     response = client.get("/users")
@@ -32,11 +32,11 @@ def test_db_has_the_users_user1_name_Franco_Martin_last_name_Di_Maria_and_fiuba_
     session.add(UserDBModel(name="Franco Martin",
                             lastname="Di Maria",
                             email="fdimaria@fi.uba.ar",
-                            password = "hola"))
+                            password="hola"))
     session.add(UserDBModel(name="Brian",
                             lastname="Zambelli Tello",
                             email="bzambelli@fi.uba.ar",
-                            password = "hola"))
+                            password="hola"))
     session.commit()
     client = test_app.test_client()
     response = client.get("/users")
