@@ -1,4 +1,6 @@
 from prod import db
+from sqlalchemy.orm import relationship
+from sqlalchemy import Table, Column, Integer, ForeignKey
 
 
 # Clase representativa del schema que almacena a cada uno de los
@@ -26,6 +28,7 @@ class UserDBModel(db.Model):
 
     password = db.Column(db.String(128),
                          nullable=False)
+    children = relationship("UserProjectDBModel")
 
     # Constructor de la clase.
     # PRE: Name tiene que ser un string de a lo sumo 128 caracteres, al igual
@@ -57,3 +60,40 @@ class UserDBModel(db.Model):
                                         password):
         return UserDBModel.query.filter_by(email=email,
                                            password=password) is not None
+
+
+# Clase representativa del schema que almacena a cada uno de los
+# usuarios en el sistema. Cada entrada consta de un id, name, lastname, email
+# y un estado activo que por defecto es True.
+# Un usuario puede tener mas de un proyecto. Un proyecto no puede estar
+# asociado a mas de un usuario
+class UserProjectDBModel(db.Model):
+    __tablename__ = "user_project"
+
+    user_id = Column(Integer,
+                     ForeignKey('users.id'),
+                     primary_key=True)
+
+    proyect_id = db.Column(db.Integer,
+                           primary_key=True)
+
+    # Constructor de la clase.
+    # PRE: Ambos id deben corresponderse con los creados en sus respectivas
+    # bases de datos
+    def __init__(self,
+                 id_usuario,
+                 id_proyecto):
+        self.user_id = id_usuario
+        self.proyect_id = id_proyecto
+
+    # Funcion que devuelve el par id_usuario, id_proyecto.
+    def serialize(self):
+        return {
+            "id_usuario": self.user_id,
+            "id_proyecto": self.proyect_id
+        }
+
+    # Funcion para devolver todos los proyectos asociados a un usuario
+    @staticmethod
+    def obtener_proyectos_asociados_a_un_usuario(id_usuario):
+        return UserProjectDBModel.query.filter_by(id_usuario=id_usuario)
