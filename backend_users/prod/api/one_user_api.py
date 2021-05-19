@@ -7,17 +7,9 @@ api = Api(one_user_api)
 
 
 class UserResource(Resource):
-    """def get(self,
-            name_user):
-        print(name_user)
-        user = UserDBModel.query.filter(UserDBModel.name == name_user)
-        if not user:
-            return 'The user requested could not be found', 404
-        response_object = user.serialize()
-        return response_object, 200
-    """
 
-    def get(self, user_id):
+    @staticmethod
+    def get(user_id):
         user = UserDBModel.query.get(user_id)
         if not user:
             return 'The project requested could not be found', 404
