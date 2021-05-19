@@ -15,4 +15,7 @@ def test_devuelve_true_cuando_la_relacion_usuario_pass_es_correcta(test_app,
     session.commit()
     assert UserDBModel.comprobar_relacion_usuario_pass(
         "bzambelli@fi.uba.ar",
+        "hola") is False
+    assert UserDBModel.comprobar_relacion_usuario_pass(
+        "fdimaria@fi.uba.ar",
         "hola") is True

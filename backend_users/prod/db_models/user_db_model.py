@@ -1,6 +1,6 @@
 from prod import db
 from sqlalchemy.orm import relationship
-from sqlalchemy import Table, Column, Integer, ForeignKey
+from sqlalchemy import Column, Integer, ForeignKey
 
 
 # Clase representativa del schema que almacena a cada uno de los
@@ -58,8 +58,9 @@ class UserDBModel(db.Model):
     @staticmethod
     def comprobar_relacion_usuario_pass(email,
                                         password):
-        return UserDBModel.query.filter_by(email=email,
-                                           password=password) is not None
+        db = UserDBModel.query.filter_by(email=email,
+                                         password=password)
+        return db.count() != 0
 
 
 # Clase representativa del schema que almacena a cada uno de los
