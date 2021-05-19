@@ -1,6 +1,9 @@
 from prod import db
 
 
+# Clase representativa del schema que almacena a cada uno de los
+# usuarios en el sistema. Cada entrada consta de un id, name, lastname, email
+# y un estado activo que por defecto es True
 class UserDBModel(db.Model):
     __tablename__ = "users"
 
@@ -24,6 +27,9 @@ class UserDBModel(db.Model):
     password = db.Column(db.String(128),
                          nullable=False)
 
+    # Constructor de la clase.
+    # PRE: Name tiene que ser un string de a lo sumo 128 caracteres, al igual
+    # que password, lastname y email.
     def __init__(self,
                  name,
                  lastname,
@@ -34,6 +40,7 @@ class UserDBModel(db.Model):
         self.email = email
         self.password = password
 
+    # Funcion que devuelve los datos relevantes de un usuario, serializado
     def serialize(self):
         return {
             "id": self.id,
@@ -43,6 +50,8 @@ class UserDBModel(db.Model):
             "active": self.active
         }
 
+    # Funcion para verificar si la combinacion usuario-password existe.
+    # POST: Devuelve True si es asi. False en caso contrario.
     @staticmethod
     def comprobar_relacion_usuario_pass(email,
                                         password):
