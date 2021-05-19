@@ -1,6 +1,5 @@
 from prod import db
-from sqlalchemy.orm import relationship
-from sqlalchemy import Column, Integer, ForeignKey
+from sqlalchemy import Column, Integer
 
 
 # Clase representativa del schema que almacena a cada uno de los
@@ -28,7 +27,6 @@ class UserDBModel(db.Model):
 
     password = db.Column(db.String(128),
                          nullable=False)
-    children = relationship("UserProjectDBModel")
 
     # Constructor de la clase.
     # PRE: Name tiene que ser un string de a lo sumo 128 caracteres, al igual
@@ -72,7 +70,6 @@ class UserProjectDBModel(db.Model):
     __tablename__ = "user_project"
 
     user_id = Column(Integer,
-                     ForeignKey('users.id'),
                      primary_key=True)
 
     proyect_id = db.Column(db.Integer,
@@ -98,3 +95,9 @@ class UserProjectDBModel(db.Model):
     @staticmethod
     def obtener_proyectos_asociados_a_un_usuario(id_usuario):
         return UserProjectDBModel.query.filter_by(id_usuario=id_usuario)
+
+    def agregar_relacion_usuario_proyecto(self,
+                                          id_usuario,
+                                          id_proyecto):
+        self.user_id = id_usuario
+        self.proyect_id = id_proyecto
