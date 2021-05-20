@@ -1,4 +1,4 @@
-from flask import Blueprint  # , request
+from flask import Blueprint
 from flask_restful import Api, Resource
 from prod.db_models.user_db_model import UserDBModel
 

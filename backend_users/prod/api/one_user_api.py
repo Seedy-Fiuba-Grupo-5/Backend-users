@@ -12,7 +12,7 @@ class UserResource(Resource):
     def get(user_id):
         user = UserDBModel.query.get(user_id)
         if not user:
-            return 'The project requested could not be found', 404
+            return 'Contraseña o e-mail incorrectos', 204
         response_object = user.serialize()
         return response_object, 200
 
