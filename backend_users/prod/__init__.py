@@ -40,3 +40,5 @@ def import_blueprints(app):
     app.register_blueprint(index_api)
     from .api.one_user_api import one_user_api
     app.register_blueprint(one_user_api)
+    from .api.projects_from_user_api import users_list_projects_api
+    app.register_blueprint(users_list_projects_api)
