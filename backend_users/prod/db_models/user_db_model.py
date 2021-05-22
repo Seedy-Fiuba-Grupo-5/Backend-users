@@ -60,6 +60,12 @@ class UserDBModel(db.Model):
                                          password=password)
         return db.count() != 0
 
+    @staticmethod
+    def get_id(email, password):
+        id_solicitado = UserDBModel.query.filter_by(email=email,
+                                                    password=password)
+        return id_solicitado.with_entities(UserDBModel.id)
+
 
 # Clase representativa del schema que almacena a cada uno de los
 # usuarios en el sistema junto con los id de los proyectos que posee

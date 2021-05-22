@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, request
 from flask_restful import Api, Resource
 from prod.db_models.user_db_model import UserDBModel
 
@@ -12,5 +12,12 @@ class UsersListResource(Resource):
             [user.serialize() for user in UserDBModel.query.all()]
         return response_object, 200
 
+    def post(self):
+        email = request.get_json()['email']
+        password = request.get_json()['password']
+        if not UserDBModel.comprobar_relacion_usuario_pass(email,
+                                                           password):
+            return 'Contraseña o e-mail incorrectos', 204
+        return UserDBModel.get_id(), 200
 
 api.add_resource(UsersListResource, "/users")
