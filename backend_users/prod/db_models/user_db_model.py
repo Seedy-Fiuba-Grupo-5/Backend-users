@@ -69,11 +69,11 @@ class UserDBModel(db.Model):
                         password,
                         session):
         try:
-            session.add(UserDBModel(name=name,
-                                    lastname=lastName,
-                                    email=email,
-                                    password=password))
-            session.commit()
+            db.session.add(UserDBModel(name=name,
+                                       lastname=lastName,
+                                       email=email,
+                                       password=password))
+            db.session.commit()
             return UserDBModel.get_id(email,
                                       password)
         except exc.IntegrityError:
