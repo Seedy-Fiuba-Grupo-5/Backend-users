@@ -62,12 +62,12 @@ class UserDBModel(db.Model):
             return -1
         return id_solicitado.with_entities(UserDBModel.id)[0][0]
 
-    def agregar_usuario(self,
+    @classmethod
+    def agregar_usuario(cls,
                         name,
                         lastName,
                         email,
-                        password,
-                        session):
+                        password):
         try:
             db.session.add(UserDBModel(name=name,
                                        lastname=lastName,
