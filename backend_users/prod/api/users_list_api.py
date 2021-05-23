@@ -35,7 +35,7 @@ class UsersListResource(Resource):
             "email": email,
             "id": id
         }
-        return response_object, 200
+        return response_object, 201
 
     @staticmethod
     def check_values(json, lista):
