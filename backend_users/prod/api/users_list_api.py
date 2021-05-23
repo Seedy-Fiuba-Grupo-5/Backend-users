@@ -18,8 +18,7 @@ class UsersListResource(Resource):
             return 'insufficient information for User Login', 500
         email = request.get_json()['email']
         password = request.get_json()['password']
-        if not UserDBModel.comprobar_relacion_usuario_pass(email,
-                                                           password):
+        if UserDBModel.get_id(email,password) == -1:
             return 'Contraseña o e-mail incorrectos', 204
         return UserDBModel.get_id(), 200
 
