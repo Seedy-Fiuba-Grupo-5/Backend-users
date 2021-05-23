@@ -18,7 +18,7 @@ class UsersListResource(Resource):
     def post(self):
         data = request.get_json()
         if not self.check_values(data, REGISTER_FIELDS):
-            return 'Parametros invalidos', 400
+            return 'Faltan campos en la solicitud', 400
         name = data['name']
         lastName = data['lastName']
         email = data['email']
