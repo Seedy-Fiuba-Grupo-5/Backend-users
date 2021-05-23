@@ -15,7 +15,7 @@ class UsersLoginResource(Resource):
         password = data['password']
         id = UserDBModel.get_id(email,password)
         if id == -1:
-            return 'Contraseña o e-mail incorrectos', 204
+            return 'Contraseña o e-mail incorrectos', 401
         response_object = {
             "email": email,
             "id": id
