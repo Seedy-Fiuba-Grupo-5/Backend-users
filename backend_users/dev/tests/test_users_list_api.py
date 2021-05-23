@@ -55,6 +55,8 @@ def test_db_has_the_users_user1_name_Franco_Martin_last_name_Di_Maria_and_fiuba_
     assert user_brian["lastName"] == "Zambelli Tello"
     assert user_brian["email"] == "bzambelli@fi.uba.ar"
 
+
+"""
 def test_db_vacia_post_users_name_franco_martin_last_name_di_maria_email_fdimaria_password_tomate_entonces_registra_nuevo_usuario_con_id_1(test_app, test_database):
     session = recreate_db(test_database)
     client = test_app.test_client()
@@ -76,3 +78,4 @@ def test_db_vacia_post_users_name_franco_martin_last_name_di_maria_email_fdimari
     assert register_info["lastName"] == "Di Maria"
     assert register_info["email"] == "fdimaria@fi.uba.ar"
     assert register_info["id"] == 1
+"""
