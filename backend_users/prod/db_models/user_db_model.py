@@ -1,5 +1,6 @@
 from prod import db
 from sqlalchemy import Column, Integer
+from sqlalchemy import exc
 
 
 # Clase representativa del schema que almacena a cada uno de los
@@ -60,6 +61,23 @@ class UserDBModel(db.Model):
         if id_solicitado.count() == 0:
             return -1
         return id_solicitado.with_entities(UserDBModel.id)[0][0]
+
+    def agregar_usuario(self,
+                        name,
+                        lastName,
+                        email,
+                        password,
+                        session):
+        try:
+            session.add(UserDBModel(name=name,
+                                    lastname=lastName,
+                                    email=email,
+                                    password=password))
+            session.commit()
+            return UserDBModel.get_id(email,
+                                      password)
+        except exc.IntegrityError:
+            return -1
 
 
 # Clase representativa del schema que almacena a cada uno de los
