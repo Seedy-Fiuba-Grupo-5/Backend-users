@@ -13,11 +13,22 @@ class UsersListResource(Resource):
         return response_object, 200
 
     def post(self):
+        json = request.get_json()
+        if not self.check_values(json, ["email", "password"]):
+            return 'insufficient information for User Login', 500
         email = request.get_json()['email']
         password = request.get_json()['password']
         if not UserDBModel.comprobar_relacion_usuario_pass(email,
                                                            password):
             return 'Contraseña o e-mail incorrectos', 204
         return UserDBModel.get_id(), 200
+
+    @staticmethod
+    def check_values(json, lista):
+        for value in lista:
+            if value not in json:
+                return False
+        return True
+
 
 api.add_resource(UsersListResource, "/users")
