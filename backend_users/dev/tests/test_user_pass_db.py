@@ -23,4 +23,4 @@ def test_devuelve_true_cuando_la_relacion_usuario_pass_es_correcta(test_app,
         "fdimaria@fi.uba.ar",
         "hola2") is False
     assert UserDBModel.get_id("fdimaria@fi.uba.ar",
-                              "hola")[0][0] == (1)
+                              "hola") == 1
