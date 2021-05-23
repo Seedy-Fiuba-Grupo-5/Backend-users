@@ -87,6 +87,51 @@ def test_db_vacia_post_users_name_franco_martin_last_name_di_maria_email_fdimari
     assert register_info["email"] == "fdimaria@fi.uba.ar"
     assert register_info["id"] == 1
 
+def test_db_con_mail_fdimaria_registrado_post_users_name_franco_martin_last_name_di_maria_email_fdimaria_password_tomate_entonces_obtengo_un_error(test_app, test_database):
+    """
+    Dada una base de datos con un usuario
+    Registrado con nombre "Franco Martin"
+    Registrado con apellido "Di Maria"
+    Registrado con email "fdimaria@fi.uba.ar"
+    Registrado con password "tomate"
+    Y una peticion
+    Con nombre "Franco Martin"
+    Con apellido "Di Maria"
+    Con email "fdimaria@fi.uba.ar"
+    Con password "tomate"
+    Cuando POST /users
+    Entonces obtengo un error
+    """
+    session = recreate_db(test_database)
+    client = test_app.test_client()
+    # Primer registro 
+    body = {
+        "name": "Franco Martin",
+        "lastName": "Di Maria",
+        "email": "fdimaria@fi.uba.ar",
+        "password": "tomate"
+    }
+    response = client.post(
+        "/users",
+        data=json.dumps(body),
+        content_type="application/json",
+    )
+    # Repeticion del registro
+    body = {
+        "name": "Franco Martin",
+        "lastName": "Di Maria",
+        "email": "fdimaria@fi.uba.ar",
+        "password": "tomate"
+    }
+    response = client.post(
+        "/users",
+        data=json.dumps(body),
+        content_type="application/json",
+    )
+    assert response.status_code == 401
+    error = json.loads(response.data.decode())
+    error = 'Ya existe un usuario registrado para el mail recibido'
+
 def test_db_vacia_post_url_users_datos_name_franco_martin_entonces_obtengo_un_error(test_app, test_database):
     """
     Dada una base de datos vacia
