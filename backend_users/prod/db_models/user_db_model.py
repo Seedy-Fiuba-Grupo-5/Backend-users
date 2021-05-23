@@ -51,19 +51,14 @@ class UserDBModel(db.Model):
             "active": self.active
         }
 
-    # Funcion para verificar si la combinacion usuario-password existe.
-    # POST: Devuelve True si es asi. False en caso contrario.
     @staticmethod
-    def comprobar_relacion_usuario_pass(email,
-                                        password):
-        db = UserDBModel.query.filter_by(email=email,
-                                         password=password)
-        return db.count() != 0
-
-    @staticmethod
+    # Devuelve el id asociado a la relacion e-mail--password
+    # POST: Devuelve -1 Si no existe la relacion e-mail, password
     def get_id(email, password):
         id_solicitado = UserDBModel.query.filter_by(email=email,
                                                     password=password)
+        if id_solicitado.count() == 0:
+            return -1
         return id_solicitado.with_entities(UserDBModel.id)[0][0]
 
 
