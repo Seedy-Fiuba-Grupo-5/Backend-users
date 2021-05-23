@@ -30,4 +30,5 @@ class UsersListResource(Resource):
                 return False
         return True
 
+
 api.add_resource(UsersListResource, "/users")
