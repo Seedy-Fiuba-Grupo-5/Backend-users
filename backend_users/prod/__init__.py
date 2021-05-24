@@ -47,5 +47,5 @@ def import_blueprints(app):
     app.register_blueprint(users_login_api)
 
     # /users/projects/<user_id>
-    from .api.projects_from_user_api import users_list_projects_api
-    app.register_blueprint(users_list_projects_api)
+    from .api.users_projects_list_api import users_projects_list_api
+    app.register_blueprint(users_projects_list_api)
