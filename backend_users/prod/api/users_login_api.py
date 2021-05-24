@@ -13,12 +13,12 @@ class UsersLoginResource(Resource):
             return 'Faltan contraseña y/o password', 400
         email = data['email']
         password = data['password']
-        id = UserDBModel.get_id(email, password)
-        if id == -1:
+        required_id = UserDBModel.get_id(email, password)
+        if required_id == -1:
             return 'Contraseña o e-mail incorrectos', 401
         response_object = {
             "email": email,
-            "id": id
+            "id": required_id
         }
         return response_object, 200
 

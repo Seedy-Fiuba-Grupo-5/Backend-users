@@ -7,7 +7,8 @@ api = Api(users_list_api)
 
 
 class UsersListResource(Resource):
-    def get(self):
+    @staticmethod
+    def get():
         response_object =\
             [user.serialize() for user in UserDBModel.query.all()]
         return response_object, 200
@@ -19,12 +20,12 @@ class UsersListResource(Resource):
         email = request.get_json()['email']
         password = request.get_json()['password']
         if UserDBModel.get_id(email, password) == -1:
-            return 'Contraseña o e-mail incorrectos', 204
+            return 'Email or password incorrect', 204
         return UserDBModel.get_id(), 200
 
     @staticmethod
-    def check_values(json, lista):
-        for value in lista:
+    def check_values(json, fields_list):
+        for value in fields_list:
             if value not in json:
                 return False
         return True
