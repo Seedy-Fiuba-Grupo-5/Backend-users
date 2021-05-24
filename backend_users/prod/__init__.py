@@ -34,13 +34,20 @@ def create_app(script_info=None):
 
 
 def import_blueprints(app):
+    # /users
     from .api.users_list_api import users_list_api
     app.register_blueprint(users_list_api)
-    from .api.index_api import index_api
-    app.register_blueprint(index_api)
+    
+    # /users/<user_id>
     from .api.one_user_api import one_user_api
     app.register_blueprint(one_user_api)
-    from .api.projects_from_user_api import users_list_projects_api
-    app.register_blueprint(users_list_projects_api)
+
+    # /users/login
     from .api.users_login_api import users_login_api
     app.register_blueprint(users_login_api)
+
+    # /users/projects/<user_id>
+    from .api.projects_from_user_api import users_list_projects_api
+    app.register_blueprint(users_list_projects_api)
+
+    
