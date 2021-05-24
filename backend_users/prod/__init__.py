@@ -19,6 +19,7 @@ def create_app(script_info=None):
     # Enlazar la base de datos
     db.init_app(app)
 
+    # Importar extensiones
     import_blueprints(app)
 
     return app
