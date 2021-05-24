@@ -21,15 +21,6 @@ def create_app(script_info=None):
 
     import_blueprints(app)
 
-    # Contexto de la 'shell' para flask cli
-    # Registra las instancias app y db en la 'shell'.
-    # Permite trabajar con el contexto de la aplicacion
-    # y la base de datos sin tener que importarlos
-    # directamente en la 'shell'
-    @app.shell_context_processor
-    def ctx():
-        return {"app": app, "db": db}
-
     return app
 
 
