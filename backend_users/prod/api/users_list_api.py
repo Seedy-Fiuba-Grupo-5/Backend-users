@@ -6,7 +6,7 @@ users_list_api = Blueprint("users_list_api", __name__)
 api = Api(users_list_api)
 
 REGISTER_FIELDS = ("name", "lastName", "email", "password")
-REPEATED_USER_ERROR = 'Ya existe un usuario registrado para el mail recibido'
+REPEATED_USER_ERROR = 'Insufficient information for User Login'
 
 
 class UsersListResource(Resource):
@@ -18,32 +18,24 @@ class UsersListResource(Resource):
     def post(self):
         data = request.get_json()
         if not self.check_values(data, REGISTER_FIELDS):
-            return 'Faltan campos en la solicitud', 400
+            return 'Missing values', 400
         name = data['name']
-        lastName = data['lastName']
+        lastname = data['lastName']
         email = data['email']
         password = data['password']
-        id = UserDBModel.add_user(name,
-                                  lastName,
-                                  email,
-                                  password)
-        if id == -1:
+        requested_id = UserDBModel.add_user(name,
+                                            lastname,
+                                            email,
+                                            password)
+        if requested_id == -1:
             return REPEATED_USER_ERROR, 401
         response_object = {
             "name": name,
-            "lastName": lastName,
+            "lastName": lastname,
             "email": email,
-            "id": id
+            "id": requested_id
         }
         return response_object, 201
-        json = request.get_json()
-        if not self.check_values(json, ["email", "password"]):
-            return 'insufficient information for User Login', 500
-        email = request.get_json()['email']
-        password = request.get_json()['password']
-        if UserDBModel.get_id(email, password) == -1:
-            return 'Email or password incorrect', 204
-        return UserDBModel.get_id(), 200
 
     @staticmethod
     def check_values(json, fields_list):

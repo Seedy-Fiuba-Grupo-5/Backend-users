@@ -11,7 +11,7 @@ class UserResource(Resource):
     def get(user_id):
         user = UserDBModel.query.get(user_id)
         if not user:
-            return 'Contraseña o e-mail incorrectos', 204
+            return 'Email or password incorrect', 204
         response_object = user.serialize()
         return response_object, 200
 
