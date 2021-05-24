@@ -47,22 +47,41 @@ def test_dada_una_db_con_usuario_de_id_1_get_a_url_users_barra_id_1_devuelve_a_e
     assert user['active'] == True
 
 
-def test_se_obtiene_solo_el_primer_usuario(test_app,
-                                           test_database):
-    session = test_database.session
-    session.remove()
-    test_database.drop_all()
-    test_database.create_all()
-    session.add(UserDBModel(name="Franco Martin",
-                            lastname="Di Maria",
-                            email="fdimaria@fi.uba.ar",
-                            password="hola"))
-    session.add(UserDBModel(name="Martin",
-                            lastname="Maria",
-                            email="fdimaria2@fi.uba.ar",
-                            password="hola"))
-    session.commit()
+def test_dada_una_db_con_dos_usuarios_de_ids_1_y_2_get_a_url_users_barra_id_1_y_barra_id_2_devuelve_a_cada_uno_de_ellos(
+    test_app,
+    test_database):
+    """
+    Dada una base de datos
+    Con 2 usuarios registrados con ids 1 y 2
+    Cuando GET "users/1"
+    Entonces obtengo el usuario de id = 1
+    Cuando GET "users/2"
+    Entonces obtengo el usuario de id = 2
+    """
+    session = recreate_db(test_database)
     client = test_app.test_client()
+    body_1 = {
+        "name": "Franco Martin",
+        "lastName": "Di Maria",
+        "email": "fdimaria@fi.uba.ar",
+        "password": "hola"
+    }
+    body_2 = {
+        "name": "Brian",
+        "lastName": "Zambelli Tello",
+        "email": "bzambelli@fi.uba.ar",
+        "password": "hola"
+    }
+    client.post(
+        "/users",
+        data=json.dumps(body_1),
+        content_type="application/json"
+    )
+    client.post(
+        "/users",
+        data=json.dumps(body_2),
+        content_type="application/json"
+    )
     response = client.get("/users/1")
     data = json.loads(response.data.decode())
     assert response is not None
@@ -70,10 +89,35 @@ def test_se_obtiene_solo_el_primer_usuario(test_app,
     assert len(data) == 5
     assert data["id"] == 1
     assert data["name"] == "Franco Martin"
+    assert data["lastName"] == "Di Maria"
+    assert data["email"] == "fdimaria@fi.uba.ar"
+    assert data["active"] == True
     response = client.get("/users/2")
     data = json.loads(response.data.decode())
     assert response is not None
     assert response.status_code == 200
     assert len(data) == 5
     assert data["id"] == 2
-    assert data["name"] == "Martin"
+    assert data["name"] == "Brian"
+    assert data["lastName"] == "Zambelli Tello"
+    assert data["email"] == "bzambelli@fi.uba.ar"
+    assert data["active"] == True
+
+
+def test_dada_una_db_vacia_get_a_url_users_barra_id_1_devuelve_un_error(
+    test_app,
+    test_database):
+    """
+    Dada una base de datos vacia
+    Cuando GET "users/1"
+    Entonces obtengo status 404
+    Y obtengo el cuerpo:
+        'This user does not exists'
+    """
+    session = recreate_db(test_database)
+    client = test_app.test_client()
+    response = client.get("/users/1")
+    assert response is not None
+    assert response.status_code == 404
+    error = json.loads(response.data.decode())
+    assert error == 'This user does not exists'
