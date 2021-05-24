@@ -10,12 +10,12 @@ class UsersLoginResource(Resource):
     def post(self):
         data = request.get_json()
         if not self.check_values(data, ["email", "password"]):
-            return 'Faltan contraseña y/o password', 400
+            return 'Missing arguments', 400
         email = data['email']
         password = data['password']
         required_id = UserDBModel.get_id(email, password)
         if required_id == -1:
-            return 'Contraseña o e-mail incorrectos', 401
+            return 'Email or password incorrect', 401
         response_object = {
             "email": email,
             "id": required_id
