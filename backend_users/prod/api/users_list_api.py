@@ -23,10 +23,10 @@ class UsersListResource(Resource):
         lastName = data['lastName']
         email = data['email']
         password = data['password']
-        id = UserDBModel.agregar_usuario(name,
-                                         lastName,
-                                         email,
-                                         password)
+        id = UserDBModel.add_user(name,
+                                  lastName,
+                                  email,
+                                  password)
         if id == -1:
             return REPEATED_USER_ERROR, 401
         response_object = {
