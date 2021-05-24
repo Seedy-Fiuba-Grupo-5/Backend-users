@@ -6,7 +6,7 @@ users_list_api = Blueprint("users_list_api", __name__)
 api = Api(users_list_api)
 
 REGISTER_FIELDS = ("name", "lastName", "email", "password")
-REPEATED_USER_ERROR = 'Insufficient information for User Login'
+REPEATED_USER_ERROR = 'User already registered'
 
 
 class UsersListResource(Resource):
