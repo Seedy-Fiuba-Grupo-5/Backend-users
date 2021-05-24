@@ -56,21 +56,21 @@ class UserDBModel(db.Model):
     # Devuelve el id asociado a la relacion e-mail--password
     # POST: Devuelve -1 Si no existe la relacion e-mail, password
     def get_id(email, password):
-        id_solicitado = UserDBModel.query.filter_by(email=email,
+        associated_id = UserDBModel.query.filter_by(email=email,
                                                     password=password)
-        if id_solicitado.count() == 0:
+        if associated_id.count() == 0:
             return -1
-        return id_solicitado.with_entities(UserDBModel.id)[0][0]
+        return associated_id.with_entities(UserDBModel.id)[0][0]
 
     @classmethod
-    def agregar_usuario(cls,
-                        name,
-                        lastName,
-                        email,
-                        password):
+    def add_user(cls,
+                 name,
+                 lastname,
+                 email,
+                 password):
         try:
             db.session.add(UserDBModel(name=name,
-                                       lastname=lastName,
+                                       lastname=lastname,
                                        email=email,
                                        password=password))
             db.session.commit()
@@ -103,11 +103,11 @@ class UserProjectDBModel(db.Model):
     # Funcion que devuelve el par id_usuario, id_proyecto.
     def serialize(self):
         return {
-            "id_usuario": self.user_id,
+            "user_id": self.user_id,
             "project_id": self.project_id
         }
 
     # Funcion para devolver todos los proyectos asociados a un usuario
     @staticmethod
-    def obtener_proyectos_asociados_a_un_usuario(id_usuario):
-        return UserProjectDBModel.query.filter_by(id_usuario=id_usuario)
+    def get_projects_associated_to_user_id(user_id):
+        return UserProjectDBModel.query.filter_by(id_usuario=user_id)
