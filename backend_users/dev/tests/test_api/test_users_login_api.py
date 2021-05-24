@@ -47,8 +47,8 @@ def test_dado_email_fdimaria_registrado_con_id_1_y_palabra_de_pase_tomate_cuando
 
 
 def test_dado_email_fdimaria_registrado_y_password_tomate_cuando_POST_a_url_users_barra_login_el_email_y_la_palabra_de_pase_manzana_obtengo_un_error_401(
-    test_app, 
-    test_database):
+        test_app,
+        test_database):
     """
     Dado una base de datos con un usuario registrado:
         name = "Franco Martin"
@@ -91,8 +91,8 @@ def test_dado_email_fdimaria_registrado_y_password_tomate_cuando_POST_a_url_user
 
 
 def test_dado_email_fdimaria_registrado_y_palabra_de_pase_tomate_cuando_POST_a_url_users_barra_login_email_fdimaria_obtengo_un_error(
-    test_app, 
-    test_database):
+        test_app,
+        test_database):
     """
     Dado una base de datos con un usuario registrado:
         name = "Franco Martin"

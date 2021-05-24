@@ -43,8 +43,8 @@ def test_db_vacia_post_users_name_franco_martin_last_name_di_maria_email_fdimari
 
 
 def test_db_con_mail_fdimaria_registrado_post_users_name_franco_martin_last_name_di_maria_email_fdimaria_password_tomate_entonces_obtengo_un_error(
-    test_app, 
-    test_database):
+        test_app,
+        test_database):
     """
     Dada una base de datos
     Y un usuario registrado:
@@ -88,8 +88,8 @@ def test_db_con_mail_fdimaria_registrado_post_users_name_franco_martin_last_name
 
 
 def test_db_vacia_post_url_users_datos_name_franco_martin_entonces_obtengo_un_error(
-    test_app, 
-    test_database):
+        test_app,
+        test_database):
     """
     Dada una base de datos vacia
     Y una peticion
@@ -113,8 +113,8 @@ def test_db_vacia_post_url_users_datos_name_franco_martin_entonces_obtengo_un_er
 
 
 def test_db_con_unico_usuario_name_Franco_Martin_last_name_Di_Maria_mail_fdimaria_password_hola_GET_users_debe_retornar_lo_anterior_con_id_1(
-    test_app, 
-    test_database):
+        test_app,
+        test_database):
     """
     Dada una base de datos
     Y un usuario registrado:
@@ -156,7 +156,7 @@ def test_db_con_unico_usuario_name_Franco_Martin_last_name_Di_Maria_mail_fdimari
 
 
 def test_db_con_usuario1_name_Franco_Martin_last_name_Di_Maria_email_fdimaria_password_hola_usuario2_name_Brian_last_name_Zambelli_Tello_email_bzambelli_password_hola_GET_users_debe_retornar_ambos_usuarios_con_ids_1_y_2(
-        test_app, 
+        test_app,
         test_database):
     """
     Dada una base de datos
