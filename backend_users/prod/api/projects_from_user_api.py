@@ -7,7 +7,8 @@ api = Api(users_list_projects_api)
 
 
 class UsersProjectListResource(Resource):
-    def get(self, user_id):
+    @staticmethod
+    def get(user_id):
         user = UserProjectDBModel.query.filter(UserProjectDBModel.user_id ==
                                                user_id)
         if not user:

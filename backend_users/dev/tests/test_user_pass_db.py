@@ -1,9 +1,9 @@
 from prod.db_models.user_db_model import UserDBModel
 
 
-def test_devuelve_true_cuando_la_relacion_usuario_pass_es_correcta(test_app,
-                                                                   test_database
-                                                                   ):
+def test_get_id_only_when_pass_and_user_is_correct(test_app,
+                                                   test_database
+                                                   ):
     session = test_database.session
     session.remove()
     test_database.drop_all()

@@ -44,7 +44,7 @@ def test_dado_email_fdimaria_registrado_y_palabra_de_pase_tomate_cuando_POST_a_u
     )
     assert response.status_code == 401
     error = json.loads(response.data.decode())
-    assert error == 'Contraseña o e-mail incorrectos'
+    assert error == 'Email or password incorrect'
 
 
 def test_dado_email_fdimaria_registrado_y_palabra_de_pase_tomate_cuando_POST_a_url_users_barra_login_email_fdimaria_obtengo_un_error(test_app, test_database):
@@ -63,4 +63,4 @@ def test_dado_email_fdimaria_registrado_y_palabra_de_pase_tomate_cuando_POST_a_u
     )
     assert response.status_code == 400
     error = json.loads(response.data.decode())
-    assert error == 'Faltan contraseña y/o password'
+    assert error == 'Missing arguments'

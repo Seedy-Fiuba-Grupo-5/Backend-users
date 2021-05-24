@@ -6,7 +6,8 @@ api = Api(index_api)
 
 
 class IndexResource(Resource):
-    def get(self):
+    @staticmethod
+    def get():
         response_object = {
             "GET /users":   "status_code 200 =>" +
                             "[{id: <integer>, " +

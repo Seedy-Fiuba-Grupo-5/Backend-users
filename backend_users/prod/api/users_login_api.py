@@ -23,8 +23,8 @@ class UsersLoginResource(Resource):
         return response_object, 200
 
     @staticmethod
-    def check_values(json, lista):
-        for value in lista:
+    def check_values(json, field_list):
+        for value in field_list:
             if value not in json:
                 return False
         return True

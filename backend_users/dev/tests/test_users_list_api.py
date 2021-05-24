@@ -3,7 +3,8 @@ from prod.db_models.user_db_model import UserDBModel
 from dev.aux_test import recreate_db
 
 
-def test_db_has_the_only_user_name_Franco_Martin_last_name_Di_Maria_and_fiuba_mail_fdimaria_GET_users_should_return_json_with_that_with_id_1(test_app, test_database):
+def test_db_has_the_only_user_name_Franco_Martin_last_name_Di_Maria_and_fiuba_mail_fdimaria_GET_users_should_return_json_with_that_with_id_1(
+        test_app, test_database):
     session = test_database.session
     session.remove()
     test_database.drop_all()
@@ -25,7 +26,8 @@ def test_db_has_the_only_user_name_Franco_Martin_last_name_Di_Maria_and_fiuba_ma
     assert user["email"] == "fdimaria@fi.uba.ar"
 
 
-def test_db_has_the_users_user1_name_Franco_Martin_last_name_Di_Maria_and_fiuba_mail_fdimaria_user2_name_Brian_last_name_Zambelli_Tello_and_fiuba_mail_bzambelli_GET_users_should_return_json_with_that_ids_1_2(test_app, test_database):
+def test_db_has_the_users_user1_name_Franco_Martin_last_name_Di_Maria_and_fiuba_mail_fdimaria_user2_name_Brian_last_name_Zambelli_Tello_and_fiuba_mail_bzambelli_GET_users_should_return_json_with_that_ids_1_2(
+        test_app, test_database):
     session = test_database.session
     session.remove()
     test_database.drop_all()
@@ -55,7 +57,10 @@ def test_db_has_the_users_user1_name_Franco_Martin_last_name_Di_Maria_and_fiuba_
     assert user_brian["lastName"] == "Zambelli Tello"
     assert user_brian["email"] == "bzambelli@fi.uba.ar"
 
-def test_db_vacia_post_users_name_franco_martin_last_name_di_maria_email_fdimaria_password_tomate_entonces_registra_nuevo_usuario_con_id_1(test_app, test_database):
+
+def test_db_vacia_post_users_name_franco_martin_last_name_di_maria_email_fdimaria_password_tomate_entonces_registra_nuevo_usuario_con_id_1(
+        test_app,
+        test_database):
     session = recreate_db(test_database)
     client = test_app.test_client()
     body = {

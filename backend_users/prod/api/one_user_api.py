@@ -7,7 +7,8 @@ api = Api(one_user_api)
 
 
 class UserResource(Resource):
-    def get(self, user_id):
+    @staticmethod
+    def get(user_id):
         user = UserDBModel.query.get(user_id)
         if not user:
             return 'Contraseña o e-mail incorrectos', 204

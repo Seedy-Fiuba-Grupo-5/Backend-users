@@ -1,8 +1,7 @@
 from prod.db_models.user_db_model import UserDBModel
-from dev.aux_test import recreate_db
 
 
-def test_se_devuelve_un_menos_uno_cuando_se_quiere_registrar_un_mail_ya_usado(
+def test_get_minus_one_when_register_user_twice(
         test_app,
         test_database
 ):
