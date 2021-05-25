@@ -1,4 +1,4 @@
-from flask import Blueprint  # , request
+from flask import Blueprint
 from flask_restful import Api, Resource
 from prod.db_models.user_db_model import UserDBModel
 
@@ -7,12 +7,10 @@ api = Api(one_user_api)
 
 
 class UserResource(Resource):
-
-    @staticmethod
-    def get(user_id):
+    def get(self, user_id):
         user = UserDBModel.query.get(user_id)
         if not user:
-            return 'Contraseña o e-mail incorrectos', 204
+            return 'This user does not exists', 404
         response_object = user.serialize()
         return response_object, 200
 

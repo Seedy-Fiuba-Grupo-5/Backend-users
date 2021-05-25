@@ -1,5 +1,6 @@
 from prod import db
 from sqlalchemy import Column, Integer
+from sqlalchemy import exc
 
 
 # Clase representativa del schema que almacena a cada uno de los
@@ -51,20 +52,32 @@ class UserDBModel(db.Model):
             "active": self.active
         }
 
-    # Funcion para verificar si la combinacion usuario-password existe.
-    # POST: Devuelve True si es asi. False en caso contrario.
     @staticmethod
-    def comprobar_relacion_usuario_pass(email,
-                                        password):
-        db = UserDBModel.query.filter_by(email=email,
-                                         password=password)
-        return db.count() != 0
-
-    @staticmethod
+    # Devuelve el id asociado a la relacion e-mail--password
+    # POST: Devuelve -1 Si no existe la relacion e-mail, password
     def get_id(email, password):
-        id_solicitado = UserDBModel.query.filter_by(email=email,
+        associated_id = UserDBModel.query.filter_by(email=email,
                                                     password=password)
-        return id_solicitado.with_entities(UserDBModel.id)
+        if associated_id.count() == 0:
+            return -1
+        return associated_id.with_entities(UserDBModel.id)[0][0]
+
+    @classmethod
+    def add_user(cls,
+                 name,
+                 lastname,
+                 email,
+                 password):
+        try:
+            db.session.add(UserDBModel(name=name,
+                                       lastname=lastname,
+                                       email=email,
+                                       password=password))
+            db.session.commit()
+            return UserDBModel.get_id(email,
+                                      password)
+        except exc.IntegrityError:
+            return -1
 
 
 # Clase representativa del schema que almacena a cada uno de los
@@ -90,11 +103,11 @@ class UserProjectDBModel(db.Model):
     # Funcion que devuelve el par id_usuario, id_proyecto.
     def serialize(self):
         return {
-            "id_usuario": self.user_id,
+            "user_id": self.user_id,
             "project_id": self.project_id
         }
 
     # Funcion para devolver todos los proyectos asociados a un usuario
     @staticmethod
-    def obtener_proyectos_asociados_a_un_usuario(id_usuario):
-        return UserProjectDBModel.query.filter_by(id_usuario=id_usuario)
+    def get_projects_associated_to_user_id(user_id):
+        return UserProjectDBModel.query.filter_by(user_id=user_id)

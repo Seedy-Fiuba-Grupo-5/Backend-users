@@ -19,26 +19,25 @@ def create_app(script_info=None):
     # Enlazar la base de datos
     db.init_app(app)
 
+    # Importar extensiones
     import_blueprints(app)
-
-    # Contexto de la 'shell' para flask cli
-    # Registra las instancias app y db en la 'shell'.
-    # Permite trabajar con el contexto de la aplicacion
-    # y la base de datos sin tener que importarlos
-    # directamente en la 'shell'
-    @app.shell_context_processor
-    def ctx():
-        return {"app": app, "db": db}
 
     return app
 
 
 def import_blueprints(app):
+    # /users
     from .api.users_list_api import users_list_api
     app.register_blueprint(users_list_api)
-    from .api.index_api import index_api
-    app.register_blueprint(index_api)
+
+    # /users/<user_id>
     from .api.one_user_api import one_user_api
     app.register_blueprint(one_user_api)
-    from .api.projects_from_user_api import users_list_projects_api
-    app.register_blueprint(users_list_projects_api)
+
+    # /users/login
+    from .api.users_login_api import users_login_api
+    app.register_blueprint(users_login_api)
+
+    # /users/projects/<user_id>
+    from .api.users_projects_list_api import users_projects_list_api
+    app.register_blueprint(users_projects_list_api)
