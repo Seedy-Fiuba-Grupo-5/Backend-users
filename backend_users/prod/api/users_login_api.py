@@ -1,0 +1,33 @@
+from flask import Blueprint, request
+from flask_restful import Api, Resource
+from prod.db_models.user_db_model import UserDBModel
+
+users_login_api = Blueprint("users_login_api", __name__)
+api = Api(users_login_api)
+
+
+class UsersLoginResource(Resource):
+    def post(self):
+        data = request.get_json()
+        if not self.check_values(data, ["email", "password"]):
+            return 'Missing arguments', 400
+        email = data['email']
+        password = data['password']
+        required_id = UserDBModel.get_id(email, password)
+        if required_id == -1:
+            return 'Email or password incorrect', 401
+        response_object = {
+            "email": email,
+            "id": required_id
+        }
+        return response_object, 200
+
+    @staticmethod
+    def check_values(json, field_list):
+        for value in field_list:
+            if value not in json:
+                return False
+        return True
+
+
+api.add_resource(UsersLoginResource, "/users/login")

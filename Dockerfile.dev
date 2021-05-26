@@ -1,4 +1,4 @@
-# Dockerfile para produccion
+# Dockerfile para desarrollo
 
 # Imagen base de python 
 FROM python:3.8
@@ -9,6 +9,11 @@ WORKDIR /usr/src/app
 # Actualizar repositorios de apt
 RUN apt-get update
 
+# Instalar netcat para script de espera de postgres
+# Instalar netcat para poder esperar la inicializacion 
+# de la base de datos en el script run_test.sh
+RUN apt-get install -y netcat
+
 # Instalar cliente Postgres para poder esperar 
 # la inicializacion de la base de datos
 RUN apt-get -y install postgresql-client
@@ -16,10 +21,9 @@ RUN apt-get -y install postgresql-client
 # Instalar dependencias
 RUN pip install --upgrade pip
 COPY ./requirements-prod.txt /usr/src/app/requirements-prod.txt
+COPY ./requirements-dev.txt /usr/src/app/requirements-dev.txt
 RUN pip install -Ur requirements-prod.txt
-
-# Copiar archivos de produccion
-COPY /backend_users/prod /usr/src/app/backend_users/prod
+RUN pip install -Ur requirements-dev.txt
 
 # Indica al inteprete de Python que no genere archivos .pyc
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -28,15 +32,15 @@ ENV PYTHONDONTWRITEBYTECODE 1
 # a la terminal, sin esperar en un buffer intermedio.
 ENV PYTHONUNBUFFERED 1
 
-# Indica a Flask que estamos en un ambiente de produccion
-ENV FLASK_ENV=production
+# Indica a Flask que estamos en un ambiente de desarrallo
+ENV FLASK_ENV=development
 
 # Indica a Flask en que modulo se encuetra la aplicacion
 ENV FLASK_APP=backend_users/prod/main
 
 # Indica a Flask en que modulo se encuetra la configuracion de 
 # la aplicacion
-ENV APP_SETTINGS=prod.config.ProductionConfig
+ENV APP_SETTINGS=dev.config_app.DevelopmentConfig
 
-# Ejecutar el script entrypoint.sh
-ENTRYPOINT ["sh", "/usr/src/app/backend_users/prod/entrypoint.sh"] 
+# Copiar archivos de produccion y desarrollo
+COPY /backend_users/ /usr/src/app/backend_users/

@@ -1,2 +1,5 @@
 [run]
-omit = backend_users/tests/*
+omit = 
+        backend_users/tests/*,
+        backend_users/prod/main.py
+

@@ -1,11 +1,9 @@
-name: Develop
+name: Features
 
 on:
-  pull_request:
-    branches:
-      - develop
   push:
-    branches: 
+    branches-ignore: 
+      - main
       - develop
 
 jobs:
@@ -39,4 +37,3 @@ jobs:
     - name: Stopping web and database services
       run: |
         docker-compose stop
-
