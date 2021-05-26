@@ -6,23 +6,6 @@ FROM python:3.8
 # Directorio de trabajo
 WORKDIR /usr/src/app
 
-# Indica al inteprete de Python que no genere archivos .pyc
-ENV PYTHONDONTWRITEBYTECODE 1
-
-# Indica a Python que su salida estandar se envie directamente 
-# a la terminal, sin esperar en un buffer intermedio.
-ENV PYTHONUNBUFFERED 1
-
-# Indica a Flask que estamos en un ambiente de desarrallo
-ENV FLASK_ENV=development
-
-# Indica a Flask en que modulo se encuetra la aplicacion
-ENV FLASK_APP=backend_users/prod/manage
-
-# Indica a Flask en que modulo se encuetra la configuracion de 
-# la aplicacion
-ENV APP_SETTINGS=dev.config_app.DevelopmentConfig
-
 # Actualizar repositorios de apt
 RUN apt-get update
 
@@ -35,13 +18,29 @@ RUN apt-get install -y netcat
 # la inicializacion de la base de datos
 RUN apt-get -y install postgresql-client
 
-
 # Instalar dependencias
 RUN pip install --upgrade pip
 COPY ./requirements-prod.txt /usr/src/app/requirements-prod.txt
 COPY ./requirements-dev.txt /usr/src/app/requirements-dev.txt
 RUN pip install -Ur requirements-prod.txt
 RUN pip install -Ur requirements-dev.txt
+
+# Indica al inteprete de Python que no genere archivos .pyc
+ENV PYTHONDONTWRITEBYTECODE 1
+
+# Indica a Python que su salida estandar se envie directamente 
+# a la terminal, sin esperar en un buffer intermedio.
+ENV PYTHONUNBUFFERED 1
+
+# Indica a Flask que estamos en un ambiente de desarrallo
+ENV FLASK_ENV=development
+
+# Indica a Flask en que modulo se encuetra la aplicacion
+ENV FLASK_APP=backend_users/prod/main
+
+# Indica a Flask en que modulo se encuetra la configuracion de 
+# la aplicacion
+ENV APP_SETTINGS=dev.config_app.DevelopmentConfig
 
 # Copiar archivos de produccion y desarrollo
 COPY /backend_users/ /usr/src/app/backend_users/

@@ -1,3 +1,5 @@
 [run]
-omit = backend_users/tests/*,backend_users/prod/manage.py
+omit = 
+        backend_users/tests/*,
+        backend_users/prod/main.py
 
