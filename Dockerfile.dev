@@ -17,7 +17,7 @@ ENV PYTHONUNBUFFERED 1
 ENV FLASK_ENV=development
 
 # Indica a Flask en que modulo se encuetra la aplicacion
-ENV FLASK_APP=backend_users/prod/manage
+ENV FLASK_APP=backend_users/prod/main
 
 # Indica a Flask en que modulo se encuetra la configuracion de 
 # la aplicacion
