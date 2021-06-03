@@ -4,8 +4,8 @@ from dev.aux_test import recreate_db
 
 
 def test_dada_una_db_con_usuario_de_id_1_get_a_url_users_barra_id_1_devuelve_a_este_usuario(
-    test_app,
-    test_database):
+        test_app,
+        test_database):
     """
     Dada una base de datos
     Y un usuario registrado:
@@ -48,8 +48,8 @@ def test_dada_una_db_con_usuario_de_id_1_get_a_url_users_barra_id_1_devuelve_a_e
 
 
 def test_dada_una_db_con_dos_usuarios_de_ids_1_y_2_get_a_url_users_barra_id_1_y_barra_id_2_devuelve_a_cada_uno_de_ellos(
-    test_app,
-    test_database):
+        test_app,
+        test_database):
     """
     Dada una base de datos
     Con 2 usuarios registrados con ids 1 y 2
@@ -105,8 +105,8 @@ def test_dada_una_db_con_dos_usuarios_de_ids_1_y_2_get_a_url_users_barra_id_1_y_
 
 
 def test_dada_una_db_vacia_get_a_url_users_barra_id_1_devuelve_un_error(
-    test_app,
-    test_database):
+        test_app,
+        test_database):
     """
     Dada una base de datos vacia
     Cuando GET "users/1"

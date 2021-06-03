@@ -2,9 +2,10 @@ from prod.db_models.user_db_model import UserDBModel
 from dev.aux_test import recreate_db
 
 
+
 def test_userdbmodel_add_user_dos_veces_al_mismo_usuario_devuelve_menos_1(
-    test_app,
-    test_database):
+        test_app,
+        test_database):
     """
     Dada una base de datos vacia
     Invocar UserDBModel.add_user(<usuario 1>) => 1
@@ -20,8 +21,8 @@ def test_userdbmodel_add_user_dos_veces_al_mismo_usuario_devuelve_menos_1(
 
 
 def test_get_id_only_when_pass_and_user_is_correct(
-    test_app,
-    test_database):
+        test_app,
+        test_database):
     """
     Dada una base de datos
     Y un usuario registrado:
