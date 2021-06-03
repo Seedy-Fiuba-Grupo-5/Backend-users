@@ -5,6 +5,7 @@ import jwt
 from prod import db
 from sqlalchemy import Column, Integer
 from sqlalchemy import exc
+from prod.db_models.black_list_db import BlacklistToken
 
 
 # Clase representativa del schema que almacena a cada uno de los
