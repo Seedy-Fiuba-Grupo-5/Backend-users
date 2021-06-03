@@ -2,7 +2,6 @@ from prod.db_models.user_db_model import UserDBModel
 from dev.aux_test import recreate_db
 
 
-
 def test_userdbmodel_add_user_dos_veces_al_mismo_usuario_devuelve_menos_1(
         test_app,
         test_database):
