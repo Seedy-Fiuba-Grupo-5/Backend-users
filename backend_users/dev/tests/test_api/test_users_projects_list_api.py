@@ -2,9 +2,10 @@ import json
 from prod.db_models.user_db_model import UserProjectDBModel
 from dev.aux_test import recreate_db
 
+
 def test_get_a_url_user_barra_id_1_barra_projects_devuelve_proyectos_asociados_al_usuario_de_id_1(
-    test_app,
-    test_database):
+        test_app,
+        test_database):
     """
     Dado una base de datos
     Y un proyecto registrado:
@@ -17,8 +18,8 @@ def test_get_a_url_user_barra_id_1_barra_projects_devuelve_proyectos_asociados_a
         project_id = 1
     """
     session = recreate_db(test_database)
-    session.add(UserProjectDBModel( user_id=1,
-                                    project_id=1))
+    session.add(UserProjectDBModel(user_id=1,
+                                   project_id=1))
 
     session.commit()
     client = test_app.test_client()
@@ -33,8 +34,8 @@ def test_get_a_url_user_barra_id_1_barra_projects_devuelve_proyectos_asociados_a
 
 
 def test_get_a_url_user_barra_id_1_barra_projects_devuelve_proyectos_asociados_al_usuario_de_id_1(
-    test_app,
-    test_database):
+        test_app,
+        test_database):
     """
     Dado una base de datos vacia
     Cuando GET "/users/1/projects"

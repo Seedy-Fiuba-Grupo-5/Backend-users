@@ -85,8 +85,9 @@ class UserDBModel(db.Model):
 class UserProjectDBModel(db.Model):
     __tablename__ = "user_project"
 
-    user_id = Column(Integer,
-                     primary_key=True)
+    user_id = Column(   db.Integer,
+                        db.ForeignKey('users.id'),
+                        primary_key=True)
 
     project_id = db.Column(db.Integer,
                            primary_key=True)
@@ -112,12 +113,20 @@ class UserProjectDBModel(db.Model):
     def get_projects_associated_to_user_id(user_id):
         return UserProjectDBModel.query.filter_by(user_id=user_id)
 
+    @classmethod
+    def add_project_to_user_id(cls,
+                               user_id,
+                               project_id):
+        try:
+            db.session.add(UserProjectDBModel(user_id, project_id))
+            db.session.commit()
+            return True
+        except exc.IntegrityError:
+            return False
+
     @staticmethod
     def get_projects_of_user_id(user_id):
-        """
         projects_query = UserProjectDBModel.query.filter_by(user_id=user_id)
         id_projects_list =\
             [user_project.project_id for user_project in projects_query.all()]
         return id_projects_list
-        """
-        return []
