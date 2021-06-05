@@ -1,5 +1,4 @@
 import datetime
-
 import flask
 import jwt
 from prod import db
