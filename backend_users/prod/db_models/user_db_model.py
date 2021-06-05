@@ -108,11 +108,6 @@ class UserProjectDBModel(db.Model):
             "project_id": self.project_id
         }
 
-    # Funcion para devolver todos los proyectos asociados a un usuario
-    @staticmethod
-    def get_projects_associated_to_user_id(user_id):
-        return UserProjectDBModel.query.filter_by(user_id=user_id)
-
     @classmethod
     def add_project_to_user_id(cls,
                                user_id,
