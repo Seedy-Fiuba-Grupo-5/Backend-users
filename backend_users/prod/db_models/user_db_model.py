@@ -120,10 +120,9 @@ class UserProjectDBModel(db.Model):
         try:
             db.session.add(UserProjectDBModel(user_id, project_id))
             db.session.commit()
-            return True
         except exc.IntegrityError:
             db.session.rollback()
-            return False
+        return UserProjectDBModel.get_projects_of_user_id(user_id)
 
     @staticmethod
     def get_projects_of_user_id(user_id):
