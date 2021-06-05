@@ -122,6 +122,7 @@ class UserProjectDBModel(db.Model):
             db.session.commit()
         except exc.IntegrityError:
             db.session.rollback()
+            # TODO: Considerar levantar un execpcion.
         return UserProjectDBModel.get_projects_of_user_id(user_id)
 
     @staticmethod

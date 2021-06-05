@@ -26,6 +26,7 @@ class UsersProjectsListResource(Resource):
             "user_id": user_id,
             "project_id": id_projects_list
         }
+        # TODO: Considerar devolver errores
         return response_object, 201
 
 
