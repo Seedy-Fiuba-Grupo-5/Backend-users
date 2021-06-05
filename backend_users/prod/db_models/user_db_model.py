@@ -1,5 +1,5 @@
 from prod import db
-from sqlalchemy import Column, Integer
+from sqlalchemy import Column
 from sqlalchemy import exc
 
 
@@ -85,9 +85,9 @@ class UserDBModel(db.Model):
 class UserProjectDBModel(db.Model):
     __tablename__ = "user_project"
 
-    user_id = Column(   db.Integer,
-                        db.ForeignKey('users.id'),
-                        primary_key=True)
+    user_id = Column(db.Integer,
+                     db.ForeignKey('users.id'),
+                     primary_key=True)
 
     project_id = db.Column(db.Integer,
                            primary_key=True)

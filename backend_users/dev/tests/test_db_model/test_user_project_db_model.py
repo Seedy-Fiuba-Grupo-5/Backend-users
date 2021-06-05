@@ -44,6 +44,7 @@ def test_userprojectdbmodel_get_projects_of_user_id_devuelve_lista_de_ids_de_pro
     assert len(id_project_list) == 1
     assert id_project_list[0] == project_id
 
+
 def test_userprojectdbmodel_add_project_devuelve_false_cuando_el_usuario_no_existe(
         test_app,
         test_database):
