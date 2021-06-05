@@ -20,10 +20,10 @@ def test_get_a_url_user_barra_id_1_barra_projects_devuelve_proyectos_asociados_a
     }
     """
     session = recreate_db(test_database)
-    user_id = UserDBModel.add_user('un nombre', 
-                                'un apellido',
-                                'un email',
-                                'una password')
+    user_id = UserDBModel.add_user('un nombre',
+                                   'un apellido',
+                                   'un email',
+                                   'una password')
     UserProjectDBModel.add_project_to_user_id(user_id, 1)
     client = test_app.test_client()
     response = client.get("/users/{}/projects".format(user_id))
@@ -34,6 +34,7 @@ def test_get_a_url_user_barra_id_1_barra_projects_devuelve_proyectos_asociados_a
     id_projects_list = body['project_id']
     assert len(id_projects_list) == 1
     assert id_projects_list[0] == 1
+
 
 """
 def test_get_a_url_user_barra_id_1_barra_projects_devuelve_proyectos_asociados_al_usuario_de_id_1(

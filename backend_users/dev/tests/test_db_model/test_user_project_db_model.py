@@ -57,6 +57,7 @@ def test_userprojectdbmodel_add_project_devuelve_false_cuando_el_usuario_no_exis
     session = recreate_db(test_database)
     assert not UserProjectDBModel.add_project_to_user_id(11, 19)
 
+
 def test_userprojectdbmodel_add_project_devuelve_false_cuando_el_proyecto_ya_esta_asociado_a_este_usuario(
         test_app,
         test_database):

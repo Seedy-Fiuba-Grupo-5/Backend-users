@@ -13,7 +13,7 @@ class UsersProjectsListResource(Resource):
             UserProjectDBModel.get_projects_of_user_id(user_id)
         response_object = {
             "user_id": int(user_id),
-            "project_id": id_projects_list 
+            "project_id": id_projects_list
         }
         return response_object, 200
 
