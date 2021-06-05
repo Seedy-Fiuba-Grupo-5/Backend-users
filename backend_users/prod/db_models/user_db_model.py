@@ -122,6 +122,7 @@ class UserProjectDBModel(db.Model):
             db.session.commit()
             return True
         except exc.IntegrityError:
+            db.session.rollback()
             return False
 
     @staticmethod
