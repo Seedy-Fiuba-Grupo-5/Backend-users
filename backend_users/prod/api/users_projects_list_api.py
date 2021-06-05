@@ -9,10 +9,12 @@ api = Api(users_projects_list_api)
 
 class UsersProjectsListResource(Resource):
     def get(self, user_id):
-        projects_query =\
-            UserProjectDBModel.get_projects_associated_to_user_id(user_id)
-        response_object = \
-            [user_project.serialize() for user_project in projects_query.all()]
+        id_projects_list =\
+            UserProjectDBModel.get_projects_of_user_id(user_id)
+        response_object = {
+            "user_id": int(user_id),
+            "project_id": id_projects_list 
+        }
         return response_object, 200
 
     def post(self, user_id):
