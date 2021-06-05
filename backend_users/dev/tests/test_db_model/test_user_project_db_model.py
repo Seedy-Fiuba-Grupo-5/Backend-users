@@ -1,6 +1,19 @@
 from prod.db_models.user_db_model import UserDBModel, UserProjectDBModel
 from dev.aux_test import recreate_db
 
+def test_userprojectdbmodel_get_projects_of_user_id_devuelve_lista_vacia_cuando_el_usuario_no_existe(
+        test_app,
+        test_database):
+    """
+    Dada una base de datos vacia
+    Cuando invoco get_projects_of_user_id(<id usuario>)
+    Obtengo:
+        []
+    """
+    session = recreate_db(test_database)
+    id_project_list = UserProjectDBModel.get_projects_of_user_id(11)
+    assert len(id_project_list) == 0
+
 
 def test_userprojectdbmodel_get_projects_of_user_id_devuelve_lista_vacia_cuando_el_usuario_no_tiene_proyectos(
         test_app,

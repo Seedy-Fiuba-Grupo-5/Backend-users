@@ -36,21 +36,26 @@ def test_get_a_url_user_barra_id_1_barra_projects_devuelve_proyectos_asociados_a
     assert id_projects_list[0] == 1
 
 
-"""
-def test_get_a_url_user_barra_id_1_barra_projects_devuelve_proyectos_asociados_al_usuario_de_id_1(
+def test_get_a_url_user_barra_id_1_barra_projects_devuelve_el_usuario_sin_proyectos_cuando_el_usuario_no_existe(
         test_app,
         test_database):
-
-    # Dado una base de datos vacia
-    # Cuando GET "/users/1/projects"
-    # Entonces obtengo status 200
-    # Y obtengo 0 elementos
+    """
+    Dado una base de datos vacia
+    Cuando GET "/users/1/projects"
+    Entonces obtengo status 200
+    Y obtengo el cuerpo:
+    {
+        "user_id": 1,
+        "project_id" : []
+    }
+    """
     session = recreate_db(test_database)
     client = test_app.test_client()
-    response = client.get("/users/1/projects")
+    user_id = 1
+    response = client.get("/users/{}/projects".format(user_id))
     assert response is not None
     assert response.status_code == 200
     body = json.loads(response.data.decode())
-    
-    assert len(projects_list) == 0
-"""
+    assert body['user_id'] == user_id
+    id_projects_list = body['project_id']
+    assert len(id_projects_list) == 0
