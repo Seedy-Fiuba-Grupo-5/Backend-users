@@ -1,6 +1,7 @@
 from prod.db_models.user_db_model import UserDBModel, UserProjectDBModel
 from dev.aux_test import recreate_db
 
+
 def test_userprojectdbmodel_get_projects_of_user_id_devuelve_lista_vacia_cuando_el_usuario_no_existe(
         test_app,
         test_database):
@@ -52,7 +53,8 @@ def test_userprojectdbmodel_get_projects_of_user_id_devuelve_lista_de_ids_de_pro
                                    email="un email",
                                    password="una password")
     project_id = 19
-    id_projects_list = UserProjectDBModel.add_project_to_user_id(user_id, project_id)
+    id_projects_list = UserProjectDBModel.add_project_to_user_id(
+        user_id, project_id)
     assert len(id_projects_list) == 1
     assert id_projects_list[0] == project_id
     id_projects_list = UserProjectDBModel.get_projects_of_user_id(user_id)
@@ -90,10 +92,12 @@ def test_userprojectdbmodel_add_project_devuelve_lista_con_proyectos_cuando_el_p
                                    email="un email",
                                    password="una password")
     project_id = 19
-    id_projects_list = UserProjectDBModel.add_project_to_user_id(user_id, project_id)
+    id_projects_list = UserProjectDBModel.add_project_to_user_id(
+        user_id, project_id)
     assert len(id_projects_list) == 1
     assert id_projects_list[0] == project_id
-    id_projects_list = UserProjectDBModel.add_project_to_user_id(user_id, project_id)
+    id_projects_list = UserProjectDBModel.add_project_to_user_id(
+        user_id, project_id)
     assert len(id_projects_list) == 1
     assert id_projects_list[0] == project_id
     id_projects_list = UserProjectDBModel.get_projects_of_user_id(user_id)
