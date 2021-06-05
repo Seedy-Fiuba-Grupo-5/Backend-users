@@ -120,3 +120,10 @@ heroku ps:scale web=0 --app seedy-fiuba-backend-users
 ```
 heroku pg:psql --app seedy-fiuba-backend-users
 ```
+
+# Postgres 
+## Recontruir toda la base de datos
+```
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+```
