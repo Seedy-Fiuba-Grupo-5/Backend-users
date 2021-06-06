@@ -112,13 +112,12 @@ def test_dada_una_db_vacia_get_a_url_users_barra_id_1_devuelve_un_error(
     Cuando GET "users/1"
     Entonces obtengo status 404
     Y obtengo el cuerpo:
-        'This user does not exists'
+        {"status": 'This user does not exists'}
     """
     session = recreate_db(test_database)
     client = test_app.test_client()
     response = client.get("/users/1")
     assert response is not None
     assert response.status_code == 404
-    # TODO: Arreglar esto
-    # error = json.loads(response.data.decode())
-    # assert error == 'This user does not exists'
+    data = json.loads(response.data.decode())
+    assert data['status'] == 'This user does not exists'

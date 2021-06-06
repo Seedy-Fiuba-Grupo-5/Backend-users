@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask_restx import Api
 
 # Namespaces
-from .one_user_api import api as one_user_ns
+from .one_user_api import ns as one_user_ns
 
 api_bp = Blueprint('api', __name__)
 api = Api(
