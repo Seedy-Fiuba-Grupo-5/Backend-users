@@ -1,5 +1,5 @@
 from prod import db
-from sqlalchemy import Column, Integer
+from sqlalchemy import Column
 from sqlalchemy import exc
 
 
@@ -85,7 +85,8 @@ class UserDBModel(db.Model):
 class UserProjectDBModel(db.Model):
     __tablename__ = "user_project"
 
-    user_id = Column(Integer,
+    user_id = Column(db.Integer,
+                     db.ForeignKey('users.id'),
                      primary_key=True)
 
     project_id = db.Column(db.Integer,
@@ -107,7 +108,21 @@ class UserProjectDBModel(db.Model):
             "project_id": self.project_id
         }
 
-    # Funcion para devolver todos los proyectos asociados a un usuario
+    @classmethod
+    def add_project_to_user_id(cls,
+                               user_id,
+                               project_id):
+        try:
+            db.session.add(UserProjectDBModel(user_id, project_id))
+            db.session.commit()
+        except exc.IntegrityError:
+            db.session.rollback()
+            # TODO: Considerar levantar un execpcion.
+        return UserProjectDBModel.get_projects_of_user_id(user_id)
+
     @staticmethod
-    def get_projects_associated_to_user_id(user_id):
-        return UserProjectDBModel.query.filter_by(user_id=user_id)
+    def get_projects_of_user_id(user_id):
+        projects_query = UserProjectDBModel.query.filter_by(user_id=user_id)
+        id_projects_list =\
+            [user_project.project_id for user_project in projects_query.all()]
+        return id_projects_list
