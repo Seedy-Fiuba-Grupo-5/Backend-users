@@ -26,5 +26,8 @@ def create_app(script_info=None):
 
 
 def import_blueprints(app):
-    from .api import api_bp
-    app.register_blueprint(api_bp)
+    from .api import api_base_bp
+    app.register_blueprint(api_base_bp)
+
+    from .api import api_v1_bp
+    app.register_blueprint(api_v1_bp)

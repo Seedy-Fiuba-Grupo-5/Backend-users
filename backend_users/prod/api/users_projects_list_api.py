@@ -3,9 +3,10 @@ from flask import request
 from prod.db_models.user_db_model import UserProjectDBModel
 
 ns = Namespace(
-    'users/<int:user_id>/projects', 
+    'users/<int:user_id>/projects',
     description="User's projects related operations"
 )
+
 
 @ns.route('')
 @ns.param('user_id', 'The user identifier')
@@ -21,7 +22,7 @@ class UsersProjectsListResource(Resource):
         'user_id': fields.Integer(description='The user id'),
         'project_id': fields.List(
             fields.Integer(description='One of the user projects id')
-        ) 
+        )
     })
 
     @ns.marshal_with(code_20x_swg, code=200)
@@ -39,7 +40,7 @@ class UsersProjectsListResource(Resource):
     def post(self, user_id):
         data = request.get_json()
         id_projects_list = UserProjectDBModel.add_project_to_user_id(
-                                data['user_id'], data['project_id'])
+            data['user_id'], data['project_id'])
         response_object = {
             "user_id": data['user_id'],
             "project_id": id_projects_list
