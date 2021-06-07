@@ -3,6 +3,7 @@ from flask_restx import Api
 
 # Namespaces
 from .one_user_api import ns as one_user_ns
+from .users_list_api import ns as users_list_ns
 
 api_bp = Blueprint('api', __name__)
 api = Api(
@@ -13,3 +14,4 @@ api = Api(
 )
 
 api.add_namespace(one_user_ns)
+api.add_namespace(users_list_ns)
