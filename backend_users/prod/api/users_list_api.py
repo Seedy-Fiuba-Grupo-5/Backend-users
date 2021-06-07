@@ -46,7 +46,7 @@ class UsersListResource(Resource):
         return response_object, 200
 
     @ns.expect(body_swg)
-    @ns.marshal_with(code_20x_swg, 201)
+    @ns.marshal_with(code_20x_swg, code=201)
     @ns.response(400, MISSING_VALUES_ERROR, code_400_swg)
     @ns.response(401, REPEATED_USER_ERROR, code_401_swg)
     def post(self):

@@ -24,7 +24,7 @@ class UserResource(Resource):
         'status': fields.String(example=USER_NOT_EXIST_ERROR)
     })
 
-    @ns.marshal_with(code_200_swg, 200)
+    @ns.marshal_with(code_200_swg, code=200)
     @ns.response(404, USER_NOT_EXIST_ERROR, code_404_swg)
     def get(self, user_id):
         '''Get user data'''
