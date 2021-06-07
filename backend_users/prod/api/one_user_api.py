@@ -9,9 +9,10 @@ ns = Namespace(
 
 @ns.route('')
 @ns.param('user_id', 'The user identifier')
-@ns.response(404, 'The user does not exists')
 class UserResource(Resource):
-    resp_model = ns.model('One user output', {
+    USER_NOT_EXIST_ERROR = 'This user does not exists'
+
+    code_200_swg = ns.model('One user output 200', {
         "id": fields.Integer(description='The user id'),
         "name": fields.String(description="The user name"),
         "lastName": fields.String(description="The user last name"),
@@ -19,11 +20,16 @@ class UserResource(Resource):
         "active": fields.Boolean(description="The user status")
     })
 
-    @ns.marshal_with(resp_model, 200)
+    code_404_swg = ns.model('One user output 404', {
+        'status': fields.String(example=USER_NOT_EXIST_ERROR)
+    })
+
+    @ns.marshal_with(code_200_swg, 200)
+    @ns.response(404, USER_NOT_EXIST_ERROR, code_404_swg)
     def get(self, user_id):
         '''Get user data'''
         user = UserDBModel.query.get(user_id)
         if not user:
-            ns.abort(404, status='This user does not exists')
+            ns.abort(404, status=self.USER_NOT_EXIST_ERROR)
         response_object = user.serialize()
         return response_object, 200

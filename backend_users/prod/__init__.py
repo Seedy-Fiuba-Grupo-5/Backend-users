@@ -26,10 +26,6 @@ def create_app(script_info=None):
 
 
 def import_blueprints(app):
-    # /users/login
-    from .api.users_login_api import users_login_api
-    app.register_blueprint(users_login_api)
-
     # /users/projects/<user_id>
     from .api.users_projects_list_api import users_projects_list_api
     app.register_blueprint(users_projects_list_api)
