@@ -1,9 +1,0 @@
-{
-  "info": {
-    "description": "sean",
-    "version": "1.0.0",
-    "title": "Backend User - API"
-  },
-  "swagger": "2.0",
-  "paths": {}
-}
