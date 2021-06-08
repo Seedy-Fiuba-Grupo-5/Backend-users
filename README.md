@@ -5,13 +5,6 @@
 [![Develop](https://github.com/Seedy-Fiuba-Grupo-5/Backend-users/actions/workflows/develop.yml/badge.svg?branch=develop)](https://github.com/Seedy-Fiuba-Grupo-5/Backend-users/actions/workflows/develop.yml)
 [![codecov](https://codecov.io/gh/Seedy-Fiuba-Grupo-5/Backend-users/branch/develop/graph/badge.svg)](https://codecov.io/gh/Seedy-Fiuba-Grupo-5/Backend-users/branch/develop)
 
-# Seedy Fiuba Backend-Users
-[![Main](https://github.com/Seedy-Fiuba-Grupo-5/Backend-users/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/Seedy-Fiuba-Grupo-5/Backend-users/actions/workflows/main.yml)
-[![codecov](https://codecov.io/gh/Seedy-Fiuba-Grupo-5/Backend-users/branch/main/graph/badge.svg)](https://codecov.io/gh/Seedy-Fiuba-Grupo-5/Backend-users/branch/main)
-
-[![Develop](https://github.com/Seedy-Fiuba-Grupo-5/Backend-users/actions/workflows/develop.yml/badge.svg?branch=develop)](https://github.com/Seedy-Fiuba-Grupo-5/Backend-users/actions/workflows/develop.yml)
-[![codecov](https://codecov.io/gh/Seedy-Fiuba-Grupo-5/Backend-users/branch/develop/graph/badge.svg)](https://codecov.io/gh/Seedy-Fiuba-Grupo-5/Backend-users/branch/develop)
-
 ## Tecnologias
 - Flask (framework del servicio web)
 - Postgres (base de datos)
@@ -119,11 +112,4 @@ heroku ps:scale web=0 --app seedy-fiuba-backend-users
 ## Postgres psql
 ```
 heroku pg:psql --app seedy-fiuba-backend-users
-```
-
-# Postgres 
-## Recontruir toda la base de datos
-```
-DROP SCHEMA public CASCADE;
-CREATE SCHEMA public;
 ```

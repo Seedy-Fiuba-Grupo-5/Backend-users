@@ -1,6 +1,10 @@
+import datetime
+import flask
+import jwt
 from prod import db
 from sqlalchemy import Column
 from sqlalchemy import exc
+from prod.db_models.black_list_db import BlacklistToken
 
 
 # Clase representativa del schema que almacena a cada uno de los
@@ -62,6 +66,10 @@ class UserDBModel(db.Model):
             return -1
         return associated_id.with_entities(UserDBModel.id)[0][0]
 
+    @staticmethod
+    def check_id(associated_id):
+        return UserDBModel.query.filter_by(id=associated_id).count() == 0
+
     @classmethod
     def add_user(cls,
                  name,
@@ -78,6 +86,48 @@ class UserDBModel(db.Model):
                                       password)
         except exc.IntegrityError:
             return -1
+
+    @staticmethod
+    def encode_auth_token(user_id):
+        """
+        Generates the Auth Token
+        :return: string
+        """
+        try:
+            payload = {
+                'exp': datetime.datetime.utcnow() +
+                datetime.timedelta(days=0,
+                                   seconds=5),
+                'iat': datetime.datetime.utcnow(),
+                'sub': user_id
+            }
+            return jwt.encode(
+                payload,
+                flask.current_app.config.get('SECRET_KEY'),
+                algorithm='HS256'
+            )
+        except Exception as e:
+            return e
+
+    @staticmethod
+    def decode_auth_token(auth_token):
+        """
+        Validates the auth token
+        :param auth_token:
+        :return: integer|string
+        """
+        try:
+            payload = jwt.decode(auth_token, flask.current_app.config.get(
+                'SECRET_KEY'))
+            is_blacklisted_token = BlacklistToken.check_blacklist(auth_token)
+            if is_blacklisted_token:
+                return 'Token blacklisted. Please log in again.'
+            else:
+                return payload['sub']
+        except jwt.ExpiredSignatureError:
+            return 'Signature expired. Please log in again.'
+        except jwt.InvalidTokenError:
+            return 'Invalid token. Please log in again.'
 
 
 # Clase representativa del schema que almacena a cada uno de los
