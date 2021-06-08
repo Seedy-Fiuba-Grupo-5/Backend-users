@@ -1,13 +1,17 @@
 from flask import Blueprint, request
 from flask_restful import Api, Resource
+from flask_restx import Namespace, Resource, fields
 from prod.db_models.user_db_model import UserDBModel
 
 REGISTER_FIELDS = ["token"]
+ns = Namespace(
+    'users/auth',
+    description='One user authentication related operation'
+)
 
-auth_api = Blueprint("auth_api", __name__)
-api = Api(auth_api)
 
-
+@ns.route('')
+@ns.param('user_id', 'The user identifier')
 class AuthenticationResource(Resource):
     def get(self):
         data = request.get_json()
