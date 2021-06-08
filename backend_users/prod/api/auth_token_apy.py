@@ -1,7 +1,6 @@
-from flask import Blueprint, request
-from flask_restful import Api, Resource
-from flask_restx import Namespace, Resource, fields
+from flask_restx import Namespace, Resource
 from prod.db_models.user_db_model import UserDBModel
+from flask import request
 
 REGISTER_FIELDS = ["token"]
 ns = Namespace(
@@ -30,6 +29,3 @@ class AuthenticationResource(Resource):
             if value not in json:
                 return False
         return True
-
-
-api.add_resource(AuthenticationResource, "/users/auth")
