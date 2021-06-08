@@ -66,6 +66,10 @@ class UserDBModel(db.Model):
             return -1
         return associated_id.with_entities(UserDBModel.id)[0][0]
 
+    @staticmethod
+    def check_id(associated_id):
+        return UserDBModel.query.filter_by(id=associated_id).count() == 0
+
     @classmethod
     def add_user(cls,
                  name,
