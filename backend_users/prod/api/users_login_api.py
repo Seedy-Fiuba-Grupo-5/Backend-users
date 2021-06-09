@@ -35,7 +35,8 @@ class UsersLoginResource(Resource):
     })
 
     code_400_swg = ns.model('LoginOutput400', {
-        'status': fields.String(example=MISSING_ARGS_ERROR)
+        'status': fields.String(example=MISSING_ARGS_ERROR),
+        'missing_args': fields.List(fields.String())
     })
 
     code_401_swg = ns.model('LoginOutput401', {
@@ -48,7 +49,7 @@ class UsersLoginResource(Resource):
 
     @ns.expect(body_swg)
     @ns.response(200, 'Success', code_200_swg)
-    @ns.response(400, 'Missing parameters', code_400_swg)
+    @ns.response(400, 'Missing arguments', code_400_swg)
     @ns.response(401, 'Wrong password', code_401_swg)
     @ns.response(404, 'User not found', code_404_swg)
     def post(self):
