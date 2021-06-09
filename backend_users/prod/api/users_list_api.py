@@ -13,8 +13,8 @@ ns = Namespace(
 @ns.route('')
 class UsersListResource(BaseResource):
     REGISTER_FIELDS = ("name", "lastName", "email", "password")
-    MISSING_VALUES_ERROR = 'Missing values'
-    REPEATED_USER_ERROR = 'repeated_user'
+    MISSING_VALUES_ERROR = 'missing_args'
+    REPEATED_USER_ERROR = 'repeated_email'
 
     code_status = {
         RepeatedEmailError: (409, REPEATED_USER_ERROR)
@@ -61,7 +61,8 @@ class UsersListResource(BaseResource):
             data = request.get_json()
             missing_args = self.missing_values(data, self.REGISTER_FIELDS)
             if missing_args != []:
-                ns.abort(400, status=self.MISSING_VALUES_ERROR)
+                ns.abort(400, status=self.MISSING_VALUES_ERROR,
+                         missing_args=missing_args)
             id = UserDBModel.add_user(data['name'],
                                       data['lastName'],
                                       data['email'],

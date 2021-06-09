@@ -2,9 +2,7 @@ from flask import request
 from flask_restx import Namespace, fields
 from prod.api.base_resource import BaseResource
 from prod.db_models.user_db_model import UserDBModel
-from prod.exceptions.business_error import BusinessError
-from prod.printers.error_printer import ErrorPrinter
-from prod.printers.error_printer import REPEATED_EMAIL_ERROR
+from prod.exceptions import BusinessError, RepeatedEmailError
 
 ns = Namespace(
     'users/<int:user_id>',
@@ -15,7 +13,12 @@ ns = Namespace(
 @ns.route('')
 @ns.param('user_id', 'The user identifier')
 class UserResource(BaseResource):
-    USER_NOT_EXIST_ERROR = 'This user does not exists'
+    USER_NOT_FOUND_ERROR = 'user_not_found'
+    REPEATED_EMAIL_ERROR = 'repeated_email'
+
+    code_status = {
+        RepeatedEmailError: (409, 'repeated_email')
+    }
 
     body_swg = ns.model('NotRequiredUserInput', {
         "name": fields.String(description="The user new name"),
@@ -33,7 +36,7 @@ class UserResource(BaseResource):
     })
 
     code_404_swg = ns.model('UserOutput404', {
-        'status': fields.String(example=USER_NOT_EXIST_ERROR)
+        'status': fields.String(example=USER_NOT_FOUND_ERROR)
     })
 
     code_409_swg = ns.model('UserOutput409', {
@@ -41,25 +44,25 @@ class UserResource(BaseResource):
     })
 
     @ns.response(200, 'Success', code_200_swg)
-    @ns.response(404, USER_NOT_EXIST_ERROR, code_404_swg)
+    @ns.response(404, USER_NOT_FOUND_ERROR, code_404_swg)
     def get(self, user_id):
         """Get user data"""
         user = UserDBModel.query.get(user_id)
         if not user:
-            ns.abort(404, status=self.USER_NOT_EXIST_ERROR)
+            ns.abort(404, status=self.USER_NOT_FOUND_ERROR)
         response_object = user.serialize()
         return response_object, 200
 
     @ns.expect(body_swg)
     @ns.response(200, 'Success', code_200_swg)
-    @ns.response(404, USER_NOT_EXIST_ERROR, code_404_swg)
+    @ns.response(404, USER_NOT_FOUND_ERROR, code_404_swg)
     @ns.response(409, REPEATED_EMAIL_ERROR, code_409_swg)
     def patch(self, user_id):
         '''Update user data'''
         try:
             user = UserDBModel.query.get(user_id)
             if not user:
-                ns.abort(404, status=self.USER_NOT_EXIST_ERROR)
+                ns.abort(404, status=self.USER_NOT_FOUND_ERROR)
             json = request.get_json()
             user.update(
                 name=json.get('name', user.name),
@@ -71,5 +74,5 @@ class UserResource(BaseResource):
             response_object = user.serialize()
             return response_object, 200
         except BusinessError as e:
-            code, status = ErrorPrinter.print(e)
+            code, status = self.code_status[e.__class__]
             ns.abort(code, status=status)
