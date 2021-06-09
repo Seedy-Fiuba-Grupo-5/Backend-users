@@ -1,10 +1,11 @@
 import datetime
+
 import flask
 import jwt
 from prod import db
+from prod.db_models.black_list_db import BlacklistToken
 from sqlalchemy import Column
 from sqlalchemy import exc
-from prod.db_models.black_list_db import BlacklistToken
 
 # Excepciones
 from prod.exceptions.repeated_email_error import RepeatedEmailError
@@ -80,7 +81,7 @@ class UserDBModel(db.Model):
 
     @staticmethod
     def check_id(associated_id):
-        return UserDBModel.query.filter_by(id=associated_id).count() == 0
+        return UserDBModel.query.filter_by(id=associated_id).count() == 1
 
     @classmethod
     def add_user(cls,
@@ -105,21 +106,18 @@ class UserDBModel(db.Model):
         Generates the Auth Token
         :return: string
         """
-        try:
-            payload = {
-                'exp': datetime.datetime.utcnow() +
-                datetime.timedelta(days=0,
-                                   seconds=5),
-                'iat': datetime.datetime.utcnow(),
-                'sub': user_id
-            }
-            return jwt.encode(
-                payload,
-                flask.current_app.config.get('SECRET_KEY'),
-                algorithm='HS256'
-            )
-        except Exception as e:
-            return e
+        payload = {
+            'exp': datetime.datetime.utcnow() +
+            datetime.timedelta(days=0,
+                               seconds=5000),
+            'iat': datetime.datetime.utcnow(),
+            'sub': user_id
+        }
+        return jwt.encode(
+            payload,
+            flask.current_app.config.get('SECRET_KEY'),
+            algorithm='HS256'
+        ).decode("utf-8")
 
     @staticmethod
     def decode_auth_token(auth_token):
@@ -185,6 +183,6 @@ class UserProjectDBModel(db.Model):
     @staticmethod
     def get_projects_of_user_id(user_id):
         projects_query = UserProjectDBModel.query.filter_by(user_id=user_id)
-        id_projects_list =\
+        id_projects_list = \
             [user_project.project_id for user_project in projects_query.all()]
         return id_projects_list
