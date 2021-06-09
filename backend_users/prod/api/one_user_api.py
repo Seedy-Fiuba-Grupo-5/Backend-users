@@ -1,5 +1,6 @@
 from flask import request
-from flask_restx import Namespace, Resource, fields
+from flask_restx import Namespace, fields
+from prod.api.base_resource import BaseResource
 from prod.db_models.user_db_model import UserDBModel
 from prod.exceptions.business_error import BusinessError
 from prod.printers.error_printer import ErrorPrinter
@@ -13,7 +14,7 @@ ns = Namespace(
 
 @ns.route('')
 @ns.param('user_id', 'The user identifier')
-class UserResource(Resource):
+class UserResource(BaseResource):
     USER_NOT_EXIST_ERROR = 'This user does not exists'
 
     body_swg = ns.model('NotRequiredUserInput', {

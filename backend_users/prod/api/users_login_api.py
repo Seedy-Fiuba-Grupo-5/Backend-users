@@ -1,5 +1,6 @@
-from flask_restx import Namespace, Resource, fields
+from flask_restx import Namespace, fields
 from flask import request
+from prod.api.base_resource import BaseResource
 from prod.db_models.user_db_model import UserDBModel
 from prod.exceptions import BusinessError, UserNotFoundError,\
     WrongPasswordError
@@ -12,7 +13,7 @@ ns = Namespace(
 
 
 @ns.route('')
-class UsersLoginResource(Resource):
+class UsersLoginResource(BaseResource):
     REQUIRED_VALUES = ['email', 'password']
     MISSING_ARGS_ERROR = 'missing_args'
     USER_NOT_FOUND_ERROR = 'user_not_found'
@@ -65,11 +66,3 @@ class UsersLoginResource(Resource):
         except BusinessError as e:
             code, status = self.code_status[e.__class__]
             ns.abort(code, status=status)
-
-    @staticmethod
-    def missing_values(json, field_list):
-        missing_values = []
-        for value in field_list:
-            if value not in json:
-                missing_values.append(value)
-        return missing_values

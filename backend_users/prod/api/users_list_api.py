@@ -1,5 +1,6 @@
-from flask_restx import Namespace, Resource, fields
+from flask_restx import Namespace, fields
 from flask import request
+from prod.api.base_resource import BaseResource
 from prod.db_models.user_db_model import UserDBModel
 from prod.exceptions import BusinessError, RepeatedEmailError
 
@@ -10,7 +11,7 @@ ns = Namespace(
 
 
 @ns.route('')
-class UsersListResource(Resource):
+class UsersListResource(BaseResource):
     REGISTER_FIELDS = ("name", "lastName", "email", "password")
     MISSING_VALUES_ERROR = 'Missing values'
     REPEATED_USER_ERROR = 'repeated_user'
@@ -58,7 +59,8 @@ class UsersListResource(Resource):
         """Create a new user"""
         try:
             data = request.get_json()
-            if not self.check_values(data, self.REGISTER_FIELDS):
+            missing_args = self.missing_values(data, self.REGISTER_FIELDS)
+            if missing_args != []:
                 ns.abort(400, status=self.MISSING_VALUES_ERROR)
             id = UserDBModel.add_user(data['name'],
                                       data['lastName'],
@@ -70,10 +72,3 @@ class UsersListResource(Resource):
         except BusinessError as e:
             code, status = self.code_status[e.__class__]
             ns.abort(code, status=status)
-
-    @staticmethod
-    def check_values(json, fields_list):
-        for value in fields_list:
-            if value not in json:
-                return False
-        return True

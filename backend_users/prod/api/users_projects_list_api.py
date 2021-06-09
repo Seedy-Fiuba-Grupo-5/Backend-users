@@ -1,5 +1,6 @@
-from flask_restx import Namespace, Resource, fields
+from flask_restx import Namespace, fields
 from flask import request
+from prod.api.base_resource import BaseResource
 from prod.db_models.user_db_model import UserProjectDBModel
 
 ns = Namespace(
@@ -10,7 +11,7 @@ ns = Namespace(
 
 @ns.route('')
 @ns.param('user_id', 'The user identifier')
-class UsersProjectsListResource(Resource):
+class UsersProjectsListResource(BaseResource):
 
     body_swg = ns.model('User projects input', {
         'user_id': fields.Integer(required=True, description='The user id'),
