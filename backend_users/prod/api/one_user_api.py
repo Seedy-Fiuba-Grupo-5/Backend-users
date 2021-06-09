@@ -42,7 +42,7 @@ class UserResource(Resource):
     @ns.marshal_with(code_200_swg, code=200)
     @ns.response(404, USER_NOT_EXIST_ERROR, code_404_swg)
     def get(self, user_id):
-        '''Get user data'''
+        """Get user data"""
         user = UserDBModel.query.get(user_id)
         if not user:
             ns.abort(404, status=self.USER_NOT_EXIST_ERROR)
