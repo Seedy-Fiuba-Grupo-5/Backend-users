@@ -1,14 +1,12 @@
 import datetime
-
 import flask
 import jwt
 from prod import db
 from prod.db_models.black_list_db import BlacklistToken
 from sqlalchemy import Column
 from sqlalchemy import exc
-
-# Excepciones
-from prod.exceptions.repeated_email_error import RepeatedEmailError
+from prod.exceptions import RepeatedEmailError, UserNotFoundError,\
+    WrongPasswordError
 
 
 # Clase representativa del schema que almacena a cada uno de los
@@ -70,14 +68,13 @@ class UserDBModel(db.Model):
         }
 
     @staticmethod
-    # Devuelve el id asociado a la relacion e-mail--password
-    # POST: Devuelve -1 Si no existe la relacion e-mail, password
     def get_id(email, password):
-        associated_id = UserDBModel.query.filter_by(email=email,
-                                                    password=password)
-        if associated_id.count() == 0:
-            return -1
-        return associated_id.with_entities(UserDBModel.id)[0][0]
+        user_model = UserDBModel.query.filter_by(email=email).first()
+        if user_model is None:
+            raise UserNotFoundError
+        if password != user_model.password:
+            raise WrongPasswordError
+        return user_model.id
 
     @staticmethod
     def check_id(associated_id):
@@ -98,7 +95,8 @@ class UserDBModel(db.Model):
             return UserDBModel.get_id(email,
                                       password)
         except exc.IntegrityError:
-            return -1
+            db.session.rollback()
+            raise RepeatedEmailError
 
     @staticmethod
     def encode_auth_token(user_id):
@@ -177,7 +175,7 @@ class UserProjectDBModel(db.Model):
             db.session.commit()
         except exc.IntegrityError:
             db.session.rollback()
-            # TODO: Considerar levantar un execpcion.
+            # TODO: Considerar levantar un excepcion.
         return UserProjectDBModel.get_projects_of_user_id(user_id)
 
     @staticmethod

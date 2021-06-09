@@ -112,7 +112,7 @@ def test_dada_una_db_vacia_get_a_url_users_barra_id_1_devuelve_un_error(
     Cuando GET "users/1"
     Entonces obtengo status 404
     Y obtengo el cuerpo:
-        {"status": 'This user does not exists'}
+        {"status": 'user_not_found'}
     """
     session = recreate_db(test_database)
     client = test_app.test_client()
@@ -120,7 +120,7 @@ def test_dada_una_db_vacia_get_a_url_users_barra_id_1_devuelve_un_error(
     assert response is not None
     assert response.status_code == 404
     data = json.loads(response.data.decode())
-    assert data['status'] == 'This user does not exists'
+    assert data['status'] == 'user_not_found'
 
 
 def test_patch_user_con_nuevo_email_actualiza_solo_el_email(
