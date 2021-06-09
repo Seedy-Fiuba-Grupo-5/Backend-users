@@ -123,7 +123,7 @@ def test_dada_una_db_vacia_get_a_url_users_barra_id_1_devuelve_un_error(
     assert data['status'] == 'This user does not exists'
 
 
-def test_patch_user_con_nuevo_nombre_actualiza_solo_el_nombre(
+def test_patch_user_con_nuevo_email_actualiza_solo_el_email(
         test_app, test_database):
     """
     Dada una base de datos vacia.
@@ -131,15 +131,15 @@ def test_patch_user_con_nuevo_nombre_actualiza_solo_el_nombre(
         'id': <id>
         'name': 'a name'
         'lastName: 'a lastName'
-        'email': 'test@test.com
+        'email': 'test@test.com'
     Cuando patch 'users/<id>'
     Con cuerpo vacio
         'name' : 'another name'
      Entonces obtengo el cuerpo:
         'id': <id>
-        'name': 'another name'
+        'name': 'a name'
         'lastName: 'a lastName'
-        'email': 'test@test.com
+        'email': 'another@test.com'
     """
     session = recreate_db(test_database)
     old_profile = {'name': 'a name', 'lastName': 'a last name',
@@ -148,18 +148,19 @@ def test_patch_user_con_nuevo_nombre_actualiza_solo_el_nombre(
     post_resp = client.post("/users", json=old_profile)
     post_data = json.loads(post_resp.data.decode())
     user_id = post_data['id']
-    update_profile = {'name': 'another name'}
+    update_profile = {'email': 'another@test.com'}
     patch_resp = client.patch(
         "/users/{}".format(user_id),
         json=update_profile
     )
     assert patch_resp.status_code == 200
     patch_data = json.loads(patch_resp.data.decode())
-    assert patch_data['name'] == update_profile['name']
+    assert patch_data['email'] == update_profile['email']
     for field in old_profile.keys():
-        if field in ['name', 'password']:
+        if field in ['email', 'password']:
             continue
         assert patch_data[field] == old_profile[field]
+    assert patch_data['id'] == user_id
 
 
 def test_patch_nuevo_mail_pero_ya_existente_entonces_error(
