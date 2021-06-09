@@ -6,6 +6,7 @@ from .one_user_api import ns as one_user_ns
 from .users_list_api import ns as users_list_ns
 from .users_login_api import ns as users_login_ns
 from .users_projects_list_api import ns as users_projects_list_ns
+from .auth_token_apy import ns as auth_token_ns
 
 # Base Api
 
@@ -21,6 +22,7 @@ api_base.add_namespace(one_user_ns)
 api_base.add_namespace(users_list_ns)
 api_base.add_namespace(users_login_ns)
 api_base.add_namespace(users_projects_list_ns)
+api_base.add_namespace(auth_token_ns)
 
 # Api v1
 
@@ -38,3 +40,4 @@ api_v1.add_namespace(one_user_ns)
 api_v1.add_namespace(users_list_ns)
 api_v1.add_namespace(users_login_ns)
 api_v1.add_namespace(users_projects_list_ns)
+api_v1.add_namespace(auth_token_ns)
