@@ -37,7 +37,8 @@ class UsersListResource(BaseResource):
     })
 
     code_400_swg = ns.model('One user output 400', {
-        'status': fields.String(example=MISSING_VALUES_ERROR)
+        'status': fields.String(example=MISSING_VALUES_ERROR),
+        'missing_args': fields.List(fields.String())
     })
 
     code_409_swg = ns.model('UserOutput409', {

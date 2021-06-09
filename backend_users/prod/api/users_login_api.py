@@ -54,6 +54,7 @@ class UsersLoginResource(BaseResource):
     @ns.response(401, 'Wrong password', code_401_swg)
     @ns.response(404, 'User not found', code_404_swg)
     def post(self):
+        """Login"""
         try:
             data = request.get_json()
             missing_args = self.missing_values(data, self.REQUIRED_VALUES)

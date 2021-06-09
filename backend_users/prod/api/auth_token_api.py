@@ -16,20 +16,25 @@ class AuthenticationResource(BaseResource):
     VALID_TOKEN = 'valid_token'
     MISSING_ARGS_ERROR = 'missing_args'
     INVALID_TOKEN_ERROR = 'invalid_token'
-    code_200_swg = ns.model('AuthenticationResource output 200', {
+    body_swg = ns.model('AuthenticationResourceInput', {
+        'token': fields.String()
+    })
+    code_200_swg = ns.model('AuthenticationResourceOutput200', {
         "status": fields.String(example=VALID_TOKEN),
     })
-    code_400_swg = ns.model('AuthenticationResource output 400', {
+    code_400_swg = ns.model('AuthenticationResourceOutput400', {
         'status': fields.String(example=MISSING_ARGS_ERROR)
     })
-    code_401_swg = ns.model('AuthenticationResource output 401', {
+    code_401_swg = ns.model('AuthenticationResourceOutput401', {
         'status': fields.String(example=INVALID_TOKEN_ERROR)
     })
 
+    @ns.expect(body_swg)
     @ns.response(200, 'Success', code_200_swg)
     @ns.response(400, 'Missing arguments', code_400_swg)
     @ns.response(401, 'The token is invalid', code_401_swg)
     def post(self):
+        """Validate token"""
         data = request.get_json()
         missing_args = self.missing_values(data, self.REGISTER_FIELDS)
         if missing_args != []:
