@@ -6,7 +6,7 @@ from prod.db_models.black_list_db import BlacklistToken
 from sqlalchemy import Column
 from sqlalchemy import exc
 from prod.exceptions import RepeatedEmailError, UserNotFoundError,\
-                            WrongPasswordError
+    WrongPasswordError
 
 
 # Clase representativa del schema que almacena a cada uno de los

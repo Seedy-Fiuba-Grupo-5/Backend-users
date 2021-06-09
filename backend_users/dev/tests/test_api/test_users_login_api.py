@@ -148,7 +148,8 @@ def test_dado_email_fdimaria_registrado_y_palabra_de_pase_tomate_cuando_POST_a_u
     Cuando POST "/users/login"
     Entonces obtengo status 400
     Y obtengo cuerpo:
-        'Missing arguments'
+        "status" = 'missing_args'
+        "missing_args" = ['password']
     """
     session = recreate_db(test_database)
     client = test_app.test_client()
@@ -171,4 +172,6 @@ def test_dado_email_fdimaria_registrado_y_palabra_de_pase_tomate_cuando_POST_a_u
     )
     assert response.status_code == 400
     data = json.loads(response.data.decode())
-    assert data['status'] == 'Missing arguments'
+    assert data['status'] == 'missing_args'
+    assert 'email' not in data['missing_args']
+    assert 'password' in data['missing_args']
