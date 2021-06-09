@@ -59,7 +59,7 @@ class UsersLoginResource(Resource):
             if missing_args != []:
                 ns.abort(400, status=self.MISSING_ARGS_ERROR,
                          missing_args=missing_args)
-            id = UserDBModel.get_id_token(data['email'], data['password'])
+            id = UserDBModel.get_id(data['email'], data['password'])
             response_object = {"email": data['email'], "id": id}
             return response_object, 200
         except BusinessError as e:

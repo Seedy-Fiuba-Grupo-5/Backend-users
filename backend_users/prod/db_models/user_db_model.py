@@ -68,17 +68,7 @@ class UserDBModel(db.Model):
         }
 
     @staticmethod
-    # Devuelve el id asociado a la relacion e-mail--password
-    # POST: Devuelve -1 Si no existe la relacion e-mail, password
     def get_id(email, password):
-        associated_id = UserDBModel.query.filter_by(email=email,
-                                                    password=password)
-        if associated_id.count() == 0:
-            return -1
-        return associated_id.with_entities(UserDBModel.id)[0][0]
-
-    @staticmethod
-    def get_id_token(email, password):
         user_model = UserDBModel.query.filter_by(email=email).first()
         if user_model is None:
             raise UserNotFoundError
@@ -105,7 +95,8 @@ class UserDBModel(db.Model):
             return UserDBModel.get_id(email,
                                       password)
         except exc.IntegrityError:
-            return -1
+            db.session.rollback()
+            raise RepeatedEmailError
 
     @staticmethod
     def encode_auth_token(user_id):

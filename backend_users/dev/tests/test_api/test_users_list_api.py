@@ -82,9 +82,9 @@ def test_db_con_mail_fdimaria_registrado_post_users_name_franco_martin_last_name
         data=json.dumps(body),
         content_type="application/json",
     )
-    assert response.status_code == 401
+    assert response.status_code == 409
     data = json.loads(response.data.decode())
-    assert data["status"] == 'User already registered'
+    assert data["status"] == 'repeated_user'
 
 
 def test_db_vacia_post_url_users_datos_name_franco_martin_entonces_obtengo_un_error(

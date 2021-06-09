@@ -1,6 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from flask import request
 from prod.db_models.user_db_model import UserDBModel
+from prod.exceptions import BusinessError, RepeatedEmailError
 
 ns = Namespace(
     name='users',
@@ -12,7 +13,11 @@ ns = Namespace(
 class UsersListResource(Resource):
     REGISTER_FIELDS = ("name", "lastName", "email", "password")
     MISSING_VALUES_ERROR = 'Missing values'
-    REPEATED_USER_ERROR = 'User already registered'
+    REPEATED_USER_ERROR = 'repeated_user'
+
+    code_status = {
+        RepeatedEmailError: (409, REPEATED_USER_ERROR)
+    }
 
     body_swg = ns.model('One user input', {
         "name": fields.String(required=True, description="The user name"),
@@ -34,13 +39,13 @@ class UsersListResource(Resource):
         'status': fields.String(example=MISSING_VALUES_ERROR)
     })
 
-    code_401_swg = ns.model('One user output 401', {
+    code_409_swg = ns.model('UserOutput409', {
         'status': fields.String(example=REPEATED_USER_ERROR)
     })
 
     @ns.marshal_with(code_20x_swg, as_list=True, code=200)
     def get(self):
-        '''Get all users data'''
+        """Get all users data"""
         response_object =\
             [user.serialize() for user in UserDBModel.query.all()]
         return response_object, 200
@@ -48,20 +53,23 @@ class UsersListResource(Resource):
     @ns.expect(body_swg)
     @ns.marshal_with(code_20x_swg, code=201)
     @ns.response(400, MISSING_VALUES_ERROR, code_400_swg)
-    @ns.response(401, REPEATED_USER_ERROR, code_401_swg)
+    @ns.response(409, 'User already exists', code_409_swg)
     def post(self):
-        '''Create a new user'''
-        data = request.get_json()
-        if not self.check_values(data, self.REGISTER_FIELDS):
-            ns.abort(400, status=self.MISSING_VALUES_ERROR)
-        user_id = UserDBModel.add_user(data['name'],
-                                       data['lastName'],
-                                       data['email'],
-                                       data['password'])
-        if user_id == -1:
-            ns.abort(401, status=self.REPEATED_USER_ERROR)
-        response_object = UserDBModel.query.get(user_id)
-        return response_object, 201
+        """Create a new user"""
+        try:
+            data = request.get_json()
+            if not self.check_values(data, self.REGISTER_FIELDS):
+                ns.abort(400, status=self.MISSING_VALUES_ERROR)
+            id = UserDBModel.add_user(data['name'],
+                                      data['lastName'],
+                                      data['email'],
+                                      data['password'])
+            user_model = UserDBModel.query.get(id)
+            response_object = user_model.serialize()
+            return response_object, 201
+        except BusinessError as e:
+            code, status = self.code_status[e.__class__]
+            ns.abort(code, status=status)
 
     @staticmethod
     def check_values(json, fields_list):
