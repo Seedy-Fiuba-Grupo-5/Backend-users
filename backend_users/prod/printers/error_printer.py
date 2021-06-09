@@ -1,4 +1,5 @@
 from prod.exceptions.repeated_email_error import RepeatedEmailError
+REPEATED_EMAIL_ERROR = 'repeated_email'
 
 
 class ErrorPrinter:

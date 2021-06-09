@@ -3,6 +3,7 @@ from flask_restx import Namespace, Resource, fields
 from prod.db_models.user_db_model import UserDBModel
 from prod.exceptions.business_error import BusinessError
 from prod.printers.error_printer import ErrorPrinter
+from prod.printers.error_printer import REPEATED_EMAIL_ERROR
 
 ns = Namespace(
     'users/<int:user_id>',
@@ -19,7 +20,7 @@ class UserResource(Resource):
         "name": fields.String(description="The user new name"),
         "lastName": fields.String(description="The user new last name"),
         "email": fields.String(description="The user new email"),
-        "password": fields.Boolean(description="The user new password")
+        "password": fields.String(description="The user new password")
     })
 
     code_200_swg = ns.model('UserOutput200', {
@@ -32,6 +33,10 @@ class UserResource(Resource):
 
     code_404_swg = ns.model('UserOutput404', {
         'status': fields.String(example=USER_NOT_EXIST_ERROR)
+    })
+
+    code_409_swg = ns.model('UserOutput409', {
+        'status': fields.String(example=REPEATED_EMAIL_ERROR)
     })
 
     @ns.marshal_with(code_200_swg, code=200)
@@ -47,6 +52,7 @@ class UserResource(Resource):
     @ns.expect(body_swg)
     @ns.marshal_with(code_200_swg, code=200)
     @ns.response(404, USER_NOT_EXIST_ERROR, code_404_swg)
+    @ns.response(409, REPEATED_EMAIL_ERROR, code_409_swg)
     def patch(self, user_id):
         '''Update user data'''
         try:
