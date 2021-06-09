@@ -61,7 +61,7 @@ def test_dado_email_fdimaria_registrado_y_password_tomate_cuando_POST_a_url_user
     Cuando POST "/users/login"
     Entonces obtengo status 401
     Y obtengo cuerpo:
-        'Email or password incorrect'
+        {"status": 'wrong_password'}
     """
     session = recreate_db(test_database)
     client = test_app.test_client()
@@ -87,7 +87,7 @@ def test_dado_email_fdimaria_registrado_y_password_tomate_cuando_POST_a_url_user
     )
     assert response.status_code == 401
     data = json.loads(response.data.decode())
-    assert data['status'] == 'Email or password incorrect'
+    assert data['status'] == 'wrong_password'
 
 
 def test_dado_email_fdimaria_registrado_y_palabra_de_pase_tomate_cuando_POST_a_url_users_barra_login_email_fdimaria_obtengo_un_error(
