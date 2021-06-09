@@ -121,3 +121,42 @@ def test_dada_una_db_vacia_get_a_url_users_barra_id_1_devuelve_un_error(
     assert response.status_code == 404
     data = json.loads(response.data.decode())
     assert data['status'] == 'This user does not exists'
+
+
+def test_patch_user_con_cuerpo_vacio_no_actualiza_al_usuerio(
+    test_app, test_database):
+    """
+    Dada una base de datos vacia.
+    Y un usuario registrado:
+        'id': <id>
+        'name': 'a name'
+        'lastName: 'a lastName'
+        'email': 'test@test.com
+    Cuando patch 'users/<id>'
+    Con cuerpo vacio
+        'name' : 'another name'
+     Entonces obtengo el cuerpo:
+        'id': <id>
+        'name': 'another name'
+        'lastName: 'a lastName'
+        'email': 'test@test.com
+    """
+    session = recreate_db(test_database)
+    old_profile = {'name': 'a name', 'lastName': 'a last name', 
+                    'email': 'test@test.com', 'password' : 'a password'}
+    client = test_app.test_client()
+    post_resp = client.post("/users", json=old_profile)
+    post_data = json.loads(post_resp.data.decode())
+    user_id = post_data['id']
+    update_profile = {'name': 'another name'}
+    patch_resp = client.patch(
+        "/users/{}".format(user_id),
+        json=update_profile
+    )
+    assert patch_resp.status_code == 200
+    patch_data = json.loads(patch_resp.data.decode())
+    assert patch_data['name'] == update_profile['name']
+    for field in old_profile.keys():
+        if field in ['name', 'password']:
+            continue
+        assert patch_data[field] == old_profile[field]

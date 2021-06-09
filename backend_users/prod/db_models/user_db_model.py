@@ -42,6 +42,10 @@ class UserDBModel(db.Model):
         self.email = email
         self.password = password
 
+    def update(self, name, lastName, email, password):
+        self.__init__(name, lastName, email, password)
+        db.session.commit()
+
     # Funcion que devuelve los datos relevantes de un usuario, serializado
     def serialize(self):
         return {
