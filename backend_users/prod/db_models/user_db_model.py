@@ -1,16 +1,12 @@
 import datetime
-
 import flask
 import jwt
 from prod import db
 from prod.db_models.black_list_db import BlacklistToken
 from sqlalchemy import Column
 from sqlalchemy import exc
-
-# Excepciones
 from prod.exceptions import RepeatedEmailError, UserNotFoundError,\
                             WrongPasswordError
-#from prod.exceptions.repeated_email_error import RepeatedEmailError
 
 
 # Clase representativa del schema que almacena a cada uno de los
@@ -188,7 +184,7 @@ class UserProjectDBModel(db.Model):
             db.session.commit()
         except exc.IntegrityError:
             db.session.rollback()
-            # TODO: Considerar levantar un execpcion.
+            # TODO: Considerar levantar un excepcion.
         return UserProjectDBModel.get_projects_of_user_id(user_id)
 
     @staticmethod
