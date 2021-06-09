@@ -39,7 +39,7 @@ class UserResource(Resource):
         'status': fields.String(example=REPEATED_EMAIL_ERROR)
     })
 
-    @ns.marshal_with(code_200_swg, code=200)
+    @ns.response(200, 'Success', code_200_swg)
     @ns.response(404, USER_NOT_EXIST_ERROR, code_404_swg)
     def get(self, user_id):
         """Get user data"""
@@ -50,7 +50,7 @@ class UserResource(Resource):
         return response_object, 200
 
     @ns.expect(body_swg)
-    @ns.marshal_with(code_200_swg, code=200)
+    @ns.response(200, 'Success', code_200_swg)
     @ns.response(404, USER_NOT_EXIST_ERROR, code_404_swg)
     @ns.response(409, REPEATED_EMAIL_ERROR, code_409_swg)
     def patch(self, user_id):

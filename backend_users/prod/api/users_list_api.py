@@ -43,7 +43,7 @@ class UsersListResource(Resource):
         'status': fields.String(example=REPEATED_USER_ERROR)
     })
 
-    @ns.marshal_with(code_20x_swg, as_list=True, code=200)
+    @ns.response(200, 'Success', fields.List(fields.Nested(code_20x_swg)))
     def get(self):
         """Get all users data"""
         response_object =\
@@ -51,7 +51,7 @@ class UsersListResource(Resource):
         return response_object, 200
 
     @ns.expect(body_swg)
-    @ns.marshal_with(code_20x_swg, code=201)
+    @ns.response(201, 'Success', code_20x_swg)
     @ns.response(400, MISSING_VALUES_ERROR, code_400_swg)
     @ns.response(409, 'User already exists', code_409_swg)
     def post(self):

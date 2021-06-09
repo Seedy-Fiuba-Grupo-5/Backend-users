@@ -22,8 +22,8 @@ class AuthenticationResource(Resource):
         'status': fields.String(description='The token is invalid')
     })
 
-    @ns.marshal_with(code_200_swg, code=200)
-    @ns.response(400, 'Missing values', code_400_swg)
+    @ns.response(200, 'Success', code_200_swg)
+    @ns.response(400, 'Missing arguments', code_400_swg)
     @ns.response(401, 'The token is invalid', code_401_swg)
     def post(self):
         data = request.get_json()
