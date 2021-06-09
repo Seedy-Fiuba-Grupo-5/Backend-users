@@ -123,8 +123,8 @@ def test_dada_una_db_vacia_get_a_url_users_barra_id_1_devuelve_un_error(
     assert data['status'] == 'This user does not exists'
 
 
-def test_patch_user_con_cuerpo_vacio_no_actualiza_al_usuerio(
-    test_app, test_database):
+def test_patch_user_con_nuevo_nombre_actualiza_solo_el_nombre(
+        test_app, test_database):
     """
     Dada una base de datos vacia.
     Y un usuario registrado:
@@ -142,8 +142,8 @@ def test_patch_user_con_cuerpo_vacio_no_actualiza_al_usuerio(
         'email': 'test@test.com
     """
     session = recreate_db(test_database)
-    old_profile = {'name': 'a name', 'lastName': 'a last name', 
-                    'email': 'test@test.com', 'password' : 'a password'}
+    old_profile = {'name': 'a name', 'lastName': 'a last name',
+                   'email': 'test@test.com', 'password': 'a password'}
     client = test_app.test_client()
     post_resp = client.post("/users", json=old_profile)
     post_data = json.loads(post_resp.data.decode())
@@ -160,3 +160,52 @@ def test_patch_user_con_cuerpo_vacio_no_actualiza_al_usuerio(
         if field in ['name', 'password']:
             continue
         assert patch_data[field] == old_profile[field]
+
+
+def test_patch_nuevo_mail_pero_ya_existente_entonces_error(
+        test_app, test_database):
+    """
+    Dada una base de datos vacia.
+    Y un usuario registrado:
+        'id': <id>
+        'name': 'a name'
+        'lastName: 'a lastName'
+        'email': 'test@test.com
+    Cuando patch 'users/<id>'
+    Con cuerpo vacio
+        'name' : 'another name'
+     Entonces obtengo el cuerpo:
+        'id': <id>
+        'name': 'another name'
+        'lastName: 'a lastName'
+        'email': 'test@test.com
+    """
+    session = recreate_db(test_database)
+    repeated_mail = 'repeated@test.com'
+    other_profile = {'name': 'a name', 'lastName': 'a last name',
+                     'email': repeated_mail, 'password': 'a password'}
+    old_profile = {'name': 'a name', 'lastName': 'a last name',
+                   'email': 'test@test.com', 'password': 'a password'}
+    client = test_app.test_client()
+    other_resp = client.post("/users", json=other_profile)
+    other_data = json.loads(other_resp.data.decode())
+    other_id = other_data['id']
+
+    old_resp = client.post("/users", json=old_profile)
+    old_data = json.loads(old_resp.data.decode())
+    user_id = old_data['id']
+
+    update_profile = {'email': repeated_mail}
+    patch_resp = client.patch(
+        "/users/{}".format(user_id),
+        json=update_profile
+    )
+    assert patch_resp.status_code == 409
+    patch_data = json.loads(patch_resp.data.decode())
+    assert patch_data['status'] == 'repeated_email'
+
+    re_other_resp = client.get(
+        "/users/{}".format(other_id)
+    )
+    re_other_data = json.loads(re_other_resp.data.decode())
+    assert re_other_data['email'] == other_profile['email']

@@ -2,6 +2,9 @@ from prod import db
 from sqlalchemy import Column
 from sqlalchemy import exc
 
+# Excepciones
+from prod.exceptions.repeated_email_error import RepeatedEmailError
+
 
 # Clase representativa del schema que almacena a cada uno de los
 # usuarios en el sistema. Cada entrada consta de un id, name, lastname, email
@@ -43,10 +46,15 @@ class UserDBModel(db.Model):
         self.password = password
 
     def update(self, name, lastName, email, password):
-        self.__init__(name, lastName, email, password)
-        db.session.commit()
+        try:
+            self.__init__(name, lastName, email, password)
+            db.session.commit()
+        except exc.IntegrityError:
+            db.session.rollback()
+            raise RepeatedEmailError
 
     # Funcion que devuelve los datos relevantes de un usuario, serializado
+
     def serialize(self):
         return {
             "id": self.id,

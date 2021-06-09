@@ -1,6 +1,8 @@
 from flask import request
 from flask_restx import Namespace, Resource, fields
 from prod.db_models.user_db_model import UserDBModel
+from prod.exceptions.business_error import BusinessError
+from prod.printers.error_printer import ErrorPrinter
 
 ns = Namespace(
     'users/<int:user_id>',
@@ -47,16 +49,20 @@ class UserResource(Resource):
     @ns.response(404, USER_NOT_EXIST_ERROR, code_404_swg)
     def patch(self, user_id):
         '''Update user data'''
-        user = UserDBModel.query.get(user_id)
-        if not user:
-            ns.abort(404, status=self.USER_NOT_EXIST_ERROR)
-        json = request.get_json()
-        user.update(
-            name=json.get('name', user.name),
-            lastName=json.get('lastName', user.lastName),
-            email=json.get('email', user.email),
-            password=json.get('password', user.password)
-        )
-        user = UserDBModel.query.get(user_id)
-        response_object = user.serialize()
-        return response_object, 200
+        try:
+            user = UserDBModel.query.get(user_id)
+            if not user:
+                ns.abort(404, status=self.USER_NOT_EXIST_ERROR)
+            json = request.get_json()
+            user.update(
+                name=json.get('name', user.name),
+                lastName=json.get('lastName', user.lastName),
+                email=json.get('email', user.email),
+                password=json.get('password', user.password)
+            )
+            user = UserDBModel.query.get(user_id)
+            response_object = user.serialize()
+            return response_object, 200
+        except BusinessError as e:
+            code, status = ErrorPrinter.print(e)
+            ns.abort(code, status=status)
