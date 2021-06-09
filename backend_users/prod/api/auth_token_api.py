@@ -2,7 +2,7 @@ from flask_restx import Namespace, Resource
 from prod.db_models.user_db_model import UserDBModel
 from flask import request
 
-REGISTER_FIELDS = ["token"]
+
 ns = Namespace(
     'users/auth',
     description='One user authentication related operation'
@@ -10,16 +10,17 @@ ns = Namespace(
 
 
 @ns.route('')
-@ns.param('user_id', 'The user identifier')
 class AuthenticationResource(Resource):
-    def get(self):
+    REGISTER_FIELDS = ["token"]
+
+    def post(self):
         data = request.get_json()
-        if not self.check_values(data, REGISTER_FIELDS):
-            return 'Missing values', 400
+        if not self.check_values(data, self.REGISTER_FIELDS):
+            return 'Missing values', 401
         token = data["token"]
+        token = bytes(token, encoding='utf8')
         decoded = UserDBModel.decode_auth_token(token)
-        requested_id = decoded["sub"]
-        if UserDBModel.check_id(requested_id):
+        if UserDBModel.check_id(decoded):
             return 'The token is valid', 200
         return 'The token is invalid', 400
 
