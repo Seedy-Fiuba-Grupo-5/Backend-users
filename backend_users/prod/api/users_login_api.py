@@ -1,6 +1,8 @@
 from flask_restx import Namespace, Resource, fields
 from flask import request
 from prod.db_models.user_db_model import UserDBModel
+from prod.exceptions import BusinessError
+from prod.printers import ErrorPrinter
 
 ns = Namespace(
     'users/login',
@@ -12,7 +14,13 @@ ns = Namespace(
 class UsersLoginResource(Resource):
     MISSING_ARGS_ERROR = 'Missing arguments'
     WRONG_DATA_ERROR = 'Email or password incorrect'
+    USER_NOT_FOUND_ERROR = ''
     WRONG_PASS_ERROR = 'wrong_password'
+
+    code_status = {
+        UserNotFoundError: (404, 'user_not_found'),
+        WrongPasswordError: (401, 'wrong_password')
+    }
 
     body_swg = ns.model('LoginInput', {
         'email': fields.String(required=True, description='The user email'),
@@ -38,17 +46,19 @@ class UsersLoginResource(Resource):
     @ns.response(400, MISSING_ARGS_ERROR, code_400_swg)
     @ns.response(401, 'Wrong password', code_401_swg)
     def post(self):
-        data = request.get_json()
-        if not self.check_values(data, ["email", "password"]):
-            ns.abort(400, status=self.MISSING_ARGS_ERROR)
-        required_id = UserDBModel.get_id(data['email'], data['password'])
-        if required_id == -1:
-            ns.abort(401, status=self.WRONG_PASS_ERROR)
-        response_object = {
-            "email": data['email'],
-            "id": required_id
-        }
-        return response_object, 200
+        try:
+            data = request.get_json()
+            if not self.check_values(data, ["email", "password"]):
+                ns.abort(400, status=self.MISSING_ARGS_ERROR)
+            id = UserDBModel.get_id_token(data['email'], data['password'])
+            response_object = {
+                "email": data['email'],
+                "id": id
+            }
+            return response_object, 200
+        except BusinessError as e:
+            code, status = ErrorPrinter.print(e)
+            ns.abort(code, status=status)
 
     @staticmethod
     def check_values(json, field_list):

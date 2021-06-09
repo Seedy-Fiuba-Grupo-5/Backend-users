@@ -8,7 +8,9 @@ from sqlalchemy import Column
 from sqlalchemy import exc
 
 # Excepciones
-from prod.exceptions.repeated_email_error import RepeatedEmailError
+from prod.exceptions import RepeatedEmailError, UserNotFoundError,\
+                            WrongPasswordError
+#from prod.exceptions.repeated_email_error import RepeatedEmailError
 
 
 # Clase representativa del schema que almacena a cada uno de los
@@ -78,6 +80,15 @@ class UserDBModel(db.Model):
         if associated_id.count() == 0:
             return -1
         return associated_id.with_entities(UserDBModel.id)[0][0]
+
+    @staticmethod
+    def get_id_token(email, password):
+        user_model = UserDBModel.query.filter_by(email=email).first()
+        if user_model is None:
+            raise UserNotFoundError
+        if password != user_model.password:
+            raise WrongPasswordError
+        return user_model.id
 
     @staticmethod
     def check_id(associated_id):
