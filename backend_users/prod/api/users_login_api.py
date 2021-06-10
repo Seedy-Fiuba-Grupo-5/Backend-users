@@ -62,7 +62,9 @@ class UsersLoginResource(BaseResource):
                 ns.abort(400, status=self.MISSING_ARGS_ERROR,
                          missing_args=missing_args)
             id = UserDBModel.get_id(data['email'], data['password'])
-            response_object = {"email": data['email'], "id": id}
+            token = UserDBModel.encode_auth_token(id)
+            response_object = {
+                "email": data['email'], "id": id, "token": token}
             return response_object, 200
         except BusinessError as e:
             code, status = self.code_status[e.__class__]

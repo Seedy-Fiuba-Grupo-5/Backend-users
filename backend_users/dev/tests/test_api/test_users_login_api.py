@@ -2,48 +2,64 @@ import json
 from dev.aux_test import recreate_db
 
 
-def test_dado_email_fdimaria_registrado_con_id_1_y_palabra_de_pase_tomate_cuando_POST_a_url_users_barra_login_el_email_y_la_palabra_de_pase_obtengo_el_email_y_el_id_anterior(test_app, test_database):
+def test_dado_post_users_login_con_email_y_password_validos_obtiene_id_y_token_valido(
+    test_app, 
+    test_database):
     """
-    Dado una base de datos con un usuario registrado:
-        name = "Franco Martin"
-        lastName = "Di Maria"
-        email = "fdimaria@fi.uba.ar"
-        password = "tomate"
+    Dado una base de datos.
+    Y un usuario registrado:
+        id = <id>
+        name = "a name"
+        lastName = "a last name"
+        email = "test@test.com"
+        password = "a password"
     Y una peticion:
-        email = "fdimaria@fi.uba.ar"
-        password = "tomate"
+        "email": "test@test.com"
+        "password": "a password"
     Cuando POST "/users/login"
     Entonces obtengo status 200:
-    Y obtengo cuerpo con 2 campos:
-        email == "fdimaria@fi.uba.ar"
-        id == 1
+    Y obtengo cuerpo con 3 campos:
+        "email": "test@test.com"
+        "id": <id>
+        "token": <token>
     """
     session = recreate_db(test_database)
     client = test_app.test_client()
     body_prev = {
-        "name": "Franco Martin",
-        "lastName": "Di Maria",
-        "email": "fdimaria@fi.uba.ar",
-        "password": "tomate"
+        "name": "a name",
+        "lastName": "a last name",
+        "email": "test@test.com",
+        "password": "a password"
     }
-    client.post(
+    resp_prev = client.post(
         "/users",
         data=json.dumps(body_prev),
         content_type="application/json",
     )
+    data_prev = json.loads(resp_prev.data.decode())
     body = {
-        "email": "fdimaria@fi.uba.ar",
-        "password": "tomate"
+        "email": "test@test.com",
+        "password": "a password"
     }
     response = client.post(
         "/users/login",
         data=json.dumps(body),
-        content_type="application/json",
+        content_type="application/json"
     )
     login_info = json.loads(response.data.decode())
     assert response.status_code == 200
-    assert login_info["email"] == "fdimaria@fi.uba.ar"
-    assert login_info["id"] == 1
+    assert login_info["email"] == "test@test.com"
+    assert login_info["id"] == data_prev['id']
+    body_token = {
+        "token": login_info['token']
+    }
+    resp_token = client.post(
+        "users/auth",
+        data=json.dumps(body_token),
+        content_type="application/json"
+    )
+    token_info = json.loads(resp_token.data.decode())
+    assert token_info['status'] == 'valid_token'
 
 
 def test_post_users_login_con_email_inexistente_entonces_error_404(
@@ -175,3 +191,4 @@ def test_dado_email_fdimaria_registrado_y_palabra_de_pase_tomate_cuando_POST_a_u
     assert data['status'] == 'missing_args'
     assert 'email' not in data['missing_args']
     assert 'password' in data['missing_args']
+

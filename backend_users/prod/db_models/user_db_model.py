@@ -57,7 +57,6 @@ class UserDBModel(db.Model):
             raise RepeatedEmailError
 
     # Funcion que devuelve los datos relevantes de un usuario, serializado
-
     def serialize(self):
         return {
             "id": self.id,
@@ -98,8 +97,10 @@ class UserDBModel(db.Model):
             db.session.rollback()
             raise RepeatedEmailError
 
-    @staticmethod
-    def encode_auth_token(user_id):
+    EXPIRATION_TIME = 86400  # 1 dia = 86400 segundos
+
+    @classmethod
+    def encode_auth_token(cls, user_id):
         """
         Generates the Auth Token
         :return: string
@@ -107,7 +108,7 @@ class UserDBModel(db.Model):
         payload = {
             'exp': datetime.datetime.utcnow() +
             datetime.timedelta(days=0,
-                               seconds=5000),
+                               seconds=cls.EXPIRATION_TIME),
             'iat': datetime.datetime.utcnow(),
             'sub': user_id
         }
