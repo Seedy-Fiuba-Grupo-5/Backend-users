@@ -32,7 +32,8 @@ class UsersLoginResource(BaseResource):
 
     code_200_swg = ns.model('LoginOutput200', {
         'email': fields.String(description='The user email'),
-        'id': fields.Integer(description='The user id')
+        'id': fields.Integer(description='The user id'),
+        'token': fields.String(description='The user session token')
     })
 
     code_400_swg = ns.model('LoginOutput400', {
