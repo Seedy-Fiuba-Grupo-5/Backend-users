@@ -1,33 +1,69 @@
-from flask import Blueprint, request
-from flask_restful import Api, Resource
+from flask_restx import Namespace, fields
+from flask import request
+from prod.api.base_resource import BaseResource
 from prod.db_models.user_db_model import UserDBModel
+from prod.exceptions import BusinessError, UserNotFoundError,\
+    WrongPasswordError
 
-users_login_api = Blueprint("users_login_api", __name__)
-api = Api(users_login_api)
+
+ns = Namespace(
+    'users/login',
+    description='Users login operations'
+)
 
 
-class UsersLoginResource(Resource):
+@ns.route('')
+class UsersLoginResource(BaseResource):
+    REQUIRED_VALUES = ['email', 'password']
+    MISSING_ARGS_ERROR = 'missing_args'
+    USER_NOT_FOUND_ERROR = 'user_not_found'
+    WRONG_PASS_ERROR = 'wrong_password'
+
+    code_status = {
+        UserNotFoundError: (404, USER_NOT_FOUND_ERROR),
+        WrongPasswordError: (401, WRONG_PASS_ERROR)
+    }
+
+    body_swg = ns.model('LoginInput', {
+        'email': fields.String(required=True, description='The user email'),
+        'password': fields.String(
+            required=True, description='The user password')
+    })
+
+    code_200_swg = ns.model('LoginOutput200', {
+        'email': fields.String(description='The user email'),
+        'id': fields.Integer(description='The user id')
+    })
+
+    code_400_swg = ns.model('LoginOutput400', {
+        'status': fields.String(example=MISSING_ARGS_ERROR),
+        'missing_args': fields.List(fields.String())
+    })
+
+    code_401_swg = ns.model('LoginOutput401', {
+        'status': fields.String(example=WRONG_PASS_ERROR)
+    })
+
+    code_404_swg = ns.model('LoginOutput404', {
+        'status': fields.String(example=USER_NOT_FOUND_ERROR)
+    })
+
+    @ns.expect(body_swg)
+    @ns.response(200, 'Success', code_200_swg)
+    @ns.response(400, 'Missing arguments', code_400_swg)
+    @ns.response(401, 'Wrong password', code_401_swg)
+    @ns.response(404, 'User not found', code_404_swg)
     def post(self):
-        data = request.get_json()
-        if not self.check_values(data, ["email", "password"]):
-            return 'Missing arguments', 400
-        email = data['email']
-        password = data['password']
-        required_id = UserDBModel.get_id(email, password)
-        if required_id == -1:
-            return 'Email or password incorrect', 401
-        response_object = {
-            "email": email,
-            "id": required_id
-        }
-        return response_object, 200
-
-    @staticmethod
-    def check_values(json, field_list):
-        for value in field_list:
-            if value not in json:
-                return False
-        return True
-
-
-api.add_resource(UsersLoginResource, "/users/login")
+        """Login"""
+        try:
+            data = request.get_json()
+            missing_args = self.missing_values(data, self.REQUIRED_VALUES)
+            if missing_args != []:
+                ns.abort(400, status=self.MISSING_ARGS_ERROR,
+                         missing_args=missing_args)
+            id = UserDBModel.get_id(data['email'], data['password'])
+            response_object = {"email": data['email'], "id": id}
+            return response_object, 200
+        except BusinessError as e:
+            code, status = self.code_status[e.__class__]
+            ns.abort(code, status=status)

@@ -1,6 +1,12 @@
+import datetime
+import flask
+import jwt
 from prod import db
+from prod.db_models.black_list_db import BlacklistToken
 from sqlalchemy import Column
 from sqlalchemy import exc
+from prod.exceptions import RepeatedEmailError, UserNotFoundError,\
+    WrongPasswordError
 
 
 # Clase representativa del schema que almacena a cada uno de los
@@ -42,7 +48,16 @@ class UserDBModel(db.Model):
         self.email = email
         self.password = password
 
+    def update(self, name, lastName, email, password):
+        try:
+            self.__init__(name, lastName, email, password)
+            db.session.commit()
+        except exc.IntegrityError:
+            db.session.rollback()
+            raise RepeatedEmailError
+
     # Funcion que devuelve los datos relevantes de un usuario, serializado
+
     def serialize(self):
         return {
             "id": self.id,
@@ -53,14 +68,17 @@ class UserDBModel(db.Model):
         }
 
     @staticmethod
-    # Devuelve el id asociado a la relacion e-mail--password
-    # POST: Devuelve -1 Si no existe la relacion e-mail, password
     def get_id(email, password):
-        associated_id = UserDBModel.query.filter_by(email=email,
-                                                    password=password)
-        if associated_id.count() == 0:
-            return -1
-        return associated_id.with_entities(UserDBModel.id)[0][0]
+        user_model = UserDBModel.query.filter_by(email=email).first()
+        if user_model is None:
+            raise UserNotFoundError
+        if password != user_model.password:
+            raise WrongPasswordError
+        return user_model.id
+
+    @staticmethod
+    def check_id(associated_id):
+        return UserDBModel.query.filter_by(id=associated_id).count() == 1
 
     @classmethod
     def add_user(cls,
@@ -77,7 +95,47 @@ class UserDBModel(db.Model):
             return UserDBModel.get_id(email,
                                       password)
         except exc.IntegrityError:
-            return -1
+            db.session.rollback()
+            raise RepeatedEmailError
+
+    @staticmethod
+    def encode_auth_token(user_id):
+        """
+        Generates the Auth Token
+        :return: string
+        """
+        payload = {
+            'exp': datetime.datetime.utcnow() +
+            datetime.timedelta(days=0,
+                               seconds=5000),
+            'iat': datetime.datetime.utcnow(),
+            'sub': user_id
+        }
+        return jwt.encode(
+            payload,
+            flask.current_app.config.get('SECRET_KEY'),
+            algorithm='HS256'
+        ).decode("utf-8")
+
+    @staticmethod
+    def decode_auth_token(auth_token):
+        """
+        Validates the auth token
+        :param auth_token:
+        :return: integer|string
+        """
+        try:
+            payload = jwt.decode(auth_token, flask.current_app.config.get(
+                'SECRET_KEY'))
+            is_blacklisted_token = BlacklistToken.check_blacklist(auth_token)
+            if is_blacklisted_token:
+                return 'Token blacklisted. Please log in again.'
+            else:
+                return payload['sub']
+        except jwt.ExpiredSignatureError:
+            return 'Signature expired. Please log in again.'
+        except jwt.InvalidTokenError:
+            return 'Invalid token. Please log in again.'
 
 
 # Clase representativa del schema que almacena a cada uno de los
@@ -117,12 +175,12 @@ class UserProjectDBModel(db.Model):
             db.session.commit()
         except exc.IntegrityError:
             db.session.rollback()
-            # TODO: Considerar levantar un execpcion.
+            # TODO: Considerar levantar un excepcion.
         return UserProjectDBModel.get_projects_of_user_id(user_id)
 
     @staticmethod
     def get_projects_of_user_id(user_id):
         projects_query = UserProjectDBModel.query.filter_by(user_id=user_id)
-        id_projects_list =\
+        id_projects_list = \
             [user_project.project_id for user_project in projects_query.all()]
         return id_projects_list

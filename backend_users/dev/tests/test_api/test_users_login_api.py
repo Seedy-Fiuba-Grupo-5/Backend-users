@@ -46,6 +46,50 @@ def test_dado_email_fdimaria_registrado_con_id_1_y_palabra_de_pase_tomate_cuando
     assert login_info["id"] == 1
 
 
+def test_post_users_login_con_email_inexistente_entonces_error_404(
+        test_app,
+        test_database):
+    """
+    Dado una base de datos con un usuario registrado:
+        name = "a name"
+        lastName = "a last name"
+        email = "test@test.com"
+        password = "a password"
+    Y una peticion:
+        email = "another@test.com"
+        password = "a password"
+    Cuando POST "/users/login"
+    Entonces obtengo status 404
+    Y obtengo cuerpo:
+        {"status": 'user_not_found'}
+    """
+    session = recreate_db(test_database)
+    client = test_app.test_client()
+    body_prev = {
+        "name": "a name",
+        "lastName": "a last name",
+        "email": "test@test.com",
+        "password": "a password"
+    }
+    client.post(
+        "/users",
+        data=json.dumps(body_prev),
+        content_type="application/json",
+    )
+    body = {
+        "email": "another@test.com",
+        "password": "a password"
+    }
+    response = client.post(
+        "/users/login",
+        data=json.dumps(body),
+        content_type="application/json",
+    )
+    assert response.status_code == 404
+    data = json.loads(response.data.decode())
+    assert data['status'] == 'user_not_found'
+
+
 def test_dado_email_fdimaria_registrado_y_password_tomate_cuando_POST_a_url_users_barra_login_el_email_y_la_palabra_de_pase_manzana_obtengo_un_error_401(
         test_app,
         test_database):
@@ -61,7 +105,7 @@ def test_dado_email_fdimaria_registrado_y_password_tomate_cuando_POST_a_url_user
     Cuando POST "/users/login"
     Entonces obtengo status 401
     Y obtengo cuerpo:
-        'Email or password incorrect'
+        {"status": 'wrong_password'}
     """
     session = recreate_db(test_database)
     client = test_app.test_client()
@@ -86,8 +130,8 @@ def test_dado_email_fdimaria_registrado_y_password_tomate_cuando_POST_a_url_user
         content_type="application/json",
     )
     assert response.status_code == 401
-    error = json.loads(response.data.decode())
-    assert error == 'Email or password incorrect'
+    data = json.loads(response.data.decode())
+    assert data['status'] == 'wrong_password'
 
 
 def test_dado_email_fdimaria_registrado_y_palabra_de_pase_tomate_cuando_POST_a_url_users_barra_login_email_fdimaria_obtengo_un_error(
@@ -104,7 +148,8 @@ def test_dado_email_fdimaria_registrado_y_palabra_de_pase_tomate_cuando_POST_a_u
     Cuando POST "/users/login"
     Entonces obtengo status 400
     Y obtengo cuerpo:
-        'Missing arguments'
+        "status" = 'missing_args'
+        "missing_args" = ['password']
     """
     session = recreate_db(test_database)
     client = test_app.test_client()
@@ -126,5 +171,7 @@ def test_dado_email_fdimaria_registrado_y_palabra_de_pase_tomate_cuando_POST_a_u
         content_type="application/json",
     )
     assert response.status_code == 400
-    error = json.loads(response.data.decode())
-    assert error == 'Missing arguments'
+    data = json.loads(response.data.decode())
+    assert data['status'] == 'missing_args'
+    assert 'email' not in data['missing_args']
+    assert 'password' in data['missing_args']

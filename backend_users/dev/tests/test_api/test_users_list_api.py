@@ -35,7 +35,7 @@ def test_db_vacia_post_users_name_franco_martin_last_name_di_maria_email_fdimari
     )
     assert response.status_code == 201
     register_info = json.loads(response.data.decode())
-    assert len(register_info) == 4
+    assert len(register_info) == 5
     assert register_info["name"] == "Franco Martin"
     assert register_info["lastName"] == "Di Maria"
     assert register_info["email"] == "fdimaria@fi.uba.ar"
@@ -60,7 +60,7 @@ def test_db_con_mail_fdimaria_registrado_post_users_name_franco_martin_last_name
     Cuando POST "/users"
     Entonces obtengo status 401
     Y obtengo cuerpo:
-        'User already registered'
+        {"status": 'repeated_email'}
     """
     session = recreate_db(test_database)
     client = test_app.test_client()
@@ -82,9 +82,9 @@ def test_db_con_mail_fdimaria_registrado_post_users_name_franco_martin_last_name
         data=json.dumps(body),
         content_type="application/json",
     )
-    assert response.status_code == 401
-    error = json.loads(response.data.decode())
-    assert error == 'User already registered'
+    assert response.status_code == 409
+    data = json.loads(response.data.decode())
+    assert data["status"] == 'repeated_email'
 
 
 def test_db_vacia_post_url_users_datos_name_franco_martin_entonces_obtengo_un_error(
@@ -97,7 +97,7 @@ def test_db_vacia_post_url_users_datos_name_franco_martin_entonces_obtengo_un_er
     Cuando POST "/users"
     Entonces obtengo status 400
     Y obtengo cuerpo:
-        'User already registered'
+        {"status": 'User already registered'}
     """
     session = recreate_db(test_database)
     client = test_app.test_client()
@@ -108,8 +108,11 @@ def test_db_vacia_post_url_users_datos_name_franco_martin_entonces_obtengo_un_er
         content_type="application/json",
     )
     assert response.status_code == 400
-    error = json.loads(response.data.decode())
-    assert error == 'Missing values'
+    data = json.loads(response.data.decode())
+    assert data["status"] == 'missing_args'
+    assert 'name' not in data['missing_args']
+    for field in ['lastName', 'email', 'password']:
+        assert field in data['missing_args']
 
 
 def test_db_con_unico_usuario_name_Franco_Martin_last_name_Di_Maria_mail_fdimaria_password_hola_GET_users_debe_retornar_lo_anterior_con_id_1(
