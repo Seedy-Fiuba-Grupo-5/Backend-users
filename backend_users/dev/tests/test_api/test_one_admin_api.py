@@ -14,7 +14,7 @@ def test_gets_asociated_id_to_admin_in_empty_db(
         email = "fdimaria@fi.uba.ar"
         password = "hola"
         id = 1
-    Cuando GET "users/1"
+    Cuando GET "admins/1"
     Entonces obtengo status 200
     Y obtengo el cuerpo:
         id = 1,
@@ -53,9 +53,9 @@ def test_dada_una_db_con_dos_usuarios_de_ids_1_y_2_get_a_url_users_barra_id_1_y_
     """
     Dada una base de datos
     Con 2 usuarios registrados con ids 1 y 2
-    Cuando GET "users/1"
+    Cuando GET "admins/1"
     Entonces obtengo el usuario de id = 1
-    Cuando GET "users/2"
+    Cuando GET "admins/2"
     Entonces obtengo el usuario de id = 2
     """
     session = recreate_db(test_database)
@@ -109,7 +109,7 @@ def test_dada_una_db_vacia_get_a_url_users_barra_id_1_devuelve_un_error(
         test_database):
     """
     Dada una base de datos vacia
-    Cuando GET "users/1"
+    Cuando GET "admins/1"
     Entonces obtengo status 404
     Y obtengo el cuerpo:
         {"status": 'user_not_found'}
@@ -132,7 +132,7 @@ def test_patch_user_con_nuevo_email_actualiza_solo_el_email(
         'name': 'a name'
         'lastName: 'a lastName'
         'email': 'test@test.com'
-    Cuando patch 'users/<id>'
+    Cuando patch 'admins/<id>'
     Con cuerpo vacio
         'name' : 'another name'
      Entonces obtengo el cuerpo:
@@ -172,7 +172,7 @@ def test_patch_nuevo_mail_pero_ya_existente_entonces_error(
         'name': 'a name'
         'lastName: 'a lastName'
         'email': 'test@test.com
-    Cuando patch 'users/<id>'
+    Cuando patch 'admins/<id>'
     Con cuerpo vacio
         'name' : 'another name'
      Entonces obtengo el cuerpo:
