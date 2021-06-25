@@ -59,7 +59,7 @@ class UsersLoginResource(BaseResource):
         try:
             data = request.get_json()
             missing_args = self.missing_values(data, self.REQUIRED_VALUES)
-            if missing_args != []:
+            if missing_args:
                 ns.abort(400, status=self.MISSING_ARGS_ERROR,
                          missing_args=missing_args)
             id = UserDBModel.get_id(data['email'], data['password'])

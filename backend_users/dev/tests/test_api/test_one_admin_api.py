@@ -143,12 +143,14 @@ def test_patch_user_con_nuevo_email_actualiza_solo_el_email(
     """
     session = recreate_db(test_database)
     old_profile = {'name': 'a name', 'lastName': 'a last name',
-                   'email': 'test@test.com', 'password': 'a password'}
+                   'email': 'test@test.com', 'password': 'a password',
+                   'token': AdminDBModel.encode_auth_token(1)}
     client = test_app.test_client()
     post_resp = client.post("/admins", json=old_profile)
     post_data = json.loads(post_resp.data.decode())
     user_id = post_data['id']
-    update_profile = {'email': 'another@test.com'}
+    update_profile = {'email': 'another@test.com',
+                      'token': AdminDBModel.encode_auth_token(1)}
     patch_resp = client.patch(
         "/admins/{}".format(user_id),
         json=update_profile
@@ -184,19 +186,22 @@ def test_patch_nuevo_mail_pero_ya_existente_entonces_error(
     session = recreate_db(test_database)
     repeated_mail = 'repeated@test.com'
     other_profile = {'name': 'a name', 'lastName': 'a last name',
-                     'email': repeated_mail, 'password': 'a password'}
+                     'email': repeated_mail, 'password': 'a password',
+                     'token': AdminDBModel.encode_auth_token(1)}
     old_profile = {'name': 'a name', 'lastName': 'a last name',
-                   'email': 'test@test.com', 'password': 'a password'}
+                   'email': 'test@test.com', 'password': 'a password',
+                   'token': AdminDBModel.encode_auth_token(1)}
     client = test_app.test_client()
     other_resp = client.post("/admins", json=other_profile)
     other_data = json.loads(other_resp.data.decode())
     other_id = other_data['id']
-
+    other_it = other_data['token']
     old_resp = client.post("/admins", json=old_profile)
     old_data = json.loads(old_resp.data.decode())
     user_id = old_data['id']
 
-    update_profile = {'email': repeated_mail}
+    update_profile = {'email': repeated_mail,
+                      'token': AdminDBModel.encode_auth_token(2)}
     patch_resp = client.patch(
         "/admins/{}".format(user_id),
         json=update_profile
