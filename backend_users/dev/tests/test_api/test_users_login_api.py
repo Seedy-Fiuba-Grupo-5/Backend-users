@@ -3,8 +3,8 @@ from dev.aux_test import recreate_db
 
 
 def test_dado_post_users_login_con_email_y_password_validos_obtiene_id_y_token_valido(
-    test_app, 
-    test_database):
+        test_app,
+        test_database):
     """
     Dado una base de datos.
     Y un usuario registrado:
@@ -191,4 +191,3 @@ def test_dado_email_fdimaria_registrado_y_palabra_de_pase_tomate_cuando_POST_a_u
     assert data['status'] == 'missing_args'
     assert 'email' not in data['missing_args']
     assert 'password' in data['missing_args']
-

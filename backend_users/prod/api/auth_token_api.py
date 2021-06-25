@@ -37,7 +37,7 @@ class AuthenticationResource(BaseResource):
         """Validate token"""
         data = request.get_json()
         missing_args = self.missing_values(data, self.REGISTER_FIELDS)
-        if missing_args != []:
+        if missing_args:
             response = {'status': self.MISSING_ARGS_ERROR}
             return response, 400
         token = data["token"]
