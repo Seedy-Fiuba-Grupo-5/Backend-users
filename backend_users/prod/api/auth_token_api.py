@@ -44,7 +44,8 @@ class AuthenticationResource(BaseResource):
         token = bytes(token, encoding='utf8')
         decoded = UserDBModel.decode_auth_token(token)
         if UserDBModel.check_id(decoded):
-            response = {'status': self.VALID_TOKEN}
+            encoded = UserDBModel.encode_auth_token(decoded)
+            response = {'status': self.VALID_TOKEN, 'token': encoded}
             return response, 200
         response = {'status': self.INVALID_TOKEN_ERROR}
         return response, 404
