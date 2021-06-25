@@ -58,12 +58,13 @@ class AdminResource(BaseResource):
     @ns.response(404, USER_NOT_FOUND_ERROR, code_404_swg)
     @ns.response(409, REPEATED_EMAIL_ERROR, code_409_swg)
     def patch(self, user_id):
-        '''Update user data'''
+        """Update user data"""
         try:
             user = AdminDBModel.query.get(user_id)
             if not user:
                 ns.abort(404, status=self.USER_NOT_FOUND_ERROR)
             json = request.get_json()
+
             user.update(
                 name=json.get('name', user.name),
                 lastName=json.get('lastName', user.lastName),
