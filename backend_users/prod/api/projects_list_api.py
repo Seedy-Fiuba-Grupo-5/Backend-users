@@ -4,7 +4,10 @@ from prod.api.base_resource import BaseResource
 from prod.db_models.user_db_model import UserProjectDBModel
 from prod.schemas.project_not_found import project_not_found
 from prod.schemas.project_representation import project_representation
-from prod.schemas.constants import DESCRIPTIONS, PROJECT_NOT_FOUND
+from prod.schemas.token_required import token_required
+from prod.schemas.missing_args import missing_args
+from prod.schemas.constants import DESCRIPTIONS, PROJECT_NOT_FOUND,\
+    MISSING_ARGS
 
 ns = Namespace(
     'projects/<int:project_id>',
@@ -15,17 +18,30 @@ ns = Namespace(
 @ns.route('')
 @ns.param('project_id', DESCRIPTIONS['project_id'])
 class ProjectsListResource(BaseResource):
-    code_200_sw = ns.model(project_representation.name, project_representation)
-    code_404_sw = ns.model(project_not_found.name, project_not_found)
+    REQ_FIELDS = ['token']
 
-    @ns.response(200, 'Success', code_200_sw)
-    @ns.response(404, PROJECT_NOT_FOUND, code_404_sw)
+    body_swg = ns.model(token_required.name, token_required)
+    code_200_swg = ns.model(project_representation.name,
+                            project_representation)
+    code_400_swg = ns.model(missing_args.name, missing_args)
+    code_404_swg = ns.model(project_not_found.name, project_not_found)
+
+    @ns.expect(body_swg)
+    @ns.response(200, 'Success', code_200_swg)
+    @ns.response(400, MISSING_ARGS, code_400_swg)
+    @ns.response(404, PROJECT_NOT_FOUND, code_404_swg)
     def get(self, project_id):
         """Get project's data"""
-        json = request.get_json()
         response_object = {}
-        response_object['token'] = json['token']
+        data = request.get_json()
+        missing_args = self.missing_values(data, self.REQ_FIELDS)
+        if missing_args:
+            response_object['status'] = MISSING_ARGS
+            response_object['missing_args'] = missing_args
+            return response_object, 400
         user_id = UserProjectDBModel.get_user_of_project_id(project_id)
+        # TODO: Update token
+        response_object['token'] = data['token']
         if user_id < 0:
             response_object['status'] = PROJECT_NOT_FOUND
             return response_object, 404

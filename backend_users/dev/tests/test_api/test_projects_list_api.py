@@ -101,3 +101,53 @@ def test_get_project_id_retorna_info_del_proyecto_cuando_existe(
     assert data['project_id'] == project_id
     assert data['user_id'] == user_id
     assert data['token'] is not None
+
+
+def test_get_project_id_retorna_error_cuando_falta_el_token(
+    test_app,
+    test_database
+):
+    """
+    Dada una base de datos vacia.
+    Cuando GET /projects/<id>
+    Con cuerpo:
+        {}
+    Entonces obtengo 400
+    Con cuerpo:
+        "status" : "Missing arguments"
+    """
+    session = recreate_db(test_database)
+    client = test_app.test_client()
+    email = 'name@lastname.com'
+    password = 'a password'
+    body = {
+        'name': 'a name',
+        'lastName': 'a last name',
+        'email': email,
+        'password': password
+    }
+    res = client.post('/users', json=body)
+    data = json.loads(res.data.decode())
+
+    body = {
+        'email': email,
+        'password': password
+    }
+    res = client.post('/users/login', json=body)
+    data = json.loads(res.data.decode())
+    user_id = data['id']
+    token = data['token']
+
+    project_id = 3
+    # TODO : Agregar token en body cuando el endpoint este listo
+    body = {'project_id': project_id}
+    url = '/users' + '/' + str(user_id) + '/projects'
+    res = client.post(url, json=body)
+
+    body = {}
+    url = PARCIAL_URL + '/' + str(project_id)
+    res = client.get(url, json=body)
+    assert res.status_code == 400
+    data = json.loads(res.data.decode())
+    assert data['status'] == 'Missing arguments'
+    assert 'token' in data['missing_args']
