@@ -2,9 +2,10 @@ from flask_restx import Namespace, fields
 from flask import request
 from prod.api.base_resource import BaseResource
 from prod.db_models.user_db_model import UserDBModel
-from prod.exceptions import BusinessError, UserNotFoundError,\
+from prod.exceptions import BusinessError, UserNotFoundError, \
     WrongPasswordError
-
+from prod.schemas.constants import WRONG_PASS_ERROR, MISSING_ARGS_ERROR, \
+    USER_NOT_FOUND_ERROR
 
 ns = Namespace(
     'users/login',
@@ -15,9 +16,6 @@ ns = Namespace(
 @ns.route('')
 class UsersLoginResource(BaseResource):
     REQUIRED_VALUES = ['email', 'password']
-    MISSING_ARGS_ERROR = 'missing_args'
-    USER_NOT_FOUND_ERROR = 'user_not_found'
-    WRONG_PASS_ERROR = 'wrong_password'
 
     code_status = {
         UserNotFoundError: (404, USER_NOT_FOUND_ERROR),
@@ -60,7 +58,7 @@ class UsersLoginResource(BaseResource):
             data = request.get_json()
             missing_args = self.missing_values(data, self.REQUIRED_VALUES)
             if missing_args:
-                ns.abort(400, status=self.MISSING_ARGS_ERROR,
+                ns.abort(400, status=MISSING_ARGS_ERROR,
                          missing_args=missing_args)
             id = UserDBModel.get_id(data['email'], data['password'])
             token = UserDBModel.encode_auth_token(id)
