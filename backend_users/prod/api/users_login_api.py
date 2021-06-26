@@ -6,6 +6,8 @@ from prod.exceptions import BusinessError, UserNotFoundError, \
     WrongPasswordError
 from prod.schemas.constants import WRONG_PASS_ERROR, MISSING_ARGS_ERROR, \
     USER_NOT_FOUND_ERROR
+from prod.schemas.user_login import user_login
+from prod.schemas.user_login_code20 import user_login_code20
 
 ns = Namespace(
     'users/login',
@@ -21,18 +23,9 @@ class UsersLoginResource(BaseResource):
         UserNotFoundError: (404, USER_NOT_FOUND_ERROR),
         WrongPasswordError: (401, WRONG_PASS_ERROR)
     }
+    body_swg = ns.model(user_login.name, user_login)
 
-    body_swg = ns.model('LoginInput', {
-        'email': fields.String(required=True, description='The user email'),
-        'password': fields.String(
-            required=True, description='The user password')
-    })
-
-    code_200_swg = ns.model('LoginOutput200', {
-        'email': fields.String(description='The user email'),
-        'id': fields.Integer(description='The user id'),
-        'token': fields.String(description='The user session token')
-    })
+    code_200_swg = ns.model(user_login_code20.name, user_login_code20)
 
     code_400_swg = ns.model('LoginOutput400', {
         'status': fields.String(example=MISSING_ARGS_ERROR),
