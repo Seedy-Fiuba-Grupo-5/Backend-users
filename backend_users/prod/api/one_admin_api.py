@@ -1,5 +1,5 @@
 from flask import request
-from flask_restx import Namespace, fields
+from flask_restx import Namespace
 from prod.api.base_resource import BaseResource
 from prod.db_models.admin_db_model import AdminDBModel
 from prod.exceptions import BusinessError, RepeatedEmailError
@@ -7,6 +7,7 @@ from prod.schemas.constants import USER_NOT_FOUND_ERROR, REPEATED_EMAIL_ERROR
 from prod.schemas.admin_representation import admin_representation
 from prod.schemas.user_code20 import user_code20
 from prod.schemas.user_email_repeated import user_email_repeated
+from prod.schemas.user_login_not_found import user_login_not_found
 
 
 ns = Namespace(
@@ -28,9 +29,7 @@ class AdminResource(BaseResource):
 
     code_200_swg = ns.model(user_code20.name, user_code20)
 
-    code_404_swg = ns.model('UserOutput404', {
-        'status': fields.String(example=USER_NOT_FOUND_ERROR)
-    })
+    code_404_swg = ns.model(user_login_not_found.name, user_login_not_found)
 
     code_409_swg = ns.model(user_email_repeated.name, user_email_repeated)
 
