@@ -158,7 +158,7 @@ def test_patch_user_con_nuevo_email_actualiza_solo_el_email(
     patch_data = json.loads(patch_resp.data.decode())
     assert patch_data['email'] == update_profile['email']
     for field in old_profile.keys():
-        if field in ['email', 'password']:
+        if field in ['email', 'password', 'token']:
             continue
         assert patch_data[field] == old_profile[field]
     assert patch_data['id'] == user_id
