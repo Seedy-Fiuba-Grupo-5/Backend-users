@@ -1,11 +1,12 @@
 from flask import request
-from flask_restx import Namespace, fields
+from flask_restx import Namespace
 from prod.api.base_resource import BaseResource
 from prod.db_models.user_db_model import UserDBModel
 from prod.exceptions import BusinessError, RepeatedEmailError
 from prod.schemas.user_code20 import user_code20
 from prod.schemas.admin_representation import admin_representation
 from prod.schemas.user_login_not_found import user_login_not_found
+from prod.schemas.user_email_repeated import user_email_repeated
 from prod.schemas.constants import USER_NOT_FOUND_ERROR, REPEATED_EMAIL_ERROR,\
     MISSING_VALUES_ERROR
 
@@ -29,9 +30,7 @@ class UserResource(BaseResource):
 
     code_404_swg = ns.model(user_login_not_found.name, user_login_not_found)
 
-    code_409_swg = ns.model('UserOutput409', {
-        'status': fields.String(example=REPEATED_EMAIL_ERROR)
-    })
+    code_409_swg = ns.model(user_email_repeated.name, user_email_repeated)
 
     @ns.response(200, 'Success', code_200_swg)
     @ns.response(404, USER_NOT_FOUND_ERROR, code_404_swg)
