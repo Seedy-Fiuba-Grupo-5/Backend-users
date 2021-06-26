@@ -19,3 +19,5 @@ MISSING_VALUES_ERROR = 'missing_args'
 USER_NOT_FOUND_ERROR = 'user_not_found'
 
 REPEATED_EMAIL_ERROR = 'repeated_email'
+
+REPEATED_USER_ERROR = 'repeated_email'
