@@ -10,9 +10,21 @@ from .auth_token_api import ns as auth_token_ns
 from .admin_login_api import ns as admins_login_ns
 from .one_admin_api import ns as one_admin_ns
 from .admins_list_api import ns as admins_list_ns
+from .projects_list_api import ns as projects_list_ns
+
+NAMESPACES = (
+    one_user_ns,
+    users_list_ns,
+    users_login_ns,
+    users_projects_list_ns,
+    auth_token_ns,
+    admins_login_ns,
+    one_admin_ns,
+    admins_list_ns,
+    projects_list_ns
+)
 
 # Base Api
-
 api_base_bp = Blueprint('api_base', __name__)
 api_base = Api(
     api_base_bp,
@@ -21,17 +33,7 @@ api_base = Api(
     description='Backend-users service operations'
 )
 
-api_base.add_namespace(one_user_ns)
-api_base.add_namespace(users_list_ns)
-api_base.add_namespace(users_login_ns)
-api_base.add_namespace(users_projects_list_ns)
-api_base.add_namespace(auth_token_ns)
-api_base.add_namespace(admins_login_ns)
-api_base.add_namespace(one_admin_ns)
-api_base.add_namespace(admins_list_ns)
-
 # Api v1
-
 V1_URL = '/v1/'
 
 api_v1_bp = Blueprint('api_v1', __name__, url_prefix=V1_URL)
@@ -42,11 +44,7 @@ api_v1 = Api(
     description='Backend-users service operations'
 )
 
-api_v1.add_namespace(one_user_ns)
-api_v1.add_namespace(users_list_ns)
-api_v1.add_namespace(users_login_ns)
-api_v1.add_namespace(users_projects_list_ns)
-api_v1.add_namespace(auth_token_ns)
-api_v1.add_namespace(admins_login_ns)
-api_v1.add_namespace(one_admin_ns)
-api_v1.add_namespace(admins_list_ns)
+# Add extensions
+for ns in NAMESPACES:
+    api_base.add_namespace(ns)
+    api_v1.add_namespace(ns)

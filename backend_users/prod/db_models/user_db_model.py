@@ -147,6 +147,7 @@ class UserProjectDBModel(db.Model):
     user_id = Column(db.Integer,
                      db.ForeignKey('users.id'),
                      primary_key=True)
+    # TODO: This should not be a primary key
 
     project_id = db.Column(db.Integer,
                            primary_key=True)
@@ -185,3 +186,13 @@ class UserProjectDBModel(db.Model):
         id_projects_list = \
             [user_project.project_id for user_project in projects_query.all()]
         return id_projects_list
+
+    @staticmethod
+    def get_user_of_project_id(project_id):
+        user_project = UserProjectDBModel\
+            .query\
+            .filter_by(project_id=project_id)\
+            .first()
+        if user_project is None:
+            return -1
+        return user_project.user_id
