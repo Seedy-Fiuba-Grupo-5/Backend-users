@@ -81,5 +81,5 @@ class UserResource(BaseResource):
         except BusinessError as e:
             code, status = self.code_status[e.__class__]
             ns.abort(code, status=status)
-        except KeyError as e:
+        except KeyError:
             ns.abort(404, status=self.MISSING_VALUES_ERROR)
