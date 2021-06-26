@@ -148,7 +148,8 @@ def test_patch_user_con_nuevo_email_actualiza_solo_el_email(
     post_resp = client.post("/users", json=old_profile)
     post_data = json.loads(post_resp.data.decode())
     user_id = post_data['id']
-    update_profile = {'email': 'another@test.com'}
+    update_profile = {'email': 'another@test.com',
+                      'token': UserDBModel.encode_auth_token(1)}
     patch_resp = client.patch(
         "/users/{}".format(user_id),
         json=update_profile
@@ -196,7 +197,8 @@ def test_patch_nuevo_mail_pero_ya_existente_entonces_error(
     old_data = json.loads(old_resp.data.decode())
     user_id = old_data['id']
 
-    update_profile = {'email': repeated_mail}
+    update_profile = {'email': repeated_mail,
+                      'token': UserDBModel.encode_auth_token(2)}
     patch_resp = client.patch(
         "/users/{}".format(user_id),
         json=update_profile

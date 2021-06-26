@@ -15,6 +15,7 @@ ns = Namespace(
 class UserResource(BaseResource):
     USER_NOT_FOUND_ERROR = 'user_not_found'
     REPEATED_EMAIL_ERROR = 'repeated_email'
+    MISSING_VALUES_ERROR = 'missing_args'
 
     code_status = {
         RepeatedEmailError: (409, 'repeated_email')
@@ -64,6 +65,9 @@ class UserResource(BaseResource):
             if not user:
                 ns.abort(404, status=self.USER_NOT_FOUND_ERROR)
             json = request.get_json()
+            token_decoded = UserDBModel.decode_auth_token(json['token'])
+            if token_decoded != user_id:
+                ns.abort(404, status=self.USER_NOT_FOUND_ERROR)
             user.update(
                 name=json.get('name', user.name),
                 lastName=json.get('lastName', user.lastName),
@@ -72,7 +76,10 @@ class UserResource(BaseResource):
             )
             user = UserDBModel.query.get(user_id)
             response_object = user.serialize()
+            response_object['token'] = UserDBModel.encode_auth_token(user_id)
             return response_object, 200
         except BusinessError as e:
             code, status = self.code_status[e.__class__]
             ns.abort(code, status=status)
+        except KeyError:
+            ns.abort(404, status=self.MISSING_VALUES_ERROR)

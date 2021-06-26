@@ -35,7 +35,7 @@ def test_db_vacia_post_users_name_franco_martin_last_name_di_maria_email_fdimari
     )
     assert response.status_code == 201
     register_info = json.loads(response.data.decode())
-    assert len(register_info) == 5
+    assert len(register_info) == 6
     assert register_info["name"] == "Franco Martin"
     assert register_info["lastName"] == "Di Maria"
     assert register_info["email"] == "fdimaria@fi.uba.ar"

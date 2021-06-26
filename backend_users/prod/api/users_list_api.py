@@ -70,6 +70,7 @@ class UsersListResource(BaseResource):
                                       data['password'])
             user_model = UserDBModel.query.get(id)
             response_object = user_model.serialize()
+            response_object['token'] = UserDBModel.encode_auth_token(id)
             return response_object, 201
         except BusinessError as e:
             code, status = self.code_status[e.__class__]

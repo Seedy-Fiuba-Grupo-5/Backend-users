@@ -14,7 +14,7 @@ def test_gets_asociated_id_to_admin_in_empty_db(
         email = "fdimaria@fi.uba.ar"
         password = "hola"
         id = 1
-    Cuando GET "users/1"
+    Cuando GET "admins/1"
     Entonces obtengo status 200
     Y obtengo el cuerpo:
         id = 1,
@@ -53,9 +53,9 @@ def test_dada_una_db_con_dos_usuarios_de_ids_1_y_2_get_a_url_users_barra_id_1_y_
     """
     Dada una base de datos
     Con 2 usuarios registrados con ids 1 y 2
-    Cuando GET "users/1"
+    Cuando GET "admins/1"
     Entonces obtengo el usuario de id = 1
-    Cuando GET "users/2"
+    Cuando GET "admins/2"
     Entonces obtengo el usuario de id = 2
     """
     session = recreate_db(test_database)
@@ -73,16 +73,16 @@ def test_dada_una_db_con_dos_usuarios_de_ids_1_y_2_get_a_url_users_barra_id_1_y_
         "password": "hola"
     }
     client.post(
-        "/users",
+        "/admins",
         data=json.dumps(body_1),
         content_type="application/json"
     )
     client.post(
-        "/users",
+        "/admins",
         data=json.dumps(body_2),
         content_type="application/json"
     )
-    response = client.get("/users/1")
+    response = client.get("/admins/1")
     data = json.loads(response.data.decode())
     assert response is not None
     assert response.status_code == 200
@@ -92,7 +92,7 @@ def test_dada_una_db_con_dos_usuarios_de_ids_1_y_2_get_a_url_users_barra_id_1_y_
     assert data["lastName"] == "Di Maria"
     assert data["email"] == "fdimaria@fi.uba.ar"
     assert data["active"] == True
-    response = client.get("/users/2")
+    response = client.get("/admins/2")
     data = json.loads(response.data.decode())
     assert response is not None
     assert response.status_code == 200
@@ -109,14 +109,14 @@ def test_dada_una_db_vacia_get_a_url_users_barra_id_1_devuelve_un_error(
         test_database):
     """
     Dada una base de datos vacia
-    Cuando GET "users/1"
+    Cuando GET "admins/1"
     Entonces obtengo status 404
     Y obtengo el cuerpo:
         {"status": 'user_not_found'}
     """
     session = recreate_db(test_database)
     client = test_app.test_client()
-    response = client.get("/users/1")
+    response = client.get("/admins/1")
     assert response is not None
     assert response.status_code == 404
     data = json.loads(response.data.decode())
@@ -132,7 +132,7 @@ def test_patch_user_con_nuevo_email_actualiza_solo_el_email(
         'name': 'a name'
         'lastName: 'a lastName'
         'email': 'test@test.com'
-    Cuando patch 'users/<id>'
+    Cuando patch 'admins/<id>'
     Con cuerpo vacio
         'name' : 'another name'
      Entonces obtengo el cuerpo:
@@ -143,14 +143,16 @@ def test_patch_user_con_nuevo_email_actualiza_solo_el_email(
     """
     session = recreate_db(test_database)
     old_profile = {'name': 'a name', 'lastName': 'a last name',
-                   'email': 'test@test.com', 'password': 'a password'}
+                   'email': 'test@test.com', 'password': 'a password',
+                   'token': AdminDBModel.encode_auth_token(1)}
     client = test_app.test_client()
-    post_resp = client.post("/users", json=old_profile)
+    post_resp = client.post("/admins", json=old_profile)
     post_data = json.loads(post_resp.data.decode())
     user_id = post_data['id']
-    update_profile = {'email': 'another@test.com'}
+    update_profile = {'email': 'another@test.com',
+                      'token': AdminDBModel.encode_auth_token(1)}
     patch_resp = client.patch(
-        "/users/{}".format(user_id),
+        "/admins/{}".format(user_id),
         json=update_profile
     )
     assert patch_resp.status_code == 200
@@ -172,7 +174,7 @@ def test_patch_nuevo_mail_pero_ya_existente_entonces_error(
         'name': 'a name'
         'lastName: 'a lastName'
         'email': 'test@test.com
-    Cuando patch 'users/<id>'
+    Cuando patch 'admins/<id>'
     Con cuerpo vacio
         'name' : 'another name'
      Entonces obtengo el cuerpo:
@@ -184,21 +186,24 @@ def test_patch_nuevo_mail_pero_ya_existente_entonces_error(
     session = recreate_db(test_database)
     repeated_mail = 'repeated@test.com'
     other_profile = {'name': 'a name', 'lastName': 'a last name',
-                     'email': repeated_mail, 'password': 'a password'}
+                     'email': repeated_mail, 'password': 'a password',
+                     'token': AdminDBModel.encode_auth_token(1)}
     old_profile = {'name': 'a name', 'lastName': 'a last name',
-                   'email': 'test@test.com', 'password': 'a password'}
+                   'email': 'test@test.com', 'password': 'a password',
+                   'token': AdminDBModel.encode_auth_token(1)}
     client = test_app.test_client()
-    other_resp = client.post("/users", json=other_profile)
+    other_resp = client.post("/admins", json=other_profile)
     other_data = json.loads(other_resp.data.decode())
     other_id = other_data['id']
-
-    old_resp = client.post("/users", json=old_profile)
+    other_it = other_data['token']
+    old_resp = client.post("/admins", json=old_profile)
     old_data = json.loads(old_resp.data.decode())
     user_id = old_data['id']
 
-    update_profile = {'email': repeated_mail}
+    update_profile = {'email': repeated_mail,
+                      'token': AdminDBModel.encode_auth_token(2)}
     patch_resp = client.patch(
-        "/users/{}".format(user_id),
+        "/admins/{}".format(user_id),
         json=update_profile
     )
     assert patch_resp.status_code == 409
@@ -206,7 +211,7 @@ def test_patch_nuevo_mail_pero_ya_existente_entonces_error(
     assert patch_data['status'] == 'repeated_email'
 
     re_other_resp = client.get(
-        "/users/{}".format(other_id)
+        "/admins/{}".format(other_id)
     )
     re_other_data = json.loads(re_other_resp.data.decode())
     assert re_other_data['email'] == other_profile['email']

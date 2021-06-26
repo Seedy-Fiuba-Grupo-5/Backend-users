@@ -57,19 +57,16 @@ class AdminsListResource(BaseResource):
     @ns.response(400, MISSING_VALUES_ERROR, code_400_swg)
     @ns.response(409, 'User already exists', code_409_swg)
     def post(self):
-        """Create a new user"""
+        """Create a new admin"""
         try:
             data = request.get_json()
-            missing_args = self.missing_values(data, self.REGISTER_FIELDS)
-            if missing_args != []:
-                ns.abort(400, status=self.MISSING_VALUES_ERROR,
-                         missing_args=missing_args)
             id = AdminDBModel.add_user(data['name'],
                                        data['lastName'],
                                        data['email'],
                                        data['password'])
             user_model = AdminDBModel.query.get(id)
             response_object = user_model.serialize()
+            response_object['token'] = AdminDBModel.encode_auth_token(id)
             return response_object, 201
         except BusinessError as e:
             code, status = self.code_status[e.__class__]
