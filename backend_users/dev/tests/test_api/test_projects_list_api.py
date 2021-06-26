@@ -10,7 +10,9 @@ def test_get_project_id_retorna_error_cuando_el_project_no_existe(
     test_database
 ):
     """
-    Dada una base de datos vacia.
+    Dada una base de datos.
+    Con usuario registrado:
+        'id': '<user_id>'
     Cuando GET /projects/<id>
     Entonces obtengo 404
     Con cuerpo:
@@ -18,12 +20,33 @@ def test_get_project_id_retorna_error_cuando_el_project_no_existe(
     """
     session = recreate_db(test_database)
     client = test_app.test_client()
+    email = 'name@lastname.com'
+    password = 'a password'
+    body = {
+        'name': 'a name',
+        'lastName': 'a last name',
+        'email': email,
+        'password': password
+    }
+    res = client.post('/users', json=body)
+    data = json.loads(res.data.decode())
+
+    body = {
+        'email': email,
+        'password': password
+    }
+    res = client.post('/users/login', json=body)
+    data = json.loads(res.data.decode())
+    token = data['token']
+
     project_id = 333
     url = PARCIAL_URL + "/" + str(project_id)
-    res = client.get(url)
+    body = {'token':  token}
+    res = client.get(url, json=body)
     assert res.status_code == 404
-    body = json.loads(res.data.decode())
-    assert body['status'] == "The project requested could not be found"
+    data = json.loads(res.data.decode())
+    assert data['status'] == "The project requested could not be found"
+    assert data['token'] is not None
 
 
 def test_get_project_id_retorna_info_del_proyecto_cuando_existe(
@@ -44,24 +67,37 @@ def test_get_project_id_retorna_info_del_proyecto_cuando_existe(
     """
     session = recreate_db(test_database)
     client = test_app.test_client()
+    email = 'name@lastname.com'
+    password = 'a password'
     body = {
         'name': 'a name',
         'lastName': 'a last name',
-        'email': 'name@lastname.com',
-        'password': 'a password'
+        'email': email,
+        'password': password
     }
     res = client.post('/users', json=body)
     data = json.loads(res.data.decode())
+
+    body = {
+        'email': email,
+        'password': password
+    }
+    res = client.post('/users/login', json=body)
+    data = json.loads(res.data.decode())
     user_id = data['id']
+    token = data['token']
 
     project_id = 3
+    # TODO : Agregar token en body cuando el endpoint este listo
     body = {'project_id': project_id}
     url = '/users' + '/' + str(user_id) + '/projects'
     res = client.post(url, json=body)
 
+    body = {'token': token}
     url = PARCIAL_URL + '/' + str(project_id)
-    res = client.get(url)
+    res = client.get(url, json=body)
     assert res.status_code == 200
     data = json.loads(res.data.decode())
     assert data['project_id'] == project_id
     assert data['user_id'] == user_id
+    assert data['token'] is not None
