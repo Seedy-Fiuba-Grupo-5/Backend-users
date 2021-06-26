@@ -3,7 +3,7 @@ from flask_restx import Namespace, fields
 from prod.api.base_resource import BaseResource
 from prod.db_models.admin_db_model import AdminDBModel
 from prod.exceptions import BusinessError, RepeatedEmailError
-
+from prod.schemas.constants import USER_NOT_FOUND_ERROR, REPEATED_EMAIL_ERROR
 ns = Namespace(
     'admins/<int:user_id>',
     description='One user related operations'
@@ -13,10 +13,7 @@ ns = Namespace(
 @ns.route('')
 @ns.param('user_id', 'The user identifier')
 class AdminResource(BaseResource):
-    USER_NOT_FOUND_ERROR = 'user_not_found'
-    REPEATED_EMAIL_ERROR = 'repeated_email'
     REQUIRED_VALUES = ['name', 'lastName', 'email', 'password', 'token']
-    MISSING_VALUES_ERROR = 'missing_args'
 
     code_status = {
         RepeatedEmailError: (409, 'repeated_email')
@@ -51,7 +48,7 @@ class AdminResource(BaseResource):
         """Get user data"""
         user = AdminDBModel.query.get(user_id)
         if not user:
-            ns.abort(404, status=self.USER_NOT_FOUND_ERROR)
+            ns.abort(404, status=USER_NOT_FOUND_ERROR)
         response_object = user.serialize()
         return response_object, 200
 
@@ -64,11 +61,11 @@ class AdminResource(BaseResource):
         try:
             user = AdminDBModel.query.get(user_id)
             if not user:
-                ns.abort(404, status=self.USER_NOT_FOUND_ERROR)
+                ns.abort(404, status=USER_NOT_FOUND_ERROR)
             json = request.get_json()
             token_decoded = AdminDBModel.decode_auth_token(json['token'])
             if token_decoded != user_id:
-                ns.abort(404, status=self.USER_NOT_FOUND_ERROR)
+                ns.abort(404, status=USER_NOT_FOUND_ERROR)
             user.update(
                 name=json.get('name', user.name),
                 lastName=json.get('lastName', user.lastName),

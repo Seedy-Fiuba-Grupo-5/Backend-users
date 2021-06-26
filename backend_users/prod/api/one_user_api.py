@@ -3,6 +3,8 @@ from flask_restx import Namespace, fields
 from prod.api.base_resource import BaseResource
 from prod.db_models.user_db_model import UserDBModel
 from prod.exceptions import BusinessError, RepeatedEmailError
+from prod.schemas.constants import USER_NOT_FOUND_ERROR, REPEATED_EMAIL_ERROR,\
+    MISSING_VALUES_ERROR
 
 ns = Namespace(
     'users/<int:user_id>',
@@ -13,9 +15,6 @@ ns = Namespace(
 @ns.route('')
 @ns.param('user_id', 'The user identifier')
 class UserResource(BaseResource):
-    USER_NOT_FOUND_ERROR = 'user_not_found'
-    REPEATED_EMAIL_ERROR = 'repeated_email'
-    MISSING_VALUES_ERROR = 'missing_args'
 
     code_status = {
         RepeatedEmailError: (409, 'repeated_email')
@@ -50,7 +49,7 @@ class UserResource(BaseResource):
         """Get user data"""
         user = UserDBModel.query.get(user_id)
         if not user:
-            ns.abort(404, status=self.USER_NOT_FOUND_ERROR)
+            ns.abort(404, status=USER_NOT_FOUND_ERROR)
         response_object = user.serialize()
         return response_object, 200
 
@@ -63,11 +62,11 @@ class UserResource(BaseResource):
         try:
             user = UserDBModel.query.get(user_id)
             if not user:
-                ns.abort(404, status=self.USER_NOT_FOUND_ERROR)
+                ns.abort(404, status=USER_NOT_FOUND_ERROR)
             json = request.get_json()
             token_decoded = UserDBModel.decode_auth_token(json['token'])
             if token_decoded != user_id:
-                ns.abort(404, status=self.USER_NOT_FOUND_ERROR)
+                ns.abort(404, status=USER_NOT_FOUND_ERROR)
             user.update(
                 name=json.get('name', user.name),
                 lastName=json.get('lastName', user.lastName),
@@ -82,4 +81,4 @@ class UserResource(BaseResource):
             code, status = self.code_status[e.__class__]
             ns.abort(code, status=status)
         except KeyError:
-            ns.abort(404, status=self.MISSING_VALUES_ERROR)
+            ns.abort(404, status=MISSING_VALUES_ERROR)
