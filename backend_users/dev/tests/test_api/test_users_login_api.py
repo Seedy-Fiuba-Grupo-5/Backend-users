@@ -59,7 +59,7 @@ def test_dado_post_users_login_con_email_y_password_validos_obtiene_id_y_token_v
         content_type="application/json"
     )
     token_info = json.loads(resp_token.data.decode())
-    assert token_info['status'] == 'valid_token'
+    assert token_info['status'] == 'Valid token'
 
 
 def test_post_users_login_con_email_inexistente_entonces_error_404(

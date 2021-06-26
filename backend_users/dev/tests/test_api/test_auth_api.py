@@ -31,4 +31,3 @@ def test_get_correct_encode_and_decode_of_id(test_app,
         content_type="application/json"
     )
     assert response.status_code == 200
-    print(response)
