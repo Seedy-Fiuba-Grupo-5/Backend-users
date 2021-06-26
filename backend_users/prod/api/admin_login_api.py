@@ -4,7 +4,8 @@ from prod.api.base_resource import BaseResource
 from prod.db_models.admin_db_model import AdminDBModel
 from prod.exceptions import BusinessError, UserNotFoundError,\
     WrongPasswordError
-
+from prod.schemas.constants import USER_NOT_FOUND_ERROR, WRONG_PASS_ERROR, \
+    MISSING_ARGS_ERROR
 
 ns = Namespace(
     'admins/login',
@@ -15,9 +16,6 @@ ns = Namespace(
 @ns.route('')
 class AdminsLoginResource(BaseResource):
     REQUIRED_VALUES = ['email', 'password']
-    MISSING_ARGS_ERROR = 'missing_args'
-    USER_NOT_FOUND_ERROR = 'user_not_found'
-    WRONG_PASS_ERROR = 'wrong_password'
 
     code_status = {
         UserNotFoundError: (404, USER_NOT_FOUND_ERROR),
@@ -60,7 +58,7 @@ class AdminsLoginResource(BaseResource):
             data = request.get_json()
             missing_args = self.missing_values(data, self.REQUIRED_VALUES)
             if missing_args:
-                ns.abort(400, status=self.MISSING_ARGS_ERROR,
+                ns.abort(400, status=MISSING_ARGS_ERROR,
                          missing_args=missing_args)
             id = AdminDBModel.get_id(data['email'], data['password'])
             new_token = AdminDBModel.encode_auth_token(id)
