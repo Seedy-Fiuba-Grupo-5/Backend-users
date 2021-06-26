@@ -63,9 +63,11 @@ class AdminsLoginResource(BaseResource):
                 ns.abort(400, status=self.MISSING_ARGS_ERROR,
                          missing_args=missing_args)
             id = AdminDBModel.get_id(data['email'], data['password'])
-            token = AdminDBModel.encode_auth_token(id)
+            new_token = AdminDBModel.encode_auth_token(id)
             response_object = {
-                "email": data['email'], "id": id, "token": token}
+                "email": data['email'],
+                "id": id,
+                "token": new_token}
             return response_object, 200
         except BusinessError as e:
             code, status = self.code_status[e.__class__]

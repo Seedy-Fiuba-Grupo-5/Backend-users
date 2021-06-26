@@ -1,7 +1,7 @@
 from flask_restx import Namespace
 from flask import request
 from prod.api.base_resource import BaseResource
-from prod.db_models.user_db_model import UserProjectDBModel
+from prod.db_models.user_db_model import UserProjectDBModel, UserDBModel
 from prod.schemas.project_not_found import project_not_found
 from prod.schemas.project_representation import project_representation
 from prod.schemas.token_required import token_required
@@ -40,8 +40,8 @@ class ProjectsListResource(BaseResource):
             response_object['missing_args'] = missing_args
             return response_object, 400
         user_id = UserProjectDBModel.get_user_of_project_id(project_id)
-        # TODO: Update token
-        response_object['token'] = data['token']
+        new_token = UserDBModel.encode_auth_token(user_id)
+        response_object['token'] = new_token
         if user_id < 0:
             response_object['status'] = PROJECT_NOT_FOUND
             return response_object, 404
