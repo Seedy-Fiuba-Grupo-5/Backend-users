@@ -36,7 +36,6 @@ def test_get_a_url_user_barra_id_1_barra_projects_devuelve_proyectos_asociados_a
     user_id = body_register['id']
     project_id = 1
     body_project = {
-        "user_id": user_id,
         "project_id": project_id
     }
     response_project = client.post(

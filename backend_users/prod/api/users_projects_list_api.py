@@ -14,7 +14,6 @@ ns = Namespace(
 class UsersProjectsListResource(BaseResource):
 
     body_swg = ns.model('User projects input', {
-        'user_id': fields.Integer(required=True, description='The user id'),
         'project_id': fields.Integer(
             required=True, description='The project id'),
     })
@@ -43,9 +42,9 @@ class UsersProjectsListResource(BaseResource):
         """Add project to user"""
         data = request.get_json()
         id_projects_list = UserProjectDBModel.add_project_to_user_id(
-            data['user_id'], data['project_id'])
+            user_id, data['project_id'])
         response_object = {
-            "user_id": data['user_id'],
+            "user_id": user_id,
             "project_id": id_projects_list
         }
         # TODO: Considerar devolver errores
