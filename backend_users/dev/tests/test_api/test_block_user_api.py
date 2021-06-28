@@ -80,4 +80,3 @@ def test_patchs_blocks_and_unblocks_asociated_id_to_admin_in_empty_db(
     response = client.patch("/admins/users/1", data=json.dumps(body_2),
                             content_type="application/json")
     assert response.status_code == 200
-    test_database.
