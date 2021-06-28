@@ -3,10 +3,9 @@ from flask_restx import Namespace
 from prod.api.base_resource import BaseResource
 from prod.db_models.user_db_model import UserDBModel
 from prod.exceptions import BusinessError
-from prod.schemas.constants import USER_NOT_FOUND_ERROR, REPEATED_EMAIL_ERROR
+from prod.schemas.constants import USER_NOT_FOUND_ERROR
 from prod.schemas.admin_representation import admin_representation
 from prod.schemas.admin_block_code20 import admin_block_code20
-from prod.schemas.user_email_repeated import user_email_repeated
 from prod.schemas.user_login_not_found import user_login_not_found
 
 
@@ -19,7 +18,7 @@ ns = Namespace(
 @ns.route('')
 @ns.param('user_id', 'The user identifier')
 class AdminResource(BaseResource):
-    REQUIRED_VALUES = ['name', 'lastName', 'email', 'password', 'token']
+    REQUIRED_VALUES = ['token', "id_admin"]
 
     body_swg = ns.model(admin_representation.name, admin_representation)
 
@@ -27,14 +26,11 @@ class AdminResource(BaseResource):
 
     code_404_swg = ns.model(user_login_not_found.name, user_login_not_found)
 
-    code_409_swg = ns.model(user_email_repeated.name, user_email_repeated)
-
     @ns.expect(body_swg)
     @ns.response(200, 'Success', code_200_swg)
     @ns.response(404, USER_NOT_FOUND_ERROR, code_404_swg)
-    @ns.response(409, REPEATED_EMAIL_ERROR, code_409_swg)
     def patch(self, user_id):
-        """Update user data"""
+        """Update user data, blocking user"""
         try:
             user = UserDBModel.query.get(user_id)
             if not user:
