@@ -2,7 +2,6 @@ from flask import request
 from flask_restx import Namespace
 from prod.api.base_resource import BaseResource
 from prod.db_models.user_db_model import UserDBModel
-from prod.db_models.admin_db_model import AdminDBModel
 from prod.exceptions import BusinessError
 from prod.schemas.constants import USER_NOT_FOUND_ERROR, REPEATED_EMAIL_ERROR
 from prod.schemas.admin_representation import admin_representation
@@ -37,17 +36,18 @@ class AdminResource(BaseResource):
     def patch(self, user_id):
         """Update user data"""
         try:
-            user = AdminDBModel.query.get(user_id)
+            user = UserDBModel.query.get(user_id)
             if not user:
                 ns.abort(404, status=USER_NOT_FOUND_ERROR)
             json = request.get_json()
-            token_decoded = AdminDBModel.decode_auth_token(json['token'])
-            if token_decoded != user_id:
+            token_decoded = UserDBModel.decode_auth_token(json['token'])
+            id_admin = json['id_admin']
+            if token_decoded != id_admin:
                 ns.abort(404, status=USER_NOT_FOUND_ERROR)
             UserDBModel.block(user_id)
-            user = AdminDBModel.query.get(user_id)
+            user = UserDBModel.query.get(user_id)
             response_object = user.serialize()
-            response_object['token'] = AdminDBModel.encode_auth_token(user_id)
+            response_object['token'] = UserDBModel.encode_auth_token(user_id)
             return response_object, 200
         except BusinessError as e:
             code, status = self.code_status[e.__class__]
