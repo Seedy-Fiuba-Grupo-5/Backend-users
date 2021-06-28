@@ -7,7 +7,7 @@ from prod.schemas.constants import USER_NOT_FOUND_ERROR
 from prod.schemas.admin_block_representation import admin_block_representation
 from prod.schemas.admin_block_code20 import admin_block_code20
 from prod.schemas.user_login_not_found import user_login_not_found
-
+from prod.schemas.constants import MISSING_VALUES_ERROR
 
 ns = Namespace(
     'admins/users/<int:user_id>',
@@ -50,4 +50,4 @@ class AdminResource(BaseResource):
             code, status = self.code_status[e.__class__]
             ns.abort(code, status=status)
         except KeyError:
-            ns.abort(404, status=self.MISSING_VALUES_ERROR)
+            ns.abort(404, status=MISSING_VALUES_ERROR)

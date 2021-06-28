@@ -25,3 +25,5 @@ REPEATED_USER_ERROR = 'repeated_email'
 MISSING_ARGS_ERROR = 'missing_args'
 
 WRONG_PASS_ERROR = 'wrong_password'
+
+USER_BLOCKED = 'the user is blocked'

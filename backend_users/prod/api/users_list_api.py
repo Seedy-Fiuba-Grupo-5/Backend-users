@@ -2,7 +2,7 @@ from flask_restx import Namespace, fields
 from flask import request
 from prod.api.base_resource import BaseResource
 from prod.db_models.user_db_model import UserDBModel
-from prod.exceptions import BusinessError, RepeatedEmailError
+from prod.exceptions import BusinessError, RepeatedEmailError, UserBlockedError
 from prod.schemas.user_representation import user_representation
 from prod.schemas.user_code20 import user_code20
 from prod.schemas.user_repeated import user_repeated
@@ -19,7 +19,8 @@ class UsersListResource(BaseResource):
     REGISTER_FIELDS = ("name", "lastName", "email", "password")
 
     code_status = {
-        RepeatedEmailError: (409, REPEATED_USER_ERROR)
+        RepeatedEmailError: (409, REPEATED_USER_ERROR),
+        UserBlockedError: (406, 'user_blocked')
     }
 
     body_swg = ns.model(user_representation.name, user_representation)
@@ -36,7 +37,8 @@ class UsersListResource(BaseResource):
     def get(self):
         """Get all users data"""
         response_object =\
-            [user.serialize() for user in UserDBModel.query.all()]
+            [user.serialize() for user in UserDBModel.query.all() if
+             user.active is True]
         return response_object, 200
 
     @ns.expect(body_swg)

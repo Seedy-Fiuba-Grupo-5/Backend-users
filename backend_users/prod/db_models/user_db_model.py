@@ -59,6 +59,11 @@ class UserDBModel(db.Model):
             user.active = False
         db.session.commit()
 
+    @staticmethod
+    def get_active_status(associated_id):
+        user = UserDBModel.query.filter_by(id=associated_id).first()
+        return user.active
+
     def update(self, name, lastName, email, password):
         try:
             self.__init__(name, lastName, email, password)

@@ -29,7 +29,7 @@ def test_changed_status_of_blocked_user(test_app,
 
 
 def test_change_again_status_from_blocked_to_unlocked(test_app,
-                                        test_database):
+                                                      test_database):
     """Este tests muestra como se desbloquea a un usuario.
         Se agrega a la sesion, al usuario:
         name="Franco",

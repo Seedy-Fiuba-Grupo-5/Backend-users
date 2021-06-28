@@ -2,13 +2,13 @@ from flask import request
 from flask_restx import Namespace
 from prod.api.base_resource import BaseResource
 from prod.db_models.user_db_model import UserDBModel
-from prod.exceptions import BusinessError, RepeatedEmailError
+from prod.exceptions import BusinessError, RepeatedEmailError, UserBlockedError
 from prod.schemas.user_code20 import user_code20
 from prod.schemas.admin_representation import admin_representation
 from prod.schemas.user_login_not_found import user_login_not_found
 from prod.schemas.user_email_repeated import user_email_repeated
 from prod.schemas.constants import USER_NOT_FOUND_ERROR, REPEATED_EMAIL_ERROR,\
-    MISSING_VALUES_ERROR
+    MISSING_VALUES_ERROR, USER_BLOCKED
 
 ns = Namespace(
     'users/<int:user_id>',
@@ -21,7 +21,8 @@ ns = Namespace(
 class UserResource(BaseResource):
 
     code_status = {
-        RepeatedEmailError: (409, 'repeated_email')
+        RepeatedEmailError: (409, 'repeated_email'),
+        UserBlockedError: (406, 'user_blocked')
     }
 
     body_swg = ns.model(admin_representation.name, admin_representation)
@@ -56,6 +57,9 @@ class UserResource(BaseResource):
             token_decoded = UserDBModel.decode_auth_token(json['token'])
             if token_decoded != user_id:
                 ns.abort(404, status=USER_NOT_FOUND_ERROR)
+            if UserDBModel.get_active_status(user_id) is False:
+                ns.abort(401,
+                         status=USER_BLOCKED)
             user.update(
                 name=json.get('name', user.name),
                 lastName=json.get('lastName', user.lastName),
