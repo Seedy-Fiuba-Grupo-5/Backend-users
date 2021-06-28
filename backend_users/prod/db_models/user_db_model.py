@@ -42,11 +42,19 @@ class UserDBModel(db.Model):
                  name,
                  lastname,
                  email,
-                 password):
+                 password,
+                 active=True):
         self.name = name
         self.lastName = lastname
         self.email = email
         self.password = password
+        self.active = active
+
+    @staticmethod
+    def block(associated_id):
+        user = UserDBModel.query.filter_by(id=associated_id).first()
+        user.active = False
+        db.session.commit()
 
     def update(self, name, lastName, email, password):
         try:
