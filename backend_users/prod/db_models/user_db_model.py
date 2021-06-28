@@ -51,9 +51,12 @@ class UserDBModel(db.Model):
         self.active = active
 
     @staticmethod
-    def block(associated_id):
+    def block_and_unblock(associated_id):
         user = UserDBModel.query.filter_by(id=associated_id).first()
-        user.active = False
+        if not user.active:
+            user.active = True
+        else:
+            user.active = False
         db.session.commit()
 
     def update(self, name, lastName, email, password):

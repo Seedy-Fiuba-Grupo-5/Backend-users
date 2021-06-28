@@ -4,7 +4,7 @@ from prod.api.base_resource import BaseResource
 from prod.db_models.user_db_model import UserDBModel
 from prod.exceptions import BusinessError
 from prod.schemas.constants import USER_NOT_FOUND_ERROR
-from prod.schemas.admin_representation import admin_representation
+from prod.schemas.admin_block_representation import admin_block_representation
 from prod.schemas.admin_block_code20 import admin_block_code20
 from prod.schemas.user_login_not_found import user_login_not_found
 
@@ -20,7 +20,8 @@ ns = Namespace(
 class AdminResource(BaseResource):
     REQUIRED_VALUES = ['token', "id_admin"]
 
-    body_swg = ns.model(admin_representation.name, admin_representation)
+    body_swg = ns.model(admin_block_representation.name,
+                        admin_block_representation)
 
     code_200_swg = ns.model(admin_block_code20.name, admin_block_code20)
 
@@ -40,7 +41,7 @@ class AdminResource(BaseResource):
             id_admin = json['id_admin']
             if token_decoded != id_admin:
                 ns.abort(404, status=USER_NOT_FOUND_ERROR)
-            UserDBModel.block(user_id)
+            UserDBModel.block_and_unblock(user_id)
             user = UserDBModel.query.get(user_id)
             response_object = user.serialize()
             response_object['token'] = UserDBModel.encode_auth_token(user_id)
