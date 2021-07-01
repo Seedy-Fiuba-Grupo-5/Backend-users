@@ -42,11 +42,27 @@ class UserDBModel(db.Model):
                  name,
                  lastname,
                  email,
-                 password):
+                 password,
+                 active=True):
         self.name = name
         self.lastName = lastname
         self.email = email
         self.password = password
+        self.active = active
+
+    @staticmethod
+    def flip_active_status(associated_id):
+        user = UserDBModel.query.filter_by(id=associated_id).first()
+        if not user.active:
+            user.active = True
+        else:
+            user.active = False
+        db.session.commit()
+
+    @staticmethod
+    def get_active_status(associated_id):
+        user = UserDBModel.query.filter_by(id=associated_id).first()
+        return user.active
 
     def update(self, name, lastName, email, password):
         try:

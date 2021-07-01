@@ -3,9 +3,9 @@ from flask import request
 from prod.api.base_resource import BaseResource
 from prod.db_models.user_db_model import UserDBModel
 from prod.exceptions import BusinessError, UserNotFoundError, \
-    WrongPasswordError
+    WrongPasswordError, UserBlockedError
 from prod.schemas.constants import WRONG_PASS_ERROR, MISSING_ARGS_ERROR, \
-    USER_NOT_FOUND_ERROR
+    USER_NOT_FOUND_ERROR, USER_BLOCKED
 from prod.schemas.user_login import user_login
 from prod.schemas.user_email_repeated import user_email_repeated
 from prod.schemas.user_login_code20 import user_login_code20
@@ -24,7 +24,8 @@ class UsersLoginResource(BaseResource):
 
     code_status = {
         UserNotFoundError: (404, USER_NOT_FOUND_ERROR),
-        WrongPasswordError: (401, WRONG_PASS_ERROR)
+        WrongPasswordError: (401, WRONG_PASS_ERROR),
+        UserBlockedError: (403, USER_BLOCKED)
     }
     body_swg = ns.model(user_login.name, user_login)
 
@@ -53,6 +54,9 @@ class UsersLoginResource(BaseResource):
                 ns.abort(400, status=MISSING_ARGS_ERROR,
                          missing_args=missing_args)
             id = UserDBModel.get_id(data['email'], data['password'])
+            if UserDBModel.get_active_status(id) is False:
+                ns.abort(401,
+                         status=USER_BLOCKED)
             token = UserDBModel.encode_auth_token(id)
             response_object = {
                 "email": data['email'], "id": id, "token": token}
