@@ -1,5 +1,6 @@
 import json
-from prod.db_models.user_db_model import UserDBModel, UserProjectDBModel
+from prod.db_models.user_db_model import UserDBModel
+from prod.db_models.user_project_db_model import UserProjectDBModel
 from dev.aux_test import recreate_db
 
 

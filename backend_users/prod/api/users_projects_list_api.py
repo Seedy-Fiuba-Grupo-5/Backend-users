@@ -1,7 +1,7 @@
 from flask_restx import Namespace, fields
 from flask import request
 from prod.api.base_resource import BaseResource
-from prod.db_models.user_db_model import UserProjectDBModel
+from prod.db_models.user_project_db_model import UserProjectDBModel
 
 ns = Namespace(
     'users/<int:user_id>/projects',

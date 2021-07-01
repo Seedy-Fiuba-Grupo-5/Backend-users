@@ -1,7 +1,8 @@
 from flask_restx import Namespace
 from flask import request
 from prod.api.base_resource import BaseResource
-from prod.db_models.user_db_model import UserProjectDBModel, UserDBModel
+from prod.db_models.user_db_model import UserDBModel
+from prod.db_models.user_project_db_model import UserProjectDBModel
 from prod.schemas.project_not_found import project_not_found
 from prod.schemas.project_representation import project_representation
 from prod.schemas.token_required import token_required
