@@ -41,7 +41,7 @@ class AdminResource(BaseResource):
             id_admin = json['id_admin']
             if token_decoded != id_admin:
                 ns.abort(404, status=USER_NOT_FOUND_ERROR)
-            UserDBModel.block_and_unblock(user_id)
+            UserDBModel.flip_active_status(user_id)
             user = UserDBModel.query.get(user_id)
             response_object = user.serialize()
             response_object['token'] = UserDBModel.encode_auth_token(user_id)

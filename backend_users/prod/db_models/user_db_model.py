@@ -51,7 +51,7 @@ class UserDBModel(db.Model):
         self.active = active
 
     @staticmethod
-    def block_and_unblock(associated_id):
+    def flip_active_status(associated_id):
         user = UserDBModel.query.filter_by(id=associated_id).first()
         if not user.active:
             user.active = True

@@ -24,7 +24,7 @@ def test_changed_status_of_blocked_user(test_app,
     session.add(user)
     session.commit()
     assert user.active is True
-    UserDBModel.block_and_unblock(user.id)
+    UserDBModel.flip_active_status(user.id)
     assert user.active is False
 
 
@@ -50,7 +50,7 @@ def test_change_again_status_from_blocked_to_unlocked(test_app,
     session.add(user)
     session.commit()
     assert user.active is True
-    UserDBModel.block_and_unblock(user.id)
+    UserDBModel.flip_active_status(user.id)
     assert user.active is False
-    UserDBModel.block_and_unblock(user.id)
+    UserDBModel.flip_active_status(user.id)
     assert user.active is True
