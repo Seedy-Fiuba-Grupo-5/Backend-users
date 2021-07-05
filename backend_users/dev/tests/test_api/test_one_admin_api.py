@@ -302,7 +302,7 @@ def test_patch_user_con_nuevo_id_no_actualiza_ningun_campo(
     assert patch_data['id'] == user_id
 
 
-def test_patch_user_con_nuevo_nombre_y_apellido_actualiza_uncamente_nombre_y_apellido(
+def test_patch_user_con_nuevo_nombre_y_apellido_actualiza_unicamente_nombre_y_apellido(
         test_app, test_database):
     """
     Dada una base de datos vacia.
