@@ -55,7 +55,8 @@ class SeerProjectDBModel(db.Model):
     def get_projects_of_seer_id(user_id):
         projects_query = SeerProjectDBModel.query.filter_by(user_id=user_id)
         id_projects_list = \
-            [user_project.project_id for user_project in projects_query.all()]
+            [(user_project.project_id, user_project.accepted) for
+             user_project in projects_query.all()]
         return id_projects_list
 
     @staticmethod
