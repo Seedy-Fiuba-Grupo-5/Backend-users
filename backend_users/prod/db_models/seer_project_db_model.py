@@ -28,9 +28,10 @@ class SeerProjectDBModel(db.Model):
     # bases de datos
     def __init__(self,
                  user_id,
-                 project_id):
+                 project_id, accepted=False):
         self.user_id = user_id
         self.project_id = project_id
+        self.accepted = accepted
 
     def serialize(self):
         return {
@@ -51,6 +52,13 @@ class SeerProjectDBModel(db.Model):
             # TODO: Considerar levantar un excepcion.
         return SeerProjectDBModel.get_projects_of_seer_id(user_id)
 
+    def update(self, accepted):
+        try:
+            self.__init__(self.user_id, self.project_id, accepted)
+            db.session.commit()
+        except exc.IntegrityError:
+            db.session.rollback()
+
     @staticmethod
     def get_projects_of_seer_id(user_id):
         projects_query = SeerProjectDBModel.query.filter_by(user_id=user_id)
@@ -61,9 +69,9 @@ class SeerProjectDBModel(db.Model):
 
     @staticmethod
     def get_seer_of_project_id(project_id):
-        user_project = SeerProjectDBModel\
-            .query\
-            .filter_by(project_id=project_id)\
+        user_project = SeerProjectDBModel \
+            .query \
+            .filter_by(project_id=project_id) \
             .first()
         if user_project is None:
             return -1
