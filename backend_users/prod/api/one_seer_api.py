@@ -3,6 +3,7 @@ from flask import request
 from prod.api.base_resource import BaseResource
 from prod.db_models.seer_project_db_model import SeerProjectDBModel
 from prod.schemas.constants import USER_NOT_FOUND_ERROR
+from prod.schemas.project_not_found import PROJECT_NOT_FOUND
 
 ns = Namespace(
     'seers/<int:user_id>',
@@ -32,7 +33,8 @@ class SeersProjectsListResource(BaseResource):
         """Get Seer's projects"""
         projects_info =\
             SeerProjectDBModel.get_projects_of_seer_id(user_id)
-        print(projects_info)
+        if len(projects_info) == 0:
+            ns.abort(404, status=USER_NOT_FOUND_ERROR)
         response_object = {
             "user_id": user_id,
             "project_info": projects_info,
@@ -46,6 +48,8 @@ class SeersProjectsListResource(BaseResource):
         data = request.get_json()
         projects_info = SeerProjectDBModel.add_project_to_seer_id(
             user_id, data['project_id'])
+        if len(projects_info) == 0:
+            ns.abort(404, status=USER_NOT_FOUND_ERROR)
         response_object = {
             "user_id": user_id,
             "projects_info": projects_info
@@ -70,3 +74,19 @@ class SeersProjectsListResource(BaseResource):
             return response_object, 200
         except KeyError:
             ns.abort(404, status=self.MISSING_VALUES_ERROR)
+
+    @ns.expect(body_swg)
+    @ns.response(200, 'Success', code_20x_swg)
+    def delete(self, user_id):
+        json = request.get_json()
+        deleted = SeerProjectDBModel.delete(user_id, json['project_id'])
+        if deleted:
+            projects_info = \
+                SeerProjectDBModel.get_projects_of_seer_id(user_id)
+            response_object = {
+                "user_id": user_id,
+                "project_info": projects_info,
+            }
+            return response_object, 200
+        else:
+            ns.abort(404, status=PROJECT_NOT_FOUND)
