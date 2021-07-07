@@ -187,7 +187,7 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
     assert user["accepted"]
 
 
-def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_delete_se_actualiza_unicamente_el_campo_accepted(test_app,
+def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_delete_de_dicho_id_el_usuario_ya_no_es_veedor_en_ningun_proyecto(test_app,
                                                                                                                                      test_database):
     """
     Dada una base de datos con un usuario
@@ -222,7 +222,6 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
     body_delete = {
         "token": UserDBModel.encode_auth_token(1),
         "project_id": 1,
-        "accepted": True
     }
     delete_response = client.delete("/seers/1",
                                     data=json.dumps(body_delete),
@@ -233,3 +232,135 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
     user = json.loads(delete_response.data.decode())
     assert user['user_id'] == 1
     assert user["projects_info"] == []
+
+
+def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_delete_de_un_proyecto_con_id_2_se_obtiene_project_not_found(test_app,
+                                                                                                                                     test_database):
+    """
+    Dada una base de datos con un usuario
+    Cuando Delete "seers/1" con el token adecuado y un project_id = 2
+    Entonces obtengo status 404
+    Y obtengo el cuerpo:
+        "status" == "The project requested could not be found"
+    """
+    session = recreate_db(test_database)
+    client = test_app.test_client()
+    body_usuario = {
+        "name": "Franco Martin",
+        "lastName": "Di Maria",
+        "email": "fdimaria@fi.uba.ar",
+        "password": "hola"
+    }
+    client.post(
+        "/users",
+        data=json.dumps(body_usuario),
+        content_type="application/json"
+    )
+
+    body_post = {
+        "token": UserDBModel.encode_auth_token(1),
+        "project_id": 1
+    }
+    client.post("/seers/1",
+                data=json.dumps(body_post),
+                content_type="application/json")
+
+    body_delete = {
+        "token": UserDBModel.encode_auth_token(1),
+        "project_id": 2,
+    }
+    delete_response = client.delete("/seers/1",
+                                    data=json.dumps(body_delete),
+                                    content_type="application/json")
+
+    assert delete_response is not None
+    assert delete_response.status_code == 404
+    user = json.loads(delete_response.data.decode())
+    assert user['status'] == "The project requested could not be found"
+
+def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_delete_de_un_proyecto_sin_mandar_project_id_se_obtiene_missing_arguments(test_app,
+                                                                                                                                     test_database):
+    """
+    Dada una base de datos con un usuario
+    Cuando Delete "seers/1" con el token adecuado y sin un project_id
+    Entonces obtengo status 404
+    Y obtengo el cuerpo:
+        "status" == "missing_args"
+    """
+    session = recreate_db(test_database)
+    client = test_app.test_client()
+    body_usuario = {
+        "name": "Franco Martin",
+        "lastName": "Di Maria",
+        "email": "fdimaria@fi.uba.ar",
+        "password": "hola"
+    }
+    client.post(
+        "/users",
+        data=json.dumps(body_usuario),
+        content_type="application/json"
+    )
+
+    body_post = {
+        "token": UserDBModel.encode_auth_token(1),
+        "project_id": 1
+    }
+    client.post("/seers/1",
+                data=json.dumps(body_post),
+                content_type="application/json")
+
+    body_delete = {
+        "token": UserDBModel.encode_auth_token(1)
+    }
+    delete_response = client.delete("/seers/1",
+                                    data=json.dumps(body_delete),
+                                    content_type="application/json")
+
+    assert delete_response is not None
+    assert delete_response.status_code == 404
+    user = json.loads(delete_response.data.decode())
+    assert user['status'] == "missing_args"
+
+def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_delete_de_un_proyecto_sin_mandar_token_se_obtiene_missing_arguments(test_app,
+                                                                                                                                     test_database):
+    """
+    Dada una base de datos con un usuario
+    Cuando Delete "seers/1" con el token incorrecto y un project_id = 1
+    Entonces obtengo status 404
+    Y obtengo el cuerpo:
+        "status" == "user_not_found"
+    """
+    session = recreate_db(test_database)
+    client = test_app.test_client()
+    body_usuario = {
+        "name": "Franco Martin",
+        "lastName": "Di Maria",
+        "email": "fdimaria@fi.uba.ar",
+        "password": "hola"
+    }
+    client.post(
+        "/users",
+        data=json.dumps(body_usuario),
+        content_type="application/json"
+    )
+
+    body_post = {
+        "token": UserDBModel.encode_auth_token(1),
+        "project_id": 1
+    }
+    client.post("/seers/1",
+                data=json.dumps(body_post),
+                content_type="application/json")
+
+    body_delete = {
+        "token": "",
+        "project_id": 1,
+    }
+    delete_response = client.delete("/seers/1",
+                                    data=json.dumps(body_delete),
+                                    content_type="application/json")
+
+    assert delete_response is not None
+    assert delete_response.status_code == 404
+    user = json.loads(delete_response.data.decode())
+    assert user['status'] == "user_not_found"
