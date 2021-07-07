@@ -70,16 +70,6 @@ class SeerProjectDBModel(db.Model):
         return id_projects_list
 
     @staticmethod
-    def get_seer_of_project_id(project_id):
-        user_project = SeerProjectDBModel \
-            .query \
-            .filter_by(project_id=project_id) \
-            .first()
-        if user_project is None:
-            return -1
-        return user_project.user_id
-
-    @staticmethod
     def delete(user_id, project_id):
         seer = SeerProjectDBModel.query.filter_by(
             user_id=user_id, project_id=project_id).first()

@@ -91,9 +91,6 @@ class SeersProjectsListResource(BaseResource):
             response_object['token'] = SeerProjectDBModel.encode_auth_token(
                 user_id)
             return response_object, 200
-        except BusinessError as e:
-            code, status = self.code_status[e.__class__]
-            ns.abort(code, status=status)
         except KeyError:
             ns.abort(404, status=MISSING_VALUES_ERROR)
 

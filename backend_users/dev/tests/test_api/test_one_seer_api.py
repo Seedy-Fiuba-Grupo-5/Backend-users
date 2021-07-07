@@ -142,7 +142,7 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
                                                                                                                                     test_database):
     """
     Dada una base de datos con un usuario
-    Cuando Patch "seers/1" con accepted = True
+    Cuando Patch "seers/1" con accepted = True y project_id = 1
     Entonces obtengo status 200
     Y obtengo el cuerpo:
         "user_id": 1,
@@ -186,6 +186,141 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
     assert user["project_id"] == 1
     assert user["accepted"]
 
+def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_patch_con_project_id_2_se_obtiene_user_not_found(test_app,
+                                                                                                                                    test_database):
+    """
+    Dada una base de datos con un usuario
+    Cuando Patch "seers/1" con accepted = True y project_id = 2
+    Entonces obtengo status 200
+    Y obtengo el cuerpo:
+        "user_id": 1,
+        "projects_info": [[1, true]]
+    """
+    session = recreate_db(test_database)
+    client = test_app.test_client()
+    body_usuario = {
+        "name": "Franco Martin",
+        "lastName": "Di Maria",
+        "email": "fdimaria@fi.uba.ar",
+        "password": "hola"
+    }
+    client.post(
+        "/users",
+        data=json.dumps(body_usuario),
+        content_type="application/json"
+    )
+
+    body_post = {
+        "token": UserDBModel.encode_auth_token(1),
+        "project_id": 1
+    }
+    client.post("/seers/1",
+                data=json.dumps(body_post),
+                content_type="application/json")
+
+    body_patch = {
+        "token": UserDBModel.encode_auth_token(1),
+        "project_id": 2,
+        "accepted": True
+    }
+    patch_response = client.patch("/seers/1",
+                                  data=json.dumps(body_patch),
+                                  content_type="application/json")
+
+    assert patch_response is not None
+    assert patch_response.status_code == 404
+    user = json.loads(patch_response.data.decode())
+    assert user['status'] == "user_not_found"
+
+def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_patch_con_token_incorrecto_se_obtiene_user_not_found(test_app,
+                                                                                                                                    test_database):
+    """
+    Dada una base de datos con un usuario
+    Cuando Patch "seers/1" con accepted = True, token ='' y project_id = 1
+    Entonces obtengo status 200
+    Y obtengo el cuerpo:
+        "status": "user_not_found",
+    """
+    session = recreate_db(test_database)
+    client = test_app.test_client()
+    body_usuario = {
+        "name": "Franco Martin",
+        "lastName": "Di Maria",
+        "email": "fdimaria@fi.uba.ar",
+        "password": "hola"
+    }
+    client.post(
+        "/users",
+        data=json.dumps(body_usuario),
+        content_type="application/json"
+    )
+
+    body_post = {
+        "token": UserDBModel.encode_auth_token(1),
+        "project_id": 1
+    }
+    client.post("/seers/1",
+                data=json.dumps(body_post),
+                content_type="application/json")
+
+    body_patch = {
+        "token": "",
+        "project_id": 1,
+        "accepted": True
+    }
+    patch_response = client.patch("/seers/1",
+                                  data=json.dumps(body_patch),
+                                  content_type="application/json")
+
+    assert patch_response is not None
+    assert patch_response.status_code == 404
+    user = json.loads(patch_response.data.decode())
+    assert user['status'] == "user_not_found"
+
+def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_patch_sin_project_id_se_obtiene_missin_arguments(test_app,
+                                                                                                                                    test_database):
+    """
+    Dada una base de datos con un usuario
+    Cuando Patch "seers/1" con accepted = True sin project_id = 1
+    Entonces obtengo status 200
+    Y obtengo el cuerpo:
+        "status": "missing_args"
+    """
+    session = recreate_db(test_database)
+    client = test_app.test_client()
+    body_usuario = {
+        "name": "Franco Martin",
+        "lastName": "Di Maria",
+        "email": "fdimaria@fi.uba.ar",
+        "password": "hola"
+    }
+    client.post(
+        "/users",
+        data=json.dumps(body_usuario),
+        content_type="application/json"
+    )
+
+    body_post = {
+        "token": UserDBModel.encode_auth_token(1),
+        "project_id": 1
+    }
+    client.post("/seers/1",
+                data=json.dumps(body_post),
+                content_type="application/json")
+
+    body_patch = {
+        "token": "",
+        "accepted": True
+    }
+    patch_response = client.patch("/seers/1",
+                                  data=json.dumps(body_patch),
+                                  content_type="application/json")
+
+    assert patch_response is not None
+    assert patch_response.status_code == 404
+    user = json.loads(patch_response.data.decode())
+    assert user['status'] == "missing_args"
+
 
 def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_delete_de_dicho_id_el_usuario_ya_no_es_veedor_en_ningun_proyecto(test_app,
                                                                                                                                      test_database):
@@ -203,7 +338,7 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola"-
     }
     client.post(
         "/users",
@@ -321,7 +456,7 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
     user = json.loads(delete_response.data.decode())
     assert user['status'] == "missing_args"
 
-def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_delete_de_un_proyecto_sin_mandar_token_se_obtiene_missing_arguments(test_app,
+def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_delete_de_un_proyecto_con_token_incorrecto_se_obtiene_missing_arguments(test_app,
                                                                                                                                      test_database):
     """
     Dada una base de datos con un usuario
