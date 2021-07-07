@@ -215,3 +215,133 @@ def test_patch_nuevo_mail_pero_ya_existente_entonces_error(
     )
     re_other_data = json.loads(re_other_resp.data.decode())
     assert re_other_data['email'] == other_profile['email']
+
+
+def test_patch_user_con_nuevo_nombre_actualiza_solo_el_nombre(
+        test_app, test_database):
+    """
+    Dada una base de datos vacia.
+    Y un usuario registrado:
+        'id': <id>
+        'name': 'a name'
+        'lastName: 'a lastName'
+        'email': 'test@test.com'
+    Cuando patch 'admins/<id>'
+    Con cuerpo
+        'name' : 'another name'
+        'token': <token>
+    Entonces obtengo el cuerpo:
+        'id': <id>
+        'name': 'another name'
+        'lastName: 'a lastName'
+        'email': 'another@test.com'
+    """
+    session = recreate_db(test_database)
+    old_profile = {'name': 'a name', 'lastName': 'a last name',
+                   'email': 'test@test.com', 'password': 'a password',
+                   'token': AdminDBModel.encode_auth_token(1)}
+    client = test_app.test_client()
+    post_resp = client.post("/admins", json=old_profile)
+    post_data = json.loads(post_resp.data.decode())
+    user_id = post_data['id']
+    update_profile = {'name': 'another name',
+                              'token': AdminDBModel.encode_auth_token(1)}
+    patch_resp = client.patch(
+        "/admins/{}".format(user_id),
+        json=update_profile
+    )
+    assert patch_resp.status_code == 200
+    patch_data = json.loads(patch_resp.data.decode())
+    assert patch_data['name'] == update_profile['name']
+    for field in old_profile.keys():
+        if field in ['name', 'password', 'token']:
+            continue
+        assert patch_data[field] == old_profile[field]
+    assert patch_data['id'] == user_id
+
+
+def test_patch_user_con_nuevo_id_no_actualiza_ningun_campo(
+        test_app, test_database):
+    """
+    Dada una base de datos vacia.
+    Y un usuario registrado:
+        'id': <id>
+        'name': 'a name'
+        'lastName: 'a lastName'
+        'email': 'test@test.com'
+    Cuando patch 'admins/<id>'
+    Con cuerpo
+        'id' : 400
+        'token': <token>
+    Entonces obtengo el cuerpo:
+        'id': <id>
+        'name': 'a name'
+        'lastName: 'a lastName'
+        'email': 'another@test.com'
+    """
+    session = recreate_db(test_database)
+    old_profile = {'name': 'a name', 'lastName': 'a last name',
+                   'email': 'test@test.com', 'password': 'a password',
+                   'token': AdminDBModel.encode_auth_token(1)}
+    client = test_app.test_client()
+    post_resp = client.post("/admins", json=old_profile)
+    post_data = json.loads(post_resp.data.decode())
+    user_id = post_data['id']
+    update_profile = {'id': 400,
+                      'token': AdminDBModel.encode_auth_token(1)}
+    patch_resp = client.patch(
+        "/admins/{}".format(user_id),
+        json=update_profile
+    )
+    assert patch_resp.status_code == 200
+    patch_data = json.loads(patch_resp.data.decode())
+    for field in old_profile.keys():
+        if field in ['password', 'token']:
+            continue
+        assert patch_data[field] == old_profile[field]
+    assert patch_data['id'] == user_id
+
+
+def test_patch_user_con_nuevo_nombre_y_apellido_actualiza_unicamente_nombre_y_apellido(
+        test_app, test_database):
+    """
+    Dada una base de datos vacia.
+    Y un usuario registrado:
+        'id': <id>
+        'name': 'a name'
+        'lastName: 'a lastName'
+        'email': 'test@test.com'
+    Cuando patch 'admins/<id>'
+    Con cuerpo
+        'id' : 400
+        'token': <token>
+    Entonces obtengo el cuerpo:
+        'id': <id>
+        'name': 'a name'
+        'lastName: 'a lastName'
+        'email': 'another@test.com'
+    """
+    session = recreate_db(test_database)
+    old_profile = {'name': 'a name', 'lastName': 'a last name',
+                   'email': 'test@test.com', 'password': 'a password',
+                   'token': AdminDBModel.encode_auth_token(1)}
+    client = test_app.test_client()
+    post_resp = client.post("/admins", json=old_profile)
+    post_data = json.loads(post_resp.data.decode())
+    user_id = post_data['id']
+    update_profile = {'name': 'another name',
+                      'lastName': 'another lastName',
+                      'token': AdminDBModel.encode_auth_token(1)}
+    patch_resp = client.patch(
+        "/admins/{}".format(user_id),
+        json=update_profile
+    )
+    assert patch_resp.status_code == 200
+    patch_data = json.loads(patch_resp.data.decode())
+    assert patch_data['name'] == update_profile['name']
+    assert patch_data['lastName'] == update_profile['lastName']
+    for field in old_profile.keys():
+        if field in ['name', 'lastName', 'password', 'token']:
+            continue
+        assert patch_data[field] == old_profile[field]
+    assert patch_data['id'] == user_id
