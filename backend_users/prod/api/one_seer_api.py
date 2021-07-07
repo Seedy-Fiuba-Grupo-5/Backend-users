@@ -2,9 +2,9 @@ from flask_restx import Namespace, fields
 from flask import request
 from prod.api.base_resource import BaseResource
 from prod.db_models.seer_project_db_model import SeerProjectDBModel
-from prod.schemas.constants import USER_NOT_FOUND_ERROR, USER_BLOCKED, MISSING_VALUES_ERROR
+from prod.schemas.constants import USER_NOT_FOUND_ERROR, USER_BLOCKED,\
+    MISSING_VALUES_ERROR
 from prod.schemas.project_not_found import PROJECT_NOT_FOUND
-from prod.exceptions import BusinessError
 
 ns = Namespace(
     'seers/<int:user_id>',
