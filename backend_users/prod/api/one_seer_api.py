@@ -46,17 +46,27 @@ class SeersProjectsListResource(BaseResource):
     @ns.response(201, 'Success', code_20x_swg)
     def post(self, user_id):
         """Add project to user"""
-        data = request.get_json()
-        projects_info = SeerProjectDBModel.add_project_to_seer_id(
-            user_id, data['project_id'])
-        if len(projects_info) == 0:
-            ns.abort(404, status=USER_NOT_FOUND_ERROR)
-        response_object = {
-            "user_id": user_id,
-            "projects_info": projects_info
-        }
-        # TODO: Considerar devolver errores
-        return response_object, 201
+        try:
+            data = request.get_json()
+            token_decoded = SeerProjectDBModel.decode_auth_token(data['token'])
+            if token_decoded != user_id:
+                ns.abort(404, status=USER_NOT_FOUND_ERROR)
+            if SeerProjectDBModel.get_active_status(user_id) is False:
+                ns.abort(401,
+                         status=USER_BLOCKED)
+            projects_info = SeerProjectDBModel.add_project_to_seer_id(
+                user_id, data['project_id'])
+            if len(projects_info) == 0:
+                ns.abort(404, status=USER_NOT_FOUND_ERROR)
+            response_object = {
+                "user_id": user_id,
+                "projects_info": projects_info,
+                "token": SeerProjectDBModel.encode_auth_token(user_id)
+            }
+            # TODO: Considerar devolver errores
+            return response_object, 201
+        except KeyError:
+            ns.abort(404, status=MISSING_VALUES_ERROR)
 
     @ns.expect(body_swg)
     @ns.response(200, 'Success', code_20x_swg)
@@ -104,6 +114,7 @@ class SeersProjectsListResource(BaseResource):
                 response_object = {
                     "user_id": user_id,
                     "project_info": projects_info,
+                    "token": SeerProjectDBModel.encode_auth_token(user_id)
                 }
                 return response_object, 200
             else:
