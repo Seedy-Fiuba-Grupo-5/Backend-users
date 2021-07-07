@@ -1,7 +1,7 @@
 from prod import db
 from sqlalchemy import Column
 from sqlalchemy import exc
-
+from prod.db_models.user_db_model import UserDBModel
 
 # Clase representativa del schema que almacena a cada uno de los
 # veedorres en el sistema junto con los id de los proyectos en los que cumple
@@ -86,3 +86,16 @@ class SeerProjectDBModel(db.Model):
             db.session.commit()
             deleted = True
         return deleted
+
+    @classmethod
+    def encode_auth_token(cls, user_id):
+        return UserDBModel.encode_auth_token(user_id)
+
+    @staticmethod
+    def decode_auth_token(auth_token):
+        return UserDBModel.decode_auth_token(auth_token)
+
+    @staticmethod
+    def get_active_status(associated_id):
+        return UserDBModel.get_active_status(associated_id)
+

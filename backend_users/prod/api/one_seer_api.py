@@ -2,8 +2,9 @@ from flask_restx import Namespace, fields
 from flask import request
 from prod.api.base_resource import BaseResource
 from prod.db_models.seer_project_db_model import SeerProjectDBModel
-from prod.schemas.constants import USER_NOT_FOUND_ERROR
+from prod.schemas.constants import USER_NOT_FOUND_ERROR, USER_BLOCKED, MISSING_VALUES_ERROR
 from prod.schemas.project_not_found import PROJECT_NOT_FOUND
+from prod.exceptions import BusinessError
 
 ns = Namespace(
     'seers/<int:user_id>',
@@ -66,14 +67,24 @@ class SeersProjectsListResource(BaseResource):
             seer = SeerProjectDBModel.query.get((user_id, json['project_id']))
             if not seer:
                 ns.abort(404, status=USER_NOT_FOUND_ERROR)
+            token_decoded = SeerProjectDBModel.decode_auth_token(json['token'])
+            if token_decoded != user_id:
+                ns.abort(404, status=USER_NOT_FOUND_ERROR)
+            if SeerProjectDBModel.get_active_status(user_id) is False:
+                ns.abort(401,
+                         status=USER_BLOCKED)
             seer.update(
                 accepted=json.get('accepted', seer.accepted)
             )
             seer = SeerProjectDBModel.query.get((user_id, json['project_id']))
             response_object = seer.serialize()
+            response_object['token'] = SeerProjectDBModel.encode_auth_token(user_id)
             return response_object, 200
+        except BusinessError as e:
+            code, status = self.code_status[e.__class__]
+            ns.abort(code, status=status)
         except KeyError:
-            ns.abort(404, status=self.MISSING_VALUES_ERROR)
+            ns.abort(404, status=MISSING_VALUES_ERROR)
 
     @ns.expect(body_swg)
     @ns.response(200, 'Success', code_20x_swg)
