@@ -88,7 +88,8 @@ class SeersProjectsListResource(BaseResource):
             )
             seer = SeerProjectDBModel.query.get((user_id, json['project_id']))
             response_object = seer.serialize()
-            response_object['token'] = SeerProjectDBModel.encode_auth_token(user_id)
+            response_object['token'] = SeerProjectDBModel.encode_auth_token(
+                user_id)
             return response_object, 200
         except BusinessError as e:
             code, status = self.code_status[e.__class__]
@@ -113,7 +114,7 @@ class SeersProjectsListResource(BaseResource):
                     SeerProjectDBModel.get_projects_of_seer_id(user_id)
                 response_object = {
                     "user_id": user_id,
-                    "project_info": projects_info,
+                    "projects_info": projects_info,
                     "token": SeerProjectDBModel.encode_auth_token(user_id)
                 }
                 return response_object, 200

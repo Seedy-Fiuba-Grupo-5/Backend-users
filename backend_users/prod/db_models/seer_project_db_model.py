@@ -6,6 +6,8 @@ from prod.db_models.user_db_model import UserDBModel
 # Clase representativa del schema que almacena a cada uno de los
 # veedorres en el sistema junto con los id de los proyectos en los que cumple
 # dicho rol o en los cuales dicha solicitud esta pendiente a ser aceptada
+
+
 class SeerProjectDBModel(db.Model):
     __tablename__ = "seer_project"
 
@@ -79,7 +81,8 @@ class SeerProjectDBModel(db.Model):
 
     @staticmethod
     def delete(user_id, project_id):
-        seer = SeerProjectDBModel.query.filter_by(user_id=user_id, project_id=project_id).first()
+        seer = SeerProjectDBModel.query.filter_by(
+            user_id=user_id, project_id=project_id).first()
         deleted = False
         if seer:
             db.session.delete(seer)
@@ -98,4 +101,3 @@ class SeerProjectDBModel(db.Model):
     @staticmethod
     def get_active_status(associated_id):
         return UserDBModel.get_active_status(associated_id)
-
