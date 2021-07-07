@@ -89,15 +89,24 @@ class SeersProjectsListResource(BaseResource):
     @ns.expect(body_swg)
     @ns.response(200, 'Success', code_20x_swg)
     def delete(self, user_id):
-        json = request.get_json()
-        deleted = SeerProjectDBModel.delete(user_id, json['project_id'])
-        if deleted:
-            projects_info = \
-                SeerProjectDBModel.get_projects_of_seer_id(user_id)
-            response_object = {
-                "user_id": user_id,
-                "project_info": projects_info,
-            }
-            return response_object, 200
-        else:
-            ns.abort(404, status=PROJECT_NOT_FOUND)
+        try:
+            json = request.get_json()
+            token_decoded = SeerProjectDBModel.decode_auth_token(json['token'])
+            if token_decoded != user_id:
+                ns.abort(404, status=USER_NOT_FOUND_ERROR)
+            if SeerProjectDBModel.get_active_status(user_id) is False:
+                ns.abort(401,
+                         status=USER_BLOCKED)
+            deleted = SeerProjectDBModel.delete(user_id, json['project_id'])
+            if deleted:
+                projects_info = \
+                    SeerProjectDBModel.get_projects_of_seer_id(user_id)
+                response_object = {
+                    "user_id": user_id,
+                    "project_info": projects_info,
+                }
+                return response_object, 200
+            else:
+                ns.abort(404, status=PROJECT_NOT_FOUND)
+        except KeyError:
+            ns.abort(404, status=MISSING_VALUES_ERROR)
