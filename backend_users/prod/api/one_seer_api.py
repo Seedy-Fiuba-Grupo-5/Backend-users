@@ -38,7 +38,7 @@ class SeersProjectsListResource(BaseResource):
             ns.abort(404, status=USER_NOT_FOUND_ERROR)
         response_object = {
             "user_id": user_id,
-            "project_info": projects_info,
+            "projects_info": projects_info,
         }
         return response_object, 200
 
