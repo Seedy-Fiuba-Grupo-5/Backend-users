@@ -191,10 +191,9 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
     """
     Dada una base de datos con un usuario
     Cuando Patch "seers/1" con accepted = True y project_id = 2
-    Entonces obtengo status 200
+    Entonces obtengo status 404
     Y obtengo el cuerpo:
-        "user_id": 1,
-        "projects_info": [[1, true]]
+        "status": "user_not_found"
     """
     session = recreate_db(test_database)
     client = test_app.test_client()
@@ -237,7 +236,7 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
     """
     Dada una base de datos con un usuario
     Cuando Patch "seers/1" con accepted = True, token ='' y project_id = 1
-    Entonces obtengo status 200
+    Entonces obtengo status 404
     Y obtengo el cuerpo:
         "status": "user_not_found",
     """
@@ -282,7 +281,7 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
     """
     Dada una base de datos con un usuario
     Cuando Patch "seers/1" con accepted = True sin project_id = 1
-    Entonces obtengo status 200
+    Entonces obtengo status 404
     Y obtengo el cuerpo:
         "status": "missing_args"
     """
@@ -456,7 +455,7 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
     user = json.loads(delete_response.data.decode())
     assert user['status'] == "missing_args"
 
-def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_delete_de_un_proyecto_con_token_incorrecto_se_obtiene_missing_arguments(test_app,
+def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_delete_de_un_proyecto_con_token_incorrecto_se_obtiene_user_not_found(test_app,
                                                                                                                                      test_database):
     """
     Dada una base de datos con un usuario
