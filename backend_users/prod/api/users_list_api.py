@@ -37,8 +37,7 @@ class UsersListResource(BaseResource):
     def get(self):
         """Get all users data"""
         response_object =\
-            [user.serialize() for user in UserDBModel.query.all() if
-             user.active is True]
+            [user.serialize() for user in UserDBModel.query.all()]
         return response_object, 200
 
     @ns.expect(body_swg)

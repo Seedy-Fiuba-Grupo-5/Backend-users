@@ -44,7 +44,7 @@ class AdminResource(BaseResource):
             UserDBModel.flip_active_status(user_id)
             user = UserDBModel.query.get(user_id)
             response_object = user.serialize()
-            response_object['token'] = UserDBModel.encode_auth_token(user_id)
+            response_object['token'] = UserDBModel.encode_auth_token(id_admin)
             return response_object, 200
         except BusinessError as e:
             code, status = self.code_status[e.__class__]
