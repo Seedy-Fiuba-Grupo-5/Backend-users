@@ -48,7 +48,7 @@ class UserResource(BaseResource):
     @ns.response(404, USER_NOT_FOUND_ERROR, code_404_swg)
     @ns.response(409, REPEATED_EMAIL_ERROR, code_409_swg)
     def patch(self, user_id):
-        '''Update user data'''
+        """Update user data"""
         try:
             user = UserDBModel.query.get(user_id)
             if not user:
@@ -64,7 +64,8 @@ class UserResource(BaseResource):
                 name=json.get('name', user.name),
                 lastName=json.get('lastName', user.lastName),
                 email=json.get('email', user.email),
-                password=json.get('password', user.password)
+                password=json.get('password', user.password),
+                seer=json.get('seer', user.seer)
             )
             user = UserDBModel.query.get(user_id)
             response_object = user.serialize()

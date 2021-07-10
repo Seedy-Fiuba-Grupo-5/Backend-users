@@ -34,7 +34,7 @@ def test_get_id_only_when_pass_and_user_is_correct(
         name = "Franco Martin"
         lastName = "Di Maria"
         email = "fdimaria@fi.uba.ar"
-        password = "hola" 
+        password = "hola"
         Id = 1
     Invocar UserDBModel.get_id("bzambelli@fi.uba.ar", "hola") => -1
     Invocar UserDBModel.get_id("fdimaria@fi.uba.ar", "hola")  =>  1
@@ -44,7 +44,8 @@ def test_get_id_only_when_pass_and_user_is_correct(
     session.add(UserDBModel(name="Franco Martin",
                             lastname="Di Maria",
                             email="fdimaria@fi.uba.ar",
-                            password="hola"))
+                            password="hola",
+                            seer2=False))
     session.commit()
     try:
         UserDBModel.get_id(
@@ -79,6 +80,7 @@ def test_obtain_valid_id_from_database(test_app, test_database):
     session.add(UserDBModel(name="Franco Martin",
                             lastname="Di Maria",
                             email="fdimaria@fi.uba.ar",
-                            password="hola"))
+                            password="hola",
+                            seer2=False))
     session.commit()
     assert UserDBModel.check_id(1) is True

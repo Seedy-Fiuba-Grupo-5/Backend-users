@@ -18,7 +18,8 @@ def test_changed_status_of_blocked_user(test_app,
     user = UserDBModel(name="Franco",
                        lastname="Di Maria",
                        email="fdimaria@fi.uba.ar",
-                       password="hola"
+                       password="hola",
+                       seer2=False
                        )
     session = recreate_db(test_database)
     session.add(user)
@@ -44,7 +45,8 @@ def test_change_again_status_from_blocked_to_unlocked(test_app,
     user = UserDBModel(name="Franco",
                        lastname="Di Maria",
                        email="fdimaria@fi.uba.ar",
-                       password="hola"
+                       password="hola",
+                       seer2=False
                        )
     session = recreate_db(test_database)
     session.add(user)
