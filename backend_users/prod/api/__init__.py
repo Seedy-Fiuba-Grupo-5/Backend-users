@@ -12,6 +12,7 @@ from .one_admin_api import ns as one_admin_ns
 from .admins_list_api import ns as admins_list_ns
 from .projects_list_api import ns as projects_list_ns
 from .admin_block_user_api import ns as admin_block_ns
+from .metrics_api import ns as metrics_ns
 from .one_seer_api import ns as one_seer_ns
 
 NAMESPACES = (
@@ -25,7 +26,8 @@ NAMESPACES = (
     one_admin_ns,
     admins_list_ns,
     projects_list_ns,
-    admin_block_ns
+    admin_block_ns,
+    metrics_ns
 )
 
 # Base Api

@@ -5,5 +5,7 @@ user_representation = Model('UserRepresentation', {
     "lastName": fields.String(
         required=True, description="The user last name"),
     "email": fields.String(required=True, description="The user email"),
-    "active": fields.Boolean(required=True, description="The user status")
+    "active": fields.Boolean(required=True, description="The user status"),
+    "seer": fields.Boolean(required=False, description="associated seer "
+                                                       "status")
 })

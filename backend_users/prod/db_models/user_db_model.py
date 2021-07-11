@@ -34,6 +34,10 @@ class UserDBModel(db.Model):
     password = db.Column(db.String(128),
                          nullable=False)
 
+    seer = db.Column(db.Boolean(),
+                     default=False,
+                     nullable=True)
+
     # Constructor de la clase.
     # PRE: Name tiene que ser un string de a lo sumo 128 caracteres, al igual
     # que password, lastname y email.
@@ -42,12 +46,15 @@ class UserDBModel(db.Model):
                  lastname,
                  email,
                  password,
-                 active=True):
+                 seer2,
+                 active=True,
+                 ):
         self.name = name
         self.lastName = lastname
         self.email = email
         self.password = password
         self.active = active
+        self.seer = seer2
 
     @staticmethod
     def flip_active_status(associated_id):
@@ -59,13 +66,22 @@ class UserDBModel(db.Model):
         db.session.commit()
 
     @staticmethod
+    def flip_seer_status(associated_id):
+        user = UserDBModel.query.filter_by(id=associated_id).first()
+        if not user.seer:
+            user.seer = True
+        else:
+            user.seer = False
+        db.session.commit()
+
+    @staticmethod
     def get_active_status(associated_id):
         user = UserDBModel.query.filter_by(id=associated_id).first()
         return user.active
 
-    def update(self, name, lastName, email, password):
+    def update(self, name, lastName, email, password, seer):
         try:
-            self.__init__(name, lastName, email, password)
+            self.__init__(name, lastName, email, password, seer)
             db.session.commit()
         except exc.IntegrityError:
             db.session.rollback()
@@ -78,7 +94,8 @@ class UserDBModel(db.Model):
             "name": self.name,
             "lastName": self.lastName,
             "email": self.email,
-            "active": self.active
+            "active": self.active,
+            "seer": self.seer
         }
 
     @staticmethod
@@ -99,12 +116,14 @@ class UserDBModel(db.Model):
                  name,
                  lastname,
                  email,
-                 password):
+                 password,
+                 seer=False):
         try:
             db.session.add(UserDBModel(name=name,
                                        lastname=lastname,
                                        email=email,
-                                       password=password))
+                                       password=password,
+                                       seer2=seer))
             db.session.commit()
             return UserDBModel.get_id(email,
                                       password)

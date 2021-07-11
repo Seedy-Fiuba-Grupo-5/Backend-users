@@ -86,7 +86,7 @@ def test_dada_una_db_con_dos_usuarios_de_ids_1_y_2_get_a_url_users_barra_id_1_y_
     data = json.loads(response.data.decode())
     assert response is not None
     assert response.status_code == 200
-    assert len(data) == 5
+    assert len(data) == 6
     assert data["id"] == 1
     assert data["name"] == "Franco Martin"
     assert data["lastName"] == "Di Maria"
@@ -96,7 +96,7 @@ def test_dada_una_db_con_dos_usuarios_de_ids_1_y_2_get_a_url_users_barra_id_1_y_
     data = json.loads(response.data.decode())
     assert response is not None
     assert response.status_code == 200
-    assert len(data) == 5
+    assert len(data) == 6
     assert data["id"] == 2
     assert data["name"] == "Brian"
     assert data["lastName"] == "Zambelli Tello"
