@@ -41,7 +41,7 @@ class MessagesDBModel(db.Model):
             "id_2": self.id_2,
             "text": self.text,
             "owner": self.owner,
-            "date": self.date
+            "date": self.date.strftime("%m/%d/%Y, %H:%M:%S")
         }
 
     @staticmethod

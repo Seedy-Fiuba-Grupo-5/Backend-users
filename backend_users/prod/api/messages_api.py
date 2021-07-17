@@ -18,6 +18,7 @@ ns = Namespace(
 @ns.route('')
 class UsersListResource(BaseResource):
     REGISTER_FIELDS = ("id_1", "message", "token")
+    GET_FIELDS = ('id', 'token')
 
     code_status = {
         RepeatedEmailError: (409, REPEATED_USER_ERROR),
@@ -36,11 +37,11 @@ class UsersListResource(BaseResource):
     @ns.response(400, MISSING_VALUES_ERROR, code_400_swg)
     @ns.response(200, 'Success', fields.List(fields.Nested(code_20x_swg)))
     def get(self, user_id):
-        """Get all users data"""
+        """Get all messages data"""
         try:
             json = request.get_json()
             token_decoded = UserDBModel.decode_auth_token(json['token'])
-            id_admin = json['id_owner']
+            id_admin = json['id']
             if token_decoded != id_admin:
                 ns.abort(404, status=USER_NOT_FOUND_ERROR)
             response_object = MessagesDBModel.get_messages_between_users(
@@ -65,11 +66,12 @@ class UsersListResource(BaseResource):
             id_user = data['id_1']
             if token_decoded != id_user:
                 ns.abort(404, status=USER_NOT_FOUND_ERROR)
-            UserDBModel.add_message(data['id_1'],
-                                    user_id,
-                                    data['message'])
+            MessagesDBModel.add_message(data['id_1'],
+                                        user_id,
+                                        data['message'])
             response_object = {'user_1': data['id_1'],
-                               'token': UserDBModel.encode_auth_token(id)}
+                               'token': UserDBModel.encode_auth_token(
+                                   data['id_1'])}
             return response_object, 201
         except BusinessError as e:
             code, status = self.code_status[e.__class__]
