@@ -17,7 +17,7 @@ ns = Namespace(
 
 @ns.route('')
 class UsersListResource(BaseResource):
-    REGISTER_FIELDS = ("id_1","message", "token")
+    REGISTER_FIELDS = ("id_1", "message", "token")
 
     code_status = {
         RepeatedEmailError: (409, REPEATED_USER_ERROR),
