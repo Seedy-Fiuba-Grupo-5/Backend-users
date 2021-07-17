@@ -58,3 +58,14 @@ class MessagesDBModel(db.Model):
             [message.serialize() for message in query_2.all()]
         response_object += response_object_2
         return response_object, 200
+
+    @classmethod
+    def add_message(cls,
+                    id_1,
+                    id_2,
+                    message):
+        db.session.add(MessagesDBModel(id_1=id_1,
+                                       id_2=id_2,
+                                       text=message,
+                                       owner=id_1))
+        db.session.commit()
