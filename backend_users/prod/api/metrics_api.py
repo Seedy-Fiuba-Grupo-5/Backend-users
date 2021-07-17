@@ -22,6 +22,11 @@ class MetricsResource(BaseResource):
         """Get metrics data"""
         response_object = {}
         list_of_user = [user.id for user in UserDBModel.query.all()]
+        if len(list_of_user) == 0:
+            response_object['percentage_blocked'] = 0
+            response_object['percentage_with_project'] = 0
+            response_object['percentage_seer'] = 0
+            return response_object, 200
         list_of_blocked = \
             [user.id for user in UserDBModel.query.all() if
              user.active is False]
