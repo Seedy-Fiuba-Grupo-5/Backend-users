@@ -64,4 +64,4 @@ ENV DD_APM_ENABLED=true
 COPY datadog-config/ /etc/datadog-agent/
 
 # Ejecutar el script entrypoint.sh
-CMD ["sh", "/usr/src/app/backend_users/prod/entrypoint.sh"]
+CMD ["sh", "/usr/src/app/backend_users/prod/docker-entrypoint-prod.sh"]

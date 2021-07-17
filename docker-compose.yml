@@ -12,43 +12,43 @@ services:
       context: .
       # Nombre del Dockerfile
       dockerfile: Dockerfile.dev
-    
-    entrypoint: ['/usr/src/app/backend_users/prod/entrypoint.sh']
-    
+
+    entrypoint: ['/usr/src/app/backend_users/prod/docker-entrypoint-dev.sh']
+
     # TODO: Explicar esto
     volumes:
       - .:/usr/src/app/
-    
-    # Mapear puerto 5001 del contenedor al puerto 5000 de 
+
+    # Mapear puerto 5001 del contenedor al puerto 5000 de
     # sistema operativo.
     ports:
       - 5001:5001
-    
+
     # Variables de entorno para desarrollo y pruebas
-    environment: 
+    environment:
       - DATABASE_URL=postgresql://postgres:postgres@service_users_db:5432/users_dev
       - DATABASE_TEST_URL=postgresql://postgres:postgres@service_users_db:5432/users_test
 
-    # Este servicio 'service_users_web' depende de el servicio 
+    # Este servicio 'service_users_web' depende de el servicio
     # de base datos 'service_users_db'
     depends_on:
       - service_users_db
 
   service_users_db:
-    # Nombre del contenedor 
+    # Nombre del contenedor
     container_name: container_users_db
 
     # Construccion personalizada de postgres
-    build: 
+    build:
       # Directorio donde se encuentra el Dockerfile
       context: .
       # Nombre del Dockerfile
       dockerfile: Dockerfile.db
-    
+
     # Exponemos puerto donde se ejecuta postgres
     expose:
       - 5432
-    
+
     # Información de acceso a la base de datos local
     environment:
       - POSTGRES_USER=postgres
