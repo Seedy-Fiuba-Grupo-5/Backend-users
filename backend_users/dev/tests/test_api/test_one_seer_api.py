@@ -87,8 +87,6 @@ def test_dada_una_db_con_usuario_de_id_1_post_a_seers_barra_id_1_con_token_incor
                            content_type="application/json")
     assert response is not None
     assert response.status_code == 404
-    user = json.loads(response.data.decode())
-    assert user['status'] == "user_not_found"
 
 
 def test_dada_una_db_con_usuario_de_id_1_post_a_seers_barra_id_1_con_el_cuerpo_correcto_entonces_obtengo(test_app,
@@ -228,8 +226,6 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
 
     assert patch_response is not None
     assert patch_response.status_code == 404
-    user = json.loads(patch_response.data.decode())
-    assert user['status'] == "user_not_found"
 
 def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_patch_con_token_incorrecto_se_obtiene_user_not_found(test_app,
                                                                                                                                     test_database):
@@ -273,8 +269,6 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
 
     assert patch_response is not None
     assert patch_response.status_code == 404
-    user = json.loads(patch_response.data.decode())
-    assert user['status'] == "user_not_found"
 
 def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_patch_sin_project_id_se_obtiene_missin_arguments(test_app,
                                                                                                                                     test_database):
@@ -496,5 +490,3 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
 
     assert delete_response is not None
     assert delete_response.status_code == 404
-    user = json.loads(delete_response.data.decode())
-    assert user['status'] == "user_not_found"

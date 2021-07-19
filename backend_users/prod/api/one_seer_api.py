@@ -3,14 +3,14 @@ from flask import request
 from prod.api.base_resource import BaseResource
 from prod.db_models.seer_project_db_model import SeerProjectDBModel
 from prod.schemas.constants import USER_NOT_FOUND_ERROR, USER_BLOCKED,\
-    MISSING_VALUES_ERROR
+    MISSING_VALUES_ERROR, INVALID_SEER_ID, INVALID_TOKEN, SEER_PROJECT_NOT_FOUND
 from prod.schemas.project_not_found import PROJECT_NOT_FOUND
+from prod.db_models.user_project_db_model import UserProjectDBModel
 
 ns = Namespace(
     'seers/<int:user_id>',
     description="Seer's projects related operations"
 )
-
 
 @ns.route('')
 @ns.param('user_id', 'The seer identifier')
@@ -21,15 +21,39 @@ class SeersProjectsListResource(BaseResource):
             required=True, description='The project id'),
     })
 
-    code_20x_swg = ns.model('Seer projects input 20x', {
+    post_swg_body = ns.model('Seer Post Body', {
+        'token': fields.String(description='A valid Token'),
+        'project_id': fields.Integer(
+            required=True, description='The project id'),
+    })
+
+    patch_swg_body = ns.model('Seer Patch Body', {
+        'token': fields.String(description='A valid Token'),
+        'project_id': fields.Integer(
+            required=True, description='The project id'),
+        'accepted': fields.Boolean(
+            required=True, description='The project id'),
+    })
+
+    code_200_swg = ns.model('Seer projects input 20x', {
         'user_id': fields.Integer(description='The Seer id'),
         'projects_info': fields.List(
             fields.Raw(description='One of the Seer projects '
                                    'id and its status')
-        )
+        ),
+        'token': fields.String(description='A valid Token')
     })
 
-    @ns.response(200, 'Success', code_20x_swg)
+    patch_200_swg_response = ns.model('Seer Patch response 200', {
+        'user_id': fields.Integer(description='The Seer id'),
+        'project_id': fields.Integer(
+            required=True, description='The project id'),
+        'accepted': fields.Boolean(
+            required=True, description='The project id'),
+        'token': fields.String(description='A valid Token')
+    })
+
+    @ns.response(200, 'Success', code_200_swg)
     def get(self, user_id):
         """Get Seer's projects"""
         projects_info =\
@@ -42,15 +66,18 @@ class SeersProjectsListResource(BaseResource):
         }
         return response_object, 200
 
-    @ns.expect(body_swg)
-    @ns.response(201, 'Success', code_20x_swg)
+    @ns.expect(post_swg_body)
+    @ns.response(201, 'Success', code_200_swg)
     def post(self, user_id):
         """Add project to user"""
         try:
             data = request.get_json()
             token_decoded = SeerProjectDBModel.decode_auth_token(data['token'])
-            if token_decoded != user_id:
-                ns.abort(404, status=USER_NOT_FOUND_ERROR)
+            if isinstance(token_decoded, str):
+                ns.abort(404, status=INVALID_TOKEN)
+            owner_id = UserProjectDBModel.get_user_of_project_id(token_decoded)
+            if owner_id == user_id:
+                ns.abort(404, status=INVALID_SEER_ID)
             if SeerProjectDBModel.get_active_status(user_id) is False:
                 ns.abort(401,
                          status=USER_BLOCKED)
@@ -67,19 +94,21 @@ class SeersProjectsListResource(BaseResource):
             return response_object, 201
         except KeyError:
             ns.abort(404, status=MISSING_VALUES_ERROR)
+        except AttributeError:
+            ns.abort(404, status=USER_NOT_FOUND_ERROR)
 
-    @ns.expect(body_swg)
-    @ns.response(200, 'Success', code_20x_swg)
+    @ns.expect(patch_swg_body)
+    @ns.response(200, 'Success', patch_200_swg_response)
     def patch(self, user_id):
         """Update user data"""
         try:
             json = request.get_json()
             seer = SeerProjectDBModel.query.get((user_id, json['project_id']))
             if not seer:
-                ns.abort(404, status=USER_NOT_FOUND_ERROR)
+                ns.abort(404, status=SEER_PROJECT_NOT_FOUND)
             token_decoded = SeerProjectDBModel.decode_auth_token(json['token'])
             if token_decoded != user_id:
-                ns.abort(404, status=USER_NOT_FOUND_ERROR)
+                ns.abort(404, status=INVALID_TOKEN)
             if SeerProjectDBModel.get_active_status(user_id) is False:
                 ns.abort(401,
                          status=USER_BLOCKED)
@@ -94,14 +123,14 @@ class SeersProjectsListResource(BaseResource):
         except KeyError:
             ns.abort(404, status=MISSING_VALUES_ERROR)
 
-    @ns.expect(body_swg)
-    @ns.response(200, 'Success', code_20x_swg)
+    @ns.expect(post_swg_body)
+    @ns.response(200, 'Success', code_200_swg)
     def delete(self, user_id):
         try:
             json = request.get_json()
             token_decoded = SeerProjectDBModel.decode_auth_token(json['token'])
             if token_decoded != user_id:
-                ns.abort(404, status=USER_NOT_FOUND_ERROR)
+                ns.abort(404, status=INVALID_TOKEN)
             if SeerProjectDBModel.get_active_status(user_id) is False:
                 ns.abort(401,
                          status=USER_BLOCKED)
