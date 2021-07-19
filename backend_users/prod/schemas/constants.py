@@ -27,3 +27,7 @@ MISSING_ARGS_ERROR = 'missing_args'
 WRONG_PASS_ERROR = 'wrong_password'
 
 USER_BLOCKED = 'the user is blocked'
+
+INVALID_SEER_ID = 'The seer id cannot be the same as the project owner id'
+
+SEER_PROJECT_NOT_FOUND = 'Could not found project id in the projects of the requested seer'
