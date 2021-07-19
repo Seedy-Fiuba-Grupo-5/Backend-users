@@ -87,8 +87,6 @@ def test_dada_una_db_con_usuario_de_id_1_post_a_seers_barra_id_1_con_token_incor
                            content_type="application/json")
     assert response is not None
     assert response.status_code == 404
-    user = json.loads(response.data.decode())
-    assert user['status'] == "user_not_found"
 
 
 def test_dada_una_db_con_usuario_de_id_1_post_a_seers_barra_id_1_con_el_cuerpo_correcto_entonces_obtengo(test_app,
