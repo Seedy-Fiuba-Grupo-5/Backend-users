@@ -184,8 +184,9 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
     assert user["project_id"] == 1
     assert user["accepted"]
 
+
 def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_patch_con_project_id_2_se_obtiene_user_not_found(test_app,
-                                                                                                                                    test_database):
+                                                                                                                                     test_database):
     """
     Dada una base de datos con un usuario
     Cuando Patch "seers/1" con accepted = True y project_id = 2
@@ -227,8 +228,9 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
     assert patch_response is not None
     assert patch_response.status_code == 404
 
+
 def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_patch_con_token_incorrecto_se_obtiene_user_not_found(test_app,
-                                                                                                                                    test_database):
+                                                                                                                                         test_database):
     """
     Dada una base de datos con un usuario
     Cuando Patch "seers/1" con accepted = True, token ='' y project_id = 1
@@ -270,8 +272,9 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
     assert patch_response is not None
     assert patch_response.status_code == 404
 
+
 def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_patch_sin_project_id_se_obtiene_missin_arguments(test_app,
-                                                                                                                                    test_database):
+                                                                                                                                     test_database):
     """
     Dada una base de datos con un usuario
     Cuando Patch "seers/1" con accepted = True sin project_id = 1
@@ -316,7 +319,7 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
 
 
 def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_delete_de_dicho_id_el_usuario_ya_no_es_veedor_en_ningun_proyecto(test_app,
-                                                                                                                                     test_database):
+                                                                                                                                                     test_database):
     """
     Dada una base de datos con un usuario
     Cuando Delete "seers/1" con el token adecuado y un project_id = 1
@@ -363,7 +366,7 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
 
 
 def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_delete_de_un_proyecto_con_id_2_se_obtiene_project_not_found(test_app,
-                                                                                                                                     test_database):
+                                                                                                                                                test_database):
     """
     Dada una base de datos con un usuario
     Cuando Delete "seers/1" con el token adecuado y un project_id = 2
@@ -406,8 +409,9 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
     user = json.loads(delete_response.data.decode())
     assert user['status'] == "The project requested could not be found"
 
+
 def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_delete_de_un_proyecto_sin_mandar_project_id_se_obtiene_missing_arguments(test_app,
-                                                                                                                                     test_database):
+                                                                                                                                                             test_database):
     """
     Dada una base de datos con un usuario
     Cuando Delete "seers/1" con el token adecuado y sin un project_id
@@ -449,8 +453,9 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
     user = json.loads(delete_response.data.decode())
     assert user['status'] == "missing_args"
 
+
 def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer_un_delete_de_un_proyecto_con_token_incorrecto_se_obtiene_user_not_found(test_app,
-                                                                                                                                     test_database):
+                                                                                                                                                         test_database):
     """
     Dada una base de datos con un usuario
     Cuando Delete "seers/1" con el token incorrecto y un project_id = 1

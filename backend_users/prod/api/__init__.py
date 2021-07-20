@@ -15,12 +15,14 @@ from .admin_block_user_api import ns as admin_block_ns
 from .metrics_api import ns as metrics_ns
 from .one_seer_api import ns as one_seer_ns
 from .messages_api import ns as messages_ns
+from .one_user_favorite_projects_api import ns as one_user_favorite_projects_ns
 
 NAMESPACES = (
     one_user_ns,
     users_list_ns,
     users_login_ns,
     users_projects_list_ns,
+    one_user_favorite_projects_ns,
     auth_token_ns,
     admins_login_ns,
     one_seer_ns,
@@ -29,7 +31,7 @@ NAMESPACES = (
     projects_list_ns,
     admin_block_ns,
     metrics_ns,
-    messages_ns
+    messages_ns,
 )
 
 # Base Api

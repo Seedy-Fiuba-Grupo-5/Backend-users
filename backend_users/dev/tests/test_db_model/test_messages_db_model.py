@@ -3,7 +3,7 @@ from dev.aux_test import recreate_db
 
 
 def test_get_messages_form_user_1_to_user_2(test_app,
-                                        test_database):
+                                            test_database):
     """Este tests muestra como se obtienen los mensajes entre dos usuarios
     """
     session = recreate_db(test_database)
@@ -18,7 +18,7 @@ def test_get_messages_form_user_1_to_user_2(test_app,
                                 owner=2))
     session.commit()
     messages = MessagesDBModel.get_messages_between_users(1,
-                                                            2)
+                                                          2)
     assert len(messages) == 2
 
 
