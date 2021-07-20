@@ -34,16 +34,16 @@ class TransactionsDBModel(db.Model):
                  user_id,
                  project_id,
                  amount,
-                 type,
+                 type2,
                  ):
         self.user_id = user_id
         self.project_id = project_id
         self.amount = amount
-        self.type = type
+        self.type = type2
 
-    def update(self, user_id, project_id, amount, type):
+    def update(self, user_id, project_id, amount, type2):
         try:
-            self.__init__(user_id, project_id, amount, type)
+            self.__init__(user_id, project_id, amount, type2)
             db.session.commit()
         except exc.IntegrityError:
             db.session.rollback()
@@ -62,12 +62,12 @@ class TransactionsDBModel(db.Model):
                         user_id,
                         project_id,
                         amount,
-                        type):
-        if type not in TRANSACTION_TYPES:
+                        type2):
+        if type2 not in TRANSACTION_TYPES:
             raise InvalidTransitionType
         if amount <= 0:
             raise InvalidTransitionAmount
-        project_model = TransactionsDBModel(user_id, project_id, amount, type)
+        project_model = TransactionsDBModel(user_id, project_id, amount, type2)
         db.session.add(project_model)
         db.session.commit()
         db.session.refresh(project_model)

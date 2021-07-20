@@ -76,7 +76,7 @@ class SeersProjectsListResource(BaseResource):
             token_decoded = SeerProjectDBModel.decode_auth_token(data['token'])
             if isinstance(token_decoded, str):
                 ns.abort(404, status=INVALID_TOKEN)
-            owner_id = UserProjectDBModel.get_user_of_project_id(token_decoded)
+            owner_id = UserProjectDBModel.get_user_of_project_id(data['project_id'])
             if owner_id == user_id:
                 ns.abort(404, status=INVALID_SEER_ID)
             if SeerProjectDBModel.get_active_status(user_id) is False:
