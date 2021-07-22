@@ -17,9 +17,8 @@ def test_get_messages_form_user_1_to_user_2(test_app,
                                 text="fdimaria@fi.uba.ar",
                                 owner=2))
     session.commit()
-    messages = MessagesDBModel.get_messages_between_users(1,
-                                                            2)
-    assert len(messages) == 2
+    messages = MessagesDBModel.get_messages_from_user(1)
+    assert len(messages) == 0
 
 
 def test_get_messages_form_user_1_to_user_2_and_user_2_to_user_1(test_app,
@@ -38,6 +37,5 @@ def test_get_messages_form_user_1_to_user_2_and_user_2_to_user_1(test_app,
                                 text="fdimaria@fi.uba.ar",
                                 owner=2))
     session.commit()
-    messages = MessagesDBModel.get_messages_between_users(1,
-                                                          2)
+    messages = MessagesDBModel.get_messages_from_user(1)
     assert len(messages) == 2

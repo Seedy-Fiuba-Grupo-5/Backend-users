@@ -41,11 +41,9 @@ class UsersListResource(BaseResource):
         try:
             json = request.get_json()
             token_decoded = UserDBModel.decode_auth_token(json['token'])
-            id_admin = json['id']
-            if token_decoded != id_admin:
+            if token_decoded != user_id:
                 ns.abort(404, status=USER_NOT_FOUND_ERROR)
-            response_object = MessagesDBModel.get_messages_between_users(
-                id_admin,
+            response_object = MessagesDBModel.get_messages_from_user(
                 user_id)
             return response_object, 200
         except KeyError:

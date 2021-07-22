@@ -45,18 +45,12 @@ class MessagesDBModel(db.Model):
         }
 
     @staticmethod
-    def get_messages_between_users(id_1, id_2):
-        query = MessagesDBModel.query.filter_by(id_1=id_1,
-                                                id_2=id_2)
-        query_2 = MessagesDBModel.query.filter_by(id_1=id_2,
-                                                  id_2=id_1)
+    def get_messages_from_user(requested_id):
+        query = MessagesDBModel.query.filter_by(id_2=requested_id)
         if len(query.all()) == 0:
             return {}
         response_object = \
             [message.serialize() for message in query.all()]
-        response_object_2 = \
-            [message.serialize() for message in query_2.all()]
-        response_object += response_object_2
         return response_object, 200
 
     @classmethod

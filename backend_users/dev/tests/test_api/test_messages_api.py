@@ -46,17 +46,27 @@ def test_get_messages(test_app,
         "token": UserDBModel.encode_auth_token(2),
     }
     response = client.post(
-        "/messages/2",
+        "/messages/1",
         data=json.dumps(body),
         content_type="application/json"
     )
     assert response.status_code == 201
     body = {
-        "id": 2,
         "token": UserDBModel.encode_auth_token(2),
     }
     response = client.get(
         "/messages/2",
+        data=json.dumps(body),
+        content_type="application/json"
+    )
+    assert response.status_code == 200
+    patch_data = json.loads(response.data.decode())
+    assert len(patch_data) == 2
+    body = {
+        "token": UserDBModel.encode_auth_token(1),
+    }
+    response = client.get(
+        "/messages/1",
         data=json.dumps(body),
         content_type="application/json"
     )
