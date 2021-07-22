@@ -3,7 +3,7 @@ from dev.aux_test import recreate_db
 
 
 def test_get_messages_form_user_1_to_user_2(test_app,
-                                        test_database):
+                                            test_database):
     """Este tests muestra como se obtienen los mensajes entre dos usuarios
     """
     session = recreate_db(test_database)

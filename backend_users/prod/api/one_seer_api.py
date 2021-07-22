@@ -12,6 +12,7 @@ ns = Namespace(
     description="Seer's projects related operations"
 )
 
+
 @ns.route('')
 @ns.param('user_id', 'The seer identifier')
 class SeersProjectsListResource(BaseResource):
