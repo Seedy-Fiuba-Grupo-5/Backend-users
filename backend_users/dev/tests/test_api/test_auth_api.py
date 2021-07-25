@@ -24,7 +24,8 @@ def test_get_correct_encode_and_decode_of_id(test_app,
         data=json.dumps(body),
         content_type="application/json"
     )
-    body = {"token": UserDBModel.encode_auth_token(1)}
+    body = {'user_id': 1,
+            "token": UserDBModel.encode_auth_token(1)}
     response = client.post(
         'users/auth',
         data=json.dumps(body),

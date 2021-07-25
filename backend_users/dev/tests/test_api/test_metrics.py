@@ -20,7 +20,8 @@ def test_get_correct_metrics(test_app, test_database):
         data=json.dumps(body),
         content_type="application/json"
     )
-    body = {"token": UserDBModel.encode_auth_token(1)}
+    body = {'user_id': 1,
+            "token": UserDBModel.encode_auth_token(1)}
     client.post(
         'users/auth',
         data=json.dumps(body),
@@ -50,7 +51,8 @@ def test_metric_percentage_blocked(test_app, test_database):
         data=json.dumps(body),
         content_type="application/json"
     )
-    body = {"token": UserDBModel.encode_auth_token(1)}
+    body = {'user_id': 1,
+            "token": UserDBModel.encode_auth_token(1)}
     client.post(
         'users/auth',
         data=json.dumps(body),
@@ -87,7 +89,8 @@ def test_metric_percentage_seer(test_app, test_database):
         data=json.dumps(body),
         content_type="application/json"
     )
-    body = {"token": UserDBModel.encode_auth_token(1)}
+    body = {'user_id': 1,
+            "token": UserDBModel.encode_auth_token(1)}
     client.post(
         'users/auth',
         data=json.dumps(body),

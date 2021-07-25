@@ -38,6 +38,9 @@ class AuthenticationResource(BaseResource):
         token = data["token"]
         token = bytes(token, encoding='utf8')
         decoded = UserDBModel.decode_auth_token(token)
+        if decoded != data['user_id']:
+            response = {'status': INVALID_TOKEN}
+            return response, 401
         if UserDBModel.check_id(decoded):
             encoded = UserDBModel.encode_auth_token(decoded)
             response = {'status': VALID_TOKEN, 'token': encoded}
