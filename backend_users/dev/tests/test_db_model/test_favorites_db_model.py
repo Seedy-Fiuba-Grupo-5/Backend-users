@@ -54,8 +54,8 @@ def test_favoritesdbmodel_get_projects_of_user_id_devuelve_lista_de_ids_de_proye
                                    email="un email",
                                    password="una password")
     project_id = 19
-    id_projects_list = FavoritesProjectDBModel.add_project_to_favorites_of_user_id(
-        user_id, project_id)
+    id_projects_list = FavoritesProjectDBModel.add_project_to_favorites(user_id,
+                                                                        project_id)
     assert len(id_projects_list) == 1
     assert id_projects_list[0] == project_id
     id_projects_list = FavoritesProjectDBModel.get_favorites_of_user_id(

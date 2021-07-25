@@ -31,9 +31,9 @@ class FavoritesProjectDBModel(db.Model):
         }
 
     @classmethod
-    def add_project_to_favorites_of_user_id(cls,
-                                            user_id,
-                                            project_id):
+    def add_project_to_favorites(cls,
+                                 user_id,
+                                 project_id):
         try:
             db.session.add(FavoritesProjectDBModel(user_id, project_id))
             db.session.commit()

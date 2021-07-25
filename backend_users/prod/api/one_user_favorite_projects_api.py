@@ -1,9 +1,9 @@
-from flask_restx import Namespace, fields
 from flask import request
+from flask_restx import Namespace, fields
 from prod.api.base_resource import BaseResource
-from prod.db_models.user_db_model import UserDBModel
 from prod.db_models.favorites_db_model import FavoritesProjectDBModel
-from prod.schemas.constants import USER_NOT_FOUND_ERROR, USER_BLOCKED,\
+from prod.db_models.user_db_model import UserDBModel
+from prod.schemas.constants import USER_NOT_FOUND_ERROR, USER_BLOCKED, \
     MISSING_VALUES_ERROR, INVALID_TOKEN
 from prod.schemas.project_not_found import PROJECT_NOT_FOUND
 
@@ -55,8 +55,9 @@ class UserFavoriteProjectsListResource(BaseResource):
             if FavoritesProjectDBModel.get_active_status(user_id) is False:
                 ns.abort(401,
                          status=USER_BLOCKED)
-            projects_info = FavoritesProjectDBModel.add_project_to_favorites_of_user_id(
-                user_id, data['project_id'])
+            projects_info = FavoritesProjectDBModel.add_project_to_favorites(
+                user_id,
+                data['project_id'])
             response_object = {
                 "user_id": user_id,
                 "projects_id": projects_info,

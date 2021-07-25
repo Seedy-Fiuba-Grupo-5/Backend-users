@@ -1,10 +1,6 @@
 from flask_restx import Namespace, fields
-from flask import request
 from prod.api.base_resource import BaseResource
-from prod.db_models.user_db_model import UserDBModel
 from prod.db_models.transactions_db_model import TransactionsDBModel
-from prod.schemas.constants import USER_NOT_FOUND_ERROR, USER_BLOCKED,\
-    MISSING_VALUES_ERROR, INVALID_TOKEN
 
 
 ns = Namespace(
@@ -19,8 +15,11 @@ class UserSupportsListResource(BaseResource):
 
     code_20x_swg = ns.model('All transactions input 20x', {
         'transaction_id': fields.Integer(description='The transaction id'),
-        'user_id': fields.Integer(description='The user id associated with the transaction'),
-        'projects_id': fields.Integer(description='The project id associated with the transaction'),
+        'user_id': fields.Integer(description='The user id \
+        associated with '
+                                              'the transaction'),
+        'projects_id': fields.Integer(description='The project id \
+        associated with the transaction'),
         'amount': fields.Integer(description='The amount of the transaction'),
         'type': fields.String(description='The type of the transaction')
     })
@@ -28,9 +27,9 @@ class UserSupportsListResource(BaseResource):
     @ns.response(200, 'Success', fields.List(fields.Nested(code_20x_swg)))
     def get(self, user_id):
         """Get User's favorite projects"""
-        #user = UserDBModel.query.get(user_id)
-        #if not user:
-        #    ns.abort(404, status=USER_NOT_FOUND_ERROR)
         response_object =\
-            [transaction.serialize() for transaction in TransactionsDBModel.query.filter_by(user_id=user_id, type='support').all()]
+            [transaction.serialize()
+             for transaction in TransactionsDBModel.query.filter_by(
+                user_id=user_id,
+                type='support').all()]
         return response_object, 200

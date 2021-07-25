@@ -122,7 +122,7 @@ def test_metric_percentage_seer(test_app, test_database):
                           content_type="application/json")
     assert response.status_code == 200
     data = json.loads(response.data.decode())
-    assert data["percentage_seer"] == 0.5
+    assert data["percentage_seer"] == 0.0
     update_profile = {"seer": False,
                       'token': UserDBModel.encode_auth_token(2)}
     patch_resp = client.patch(

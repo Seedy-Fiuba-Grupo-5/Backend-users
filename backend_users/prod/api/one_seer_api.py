@@ -2,8 +2,9 @@ from flask_restx import Namespace, fields
 from flask import request
 from prod.api.base_resource import BaseResource
 from prod.db_models.seer_project_db_model import SeerProjectDBModel
-from prod.schemas.constants import USER_NOT_FOUND_ERROR, USER_BLOCKED,\
-    MISSING_VALUES_ERROR, INVALID_SEER_ID, INVALID_TOKEN, SEER_PROJECT_NOT_FOUND
+from prod.schemas.constants import USER_NOT_FOUND_ERROR, USER_BLOCKED
+from prod.schemas.constants import MISSING_VALUES_ERROR, INVALID_SEER_ID
+from prod.schemas.constants import INVALID_TOKEN, SEER_PROJECT_NOT_FOUND
 from prod.schemas.project_not_found import PROJECT_NOT_FOUND
 from prod.db_models.user_project_db_model import UserProjectDBModel
 
@@ -76,7 +77,8 @@ class SeersProjectsListResource(BaseResource):
             token_decoded = SeerProjectDBModel.decode_auth_token(data['token'])
             if isinstance(token_decoded, str):
                 ns.abort(404, status=INVALID_TOKEN)
-            owner_id = UserProjectDBModel.get_user_of_project_id(data['project_id'])
+            owner_id = UserProjectDBModel.get_user_of_project_id(
+                data['project_id'])
             if owner_id == user_id:
                 ns.abort(404, status=INVALID_SEER_ID)
             if SeerProjectDBModel.get_active_status(user_id) is False:
