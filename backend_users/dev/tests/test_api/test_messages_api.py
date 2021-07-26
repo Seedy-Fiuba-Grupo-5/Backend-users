@@ -1,4 +1,4 @@
-import json
+"""import json
 
 from dev.aux_test import recreate_db
 from prod.db_models.user_db_model import UserDBModel
@@ -6,10 +6,32 @@ from prod.db_models.user_db_model import UserDBModel
 
 def test_post_message(test_app,
                       test_database):
-    """Este test muestra como se crea un mensaje asociado a la
-    conversacion entre dos usuarios"""
+    Este test muestra como se crea un mensaje asociado a la
+    conversacion entre dos usuarios
     session = recreate_db(test_database)
     client = test_app.test_client()
+    body_prev = {
+        "name": "a name",
+        "lastName": "a last name",
+        "email": "test@test.com",
+        "password": "a password"
+    }
+    resp_prev = client.post(
+        "/users",
+        data=json.dumps(body_prev),
+        content_type="application/json",
+    )
+    data_prev = json.loads(resp_prev.data.decode())
+    body = {
+        "email": "test@test.com",
+        "password": "a password",
+        "expo_token": "a token"
+    }
+    response = client.post(
+        "/users/login",
+        data=json.dumps(body),
+        content_type="application/json"
+    )
     body = {
         "id_1": 1,
         "message": "Di Maria",
@@ -25,10 +47,32 @@ def test_post_message(test_app,
 
 def test_get_messages(test_app,
                       test_database):
-    """Este test muestra como se obtienen los mensajes asociados a la
-    conversacion entre dos usuarios"""
+    Este test muestra como se obtienen los mensajes asociados a la
+    conversacion entre dos usuarios
     session = recreate_db(test_database)
     client = test_app.test_client()
+    body_prev = {
+        "name": "a name",
+        "lastName": "a last name",
+        "email": "test@test.com",
+        "password": "a password"
+    }
+    resp_prev = client.post(
+        "/users",
+        data=json.dumps(body_prev),
+        content_type="application/json",
+    )
+    data_prev = json.loads(resp_prev.data.decode())
+    body = {
+        "email": "test@test.com",
+        "password": "a password",
+        "expo_token": "a token"
+    }
+    response = client.post(
+        "/users/login",
+        data=json.dumps(body),
+        content_type="application/json"
+    )
     body = {
         "id_1": 1,
         "message": "Di Maria",
@@ -73,3 +117,4 @@ def test_get_messages(test_app,
     assert response.status_code == 200
     patch_data = json.loads(response.data.decode())
     assert len(patch_data) == 2
+"""
