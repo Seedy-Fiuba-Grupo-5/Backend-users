@@ -4,7 +4,7 @@ import jwt
 from prod import db
 from prod.db_models.black_list_db import BlacklistToken
 from sqlalchemy import exc
-from prod.exceptions import RepeatedEmailError, UserNotFoundError,\
+from prod.exceptions import RepeatedEmailError, UserNotFoundError, \
     WrongPasswordError
 
 
@@ -37,6 +37,8 @@ class UserDBModel(db.Model):
     seer = db.Column(db.Boolean(),
                      default=False,
                      nullable=True)
+    expo_token = db.Column(db.String,
+                           default="")
 
     # Constructor de la clase.
     # PRE: Name tiene que ser un string de a lo sumo 128 caracteres, al igual
@@ -55,6 +57,14 @@ class UserDBModel(db.Model):
         self.password = password
         self.active = active
         self.seer = seer2
+
+    def add_expo_token(self,
+                       token):
+        self.expo_token = token
+        db.session.commit()
+
+    def get_expo_token(self):
+        return self.expo_token
 
     @staticmethod
     def flip_active_status(associated_id):
@@ -141,8 +151,8 @@ class UserDBModel(db.Model):
         """
         payload = {
             'exp': datetime.datetime.utcnow() +
-            datetime.timedelta(days=0,
-                               seconds=cls.EXPIRATION_TIME),
+                   datetime.timedelta(days=0,
+                                      seconds=cls.EXPIRATION_TIME),
             'iat': datetime.datetime.utcnow(),
             'sub': user_id
         }
