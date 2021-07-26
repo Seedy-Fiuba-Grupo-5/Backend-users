@@ -1,11 +1,12 @@
 import datetime
+
 import flask
 import jwt
 from prod import db
 from prod.db_models.black_list_db import BlacklistToken
-from sqlalchemy import exc
 from prod.exceptions import RepeatedEmailError, UserNotFoundError, \
     WrongPasswordError
+from sqlalchemy import exc
 
 
 # Clase representativa del schema que almacena a cada uno de los
@@ -37,7 +38,7 @@ class UserDBModel(db.Model):
     seer = db.Column(db.Boolean(),
                      default=False,
                      nullable=True)
-    expo_token = db.Column(db.String,
+    expo_token = db.Column(db.String(900),
                            default="")
 
     # Constructor de la clase.
@@ -58,13 +59,17 @@ class UserDBModel(db.Model):
         self.active = active
         self.seer = seer2
 
-    def add_expo_token(self,
-                       token):
-        self.expo_token = token
+    @staticmethod
+    def add_expo_token(token,
+                       associated_id):
+        user = UserDBModel.query.filter_by(id=associated_id).first()
+        user.expo_token = token
         db.session.commit()
 
-    def get_expo_token(self):
-        return self.expo_token
+    @staticmethod
+    def get_expo_token(associated_id):
+        user = UserDBModel.query.filter_by(id=associated_id).first()
+        return user.expo_token
 
     @staticmethod
     def flip_active_status(associated_id):
@@ -151,8 +156,8 @@ class UserDBModel(db.Model):
         """
         payload = {
             'exp': datetime.datetime.utcnow() +
-                   datetime.timedelta(days=0,
-                                      seconds=cls.EXPIRATION_TIME),
+            datetime.timedelta(days=0,
+                               seconds=cls.EXPIRATION_TIME),
             'iat': datetime.datetime.utcnow(),
             'sub': user_id
         }

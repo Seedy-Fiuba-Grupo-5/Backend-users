@@ -20,7 +20,7 @@ ns = Namespace(
 
 @ns.route('')
 class UsersLoginResource(BaseResource):
-    REQUIRED_VALUES = ['email', 'password']
+    REQUIRED_VALUES = ['email', 'password', 'expo_token']
 
     code_status = {
         UserNotFoundError: (404, USER_NOT_FOUND_ERROR),
@@ -57,6 +57,8 @@ class UsersLoginResource(BaseResource):
             if UserDBModel.get_active_status(id) is False:
                 ns.abort(401,
                          status=USER_BLOCKED)
+            UserDBModel.add_expo_token(data['expo_token'],
+                                       id)
             token = UserDBModel.encode_auth_token(id)
             response_object = {
                 "email": data['email'], "id": id, "token": token}
