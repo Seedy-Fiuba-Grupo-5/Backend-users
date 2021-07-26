@@ -28,7 +28,7 @@ services:
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@service_users_db:5432/users_dev
       - DATABASE_TEST_URL=postgresql://postgres:postgres@service_users_db:5432/users_test
-      - PASS_KEY=2tM7qu+x2tyVtz/3oRAlFaxYZhsWmvaRHyF0JsTGjDwK
+      - PASS_KEY=pRmgMa8T0INjEAfksaq2aafzoZXEuwKI7wDe4c1F8AY=
 
     # Este servicio 'service_users_web' depende de el servicio
     # de base datos 'service_users_db'
