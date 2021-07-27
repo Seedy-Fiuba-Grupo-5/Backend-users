@@ -8,7 +8,10 @@ from prod.schemas.message_representation import message_representation
 from prod.schemas.constants import MISSING_VALUES_ERROR, REPEATED_USER_ERROR
 from prod.schemas.constants import USER_NOT_FOUND_ERROR, MISSING_ARGS_ERROR
 from prod.schemas.message_code20 import message_code20
-from prod.expo.messenger import Messenger
+import requests
+import os
+
+URL = os.getenv("URL")
 
 ns = Namespace(
     name='messages/<int:user_id>',
@@ -68,11 +71,13 @@ class UsersListResource(BaseResource):
             MessagesDBModel.add_message(id_user,
                                         user_id,
                                         data['message'])
-            token = UserDBModel.get_expo_token(data['id_1'])
-            messenger = Messenger()
-            messenger.send_push_message(token,
-                                        data['message'],
-                                        'nothing')
+            if data['message'] != "TESTEXPO":
+                token = UserDBModel.get_expo_token(data['id_1'])
+                requests.post(URL,
+                              json={"to": token,
+                                    "title": "Seedy Fiuba",
+                                    "body": "¡Tienes un nuevo mensaje del "
+                                            "usuario {}!".format(id_user)})
             response_object = {'user_1': data['id_1'],
                                'token': UserDBModel.encode_auth_token(
                                    data['id_1'])}

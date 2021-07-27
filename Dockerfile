@@ -40,7 +40,6 @@ RUN apt-get -y install postgresql-client
 
 # Instalar dependencias
 RUN pip install --upgrade pip
-RUN pip install exponent_server_sdk
 COPY ./requirements-prod.txt /usr/src/app/requirements-prod.txt
 RUN pip install -Ur requirements-prod.txt
 
