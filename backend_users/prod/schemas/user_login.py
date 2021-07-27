@@ -4,6 +4,6 @@ user_login = Model('LoginInput', {
     'email': fields.String(required=True, description='The user email'),
     'password': fields.String(
         required=True, description='The user password'),
-    'expo_token':fields.String(required=True, description=('The device expo '
+    'expo_token': fields.String(required=True, description=('The device expo '
                                                            'token'))
 })
