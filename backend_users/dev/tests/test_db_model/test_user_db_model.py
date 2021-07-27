@@ -1,12 +1,12 @@
 from prod.db_models.user_db_model import UserDBModel
-from prod.exceptions import RepeatedEmailError, UserNotFoundError,\
+from prod.exceptions import RepeatedEmailError, UserNotFoundError, \
     WrongPasswordError
 from dev.aux_test import recreate_db
 
 
 def test_userdbmodel_add_user_dos_veces_al_mismo_usuario_devuelve_menos_1(
-        test_app,
-        test_database):
+    test_app,
+    test_database):
     """
     Dada una base de datos vacia
     Invocar UserDBModel.add_user(<usuario 1>) => 1
@@ -26,8 +26,8 @@ def test_userdbmodel_add_user_dos_veces_al_mismo_usuario_devuelve_menos_1(
 
 
 def test_get_id_only_when_pass_and_user_is_correct(
-        test_app,
-        test_database):
+    test_app,
+    test_database):
     """
     Dada una base de datos
     Y un usuario registrado:
@@ -41,11 +41,11 @@ def test_get_id_only_when_pass_and_user_is_correct(
     Invocar UserDBModel.get_id("fdimaria@fi.uba.ar", "hola2") => -1
     """
     session = recreate_db(test_database)
-    session.add(UserDBModel(name="Franco Martin",
-                            lastname="Di Maria",
-                            email="fdimaria@fi.uba.ar",
-                            password="hola",
-                            seer2=False))
+    UserDBModel.add_user(name="Franco Martin",
+                         lastname="Di Maria",
+                         email="fdimaria@fi.uba.ar",
+                         password="hola")
+
     session.commit()
     try:
         UserDBModel.get_id(
