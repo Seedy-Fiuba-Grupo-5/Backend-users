@@ -29,6 +29,7 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@service_users_db:5432/users_dev
       - DATABASE_TEST_URL=postgresql://postgres:postgres@service_users_db:5432/users_test
       - URL=https://exp.host/--/api/v2/push/send
+      - PASS_KEY=pRmgMa8T0INjEAfksaq2aafzoZXEuwKI7wDe4c1F8AY=
     # Este servicio 'service_users_web' depende de el servicio
     # de base datos 'service_users_db'
     depends_on:

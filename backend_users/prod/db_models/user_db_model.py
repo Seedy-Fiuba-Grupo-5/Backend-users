@@ -7,6 +7,7 @@ from prod.db_models.black_list_db import BlacklistToken
 from prod.exceptions import RepeatedEmailError, UserNotFoundError, \
     WrongPasswordError
 from sqlalchemy import exc
+from prod.encryptor import Encryptor
 
 
 # Clase representativa del schema que almacena a cada uno de los
@@ -52,6 +53,7 @@ class UserDBModel(db.Model):
                  seer2,
                  active=True,
                  ):
+
         self.name = name
         self.lastName = lastname
         self.email = email
@@ -118,7 +120,9 @@ class UserDBModel(db.Model):
         user_model = UserDBModel.query.filter_by(email=email).first()
         if user_model is None:
             raise UserNotFoundError
-        if password != user_model.password:
+        encryptor = Encryptor()
+        password_db = encryptor.decrypt(user_model.password)
+        if password != password_db:
             raise WrongPasswordError
         return user_model.id
 
@@ -133,11 +137,13 @@ class UserDBModel(db.Model):
                  email,
                  password,
                  seer=False):
+        encryptor = Encryptor()
+        password_encry = encryptor.encrypt(password)
         try:
             db.session.add(UserDBModel(name=name,
                                        lastname=lastname,
                                        email=email,
-                                       password=password,
+                                       password=password_encry,
                                        seer2=seer))
             db.session.commit()
             return UserDBModel.get_id(email,

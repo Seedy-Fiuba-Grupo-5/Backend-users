@@ -5,3 +5,4 @@ psycopg2-binary==2.8.4
 flask_restx==0.4.0
 Flask-Cors==3.0.10
 pyjwt==1.4.2
+cryptography==3.4.7
