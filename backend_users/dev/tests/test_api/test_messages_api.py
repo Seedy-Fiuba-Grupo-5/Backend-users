@@ -14,7 +14,8 @@ def test_post_message(test_app,
         "name": "a name",
         "lastName": "a last name",
         "email": "test@test.com",
-        "password": "a password"
+        "password": "a password",
+        "expo_token": "IGNOREXPO"
     }
     resp_prev = client.post(
         "/users",
@@ -25,7 +26,7 @@ def test_post_message(test_app,
     body = {
         "email": "test@test.com",
         "password": "a password",
-        "expo_token": "ExponentPushToken[-CXyBu2CzuLsJ]"
+        "expo_token": "IGNOREXPO"
     }
     response = client.post(
         "/users/login",
@@ -55,7 +56,8 @@ def test_get_messages(test_app,
         "name": "a name",
         "lastName": "a last name",
         "email": "test@test.com",
-        "password": "a password"
+        "password": "a password",
+        "expo_token": "IGNOREXPO"
     }
     resp_prev = client.post(
         "/users",
@@ -66,7 +68,8 @@ def test_get_messages(test_app,
         "name": "a name2",
         "lastName": "a 2last name",
         "email": "test@2test.com",
-        "password": "a 2password"
+        "password": "a 2password",
+        "expo_token": "IGNOREXPO"
     }
     resp_prev = client.post(
         "/users",
@@ -77,7 +80,7 @@ def test_get_messages(test_app,
     body = {
         "email": "test@test.com",
         "password": "a password",
-        "expo_token": "ExponentPushToken[11Nq5qN76-CXyBu2CzuLsJ]"
+        "expo_token": "IGNOREXPO"
     }
     response = client.post(
         "/users/login",

@@ -26,7 +26,8 @@ def test_db_vacia_post_users_name_franco_martin_last_name_di_maria_email_fdimari
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "tomate"
+        "password": "tomate",
+        "expo_token": "IGNOREXPO"
     }
     response = client.post(
         "/users",
@@ -68,7 +69,8 @@ def test_db_con_mail_fdimaria_registrado_post_users_name_franco_martin_last_name
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "tomate"
+        "password": "tomate",
+        "expo_token": "IGNOREXPO"
     }
     # Primer registro
     client.post(
@@ -140,7 +142,8 @@ def test_db_con_unico_usuario_name_Franco_Martin_last_name_Di_Maria_mail_fdimari
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -193,13 +196,15 @@ def test_db_con_usuario1_name_Franco_Martin_last_name_Di_Maria_email_fdimaria_pa
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     body_2 = {
         "name": "Brian",
         "lastName": "Zambelli Tello",
         "email": "bzambelli@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",

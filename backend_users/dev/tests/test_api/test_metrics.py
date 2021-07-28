@@ -13,7 +13,8 @@ def test_get_correct_metrics(test_app, test_database):
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -44,7 +45,8 @@ def test_metric_percentage_blocked(test_app, test_database):
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -82,7 +84,8 @@ def test_metric_percentage_seer(test_app, test_database):
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -107,6 +110,8 @@ def test_metric_percentage_seer(test_app, test_database):
         "lastName": "Di Maria2",
         "email": "fdimaria2@fi.uba.ar",
         "password": "hola2",
+        "expo_token": "IGNOREXPO"
+
     }
     client.post(
         "/users",

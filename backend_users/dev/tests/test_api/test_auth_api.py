@@ -17,7 +17,8 @@ def test_get_correct_encode_and_decode_of_id(test_app,
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",

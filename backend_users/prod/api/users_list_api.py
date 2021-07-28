@@ -16,7 +16,7 @@ ns = Namespace(
 
 @ns.route('')
 class UsersListResource(BaseResource):
-    REGISTER_FIELDS = ("name", "lastName", "email", "password")
+    REGISTER_FIELDS = ("name", "lastName", "email", "password", "expo_token")
 
     code_status = {
         RepeatedEmailError: (409, REPEATED_USER_ERROR),
@@ -55,7 +55,8 @@ class UsersListResource(BaseResource):
             id = UserDBModel.add_user(data['name'],
                                       data['lastName'],
                                       data['email'],
-                                      data['password'])
+                                      data['password'],
+                                      data['expo_token'])
             user_model = UserDBModel.query.get(id)
             response_object = user_model.serialize()
             response_object['token'] = UserDBModel.encode_auth_token(id)

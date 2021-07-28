@@ -33,7 +33,8 @@ def test_seerprojectdbmodel_get_projects_of_seer_id_devuelve_lista_vacia_cuando_
     user_id = UserDBModel.add_user(name="un nombre",
                                    lastname="un apellido",
                                    email="un email",
-                                   password="una password")
+                                   password="una password",
+                                   expo_token="IGNOREXPO")
     id_project_list = SeerProjectDBModel.get_projects_of_seer_id(user_id)
     assert len(id_project_list) == 0
 
@@ -53,7 +54,8 @@ def test_seerprojectdbmodel_get_projects_of_seer_id_devuelve_lista_de_ids_de_pro
     user_id = UserDBModel.add_user(name="un nombre",
                                    lastname="un apellido",
                                    email="un email",
-                                   password="una password")
+                                   password="una password",
+                                   expo_token="IGNOREXPO")
     project_id = 19
     id_projects_list = SeerProjectDBModel.add_project_to_seer_id(
         user_id, project_id)

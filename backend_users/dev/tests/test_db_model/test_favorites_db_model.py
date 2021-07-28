@@ -32,7 +32,8 @@ def test_favoritesdbmodel_get_projects_of_user_id_devuelve_lista_vacia_cuando_el
     user_id = UserDBModel.add_user(name="un nombre",
                                    lastname="un apellido",
                                    email="un email",
-                                   password="una password")
+                                   password="una password",
+                                   expo_token="IGNOREXPO")
     id_project_list = FavoritesProjectDBModel.get_favorites_of_user_id(user_id)
     assert len(id_project_list) == 0
 
@@ -52,7 +53,8 @@ def test_favoritesdbmodel_get_projects_of_user_id_devuelve_lista_de_ids_de_proye
     user_id = UserDBModel.add_user(name="un nombre",
                                    lastname="un apellido",
                                    email="un email",
-                                   password="una password")
+                                   password="una password",
+                                   expo_token="IGNOREXPO")
     project_id = 19
     id_projects_list = FavoritesProjectDBModel.add_project_to_favorites(user_id,
                                                                         project_id)

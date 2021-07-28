@@ -17,7 +17,8 @@ def test_returns_auth_token_given_user(test_app,
                        lastname="Di Maria",
                        email="fdimaria@fi.uba.ar",
                        password="hola",
-                       seer2=False
+                       seer2=False,
+                       expo_token="IGNOREXPO"
                        )
     session = recreate_db(test_database)
     session.add(user)

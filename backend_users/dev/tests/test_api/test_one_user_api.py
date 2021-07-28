@@ -29,7 +29,8 @@ def test_dada_una_db_con_usuario_de_id_1_get_a_url_users_barra_id_1_devuelve_a_e
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        'expo_token': "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -64,13 +65,15 @@ def test_dada_una_db_con_dos_usuarios_de_ids_1_y_2_get_a_url_users_barra_id_1_y_
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        'expo_token': "IGNOREXPO"
     }
     body_2 = {
         "name": "Brian",
         "lastName": "Zambelli Tello",
         "email": "bzambelli@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        'expo_token': "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -143,7 +146,8 @@ def test_patch_user_con_nuevo_email_actualiza_solo_el_email(
     """
     session = recreate_db(test_database)
     old_profile = {'name': 'a name', 'lastName': 'a last name',
-                   'email': 'test@test.com', 'password': 'a password'}
+                   'email': 'test@test.com', 'password': 'a password',
+                   'expo_token': "IGNOREXPO"}
     client = test_app.test_client()
     post_resp = client.post("/users", json=old_profile)
     post_data = json.loads(post_resp.data.decode())
@@ -158,7 +162,7 @@ def test_patch_user_con_nuevo_email_actualiza_solo_el_email(
     patch_data = json.loads(patch_resp.data.decode())
     assert patch_data['email'] == update_profile['email']
     for field in old_profile.keys():
-        if field in ['email', 'password', 'token']:
+        if field in ['email', 'password', 'token','expo_token']:
             continue
         assert patch_data[field] == old_profile[field]
     assert patch_data['id'] == user_id
@@ -185,9 +189,11 @@ def test_patch_nuevo_mail_pero_ya_existente_entonces_error(
     session = recreate_db(test_database)
     repeated_mail = 'repeated@test.com'
     other_profile = {'name': 'a name', 'lastName': 'a last name',
-                     'email': repeated_mail, 'password': 'a password'}
+                     'email': repeated_mail, 'password': 'a password',
+                     'expo_token': "IGNOREXPO"}
     old_profile = {'name': 'a name', 'lastName': 'a last name',
-                   'email': 'test@test.com', 'password': 'a password'}
+                   'email': 'test@test.com', 'password': 'a password',
+                   'expo_token': "IGNOREXPO"}
     client = test_app.test_client()
     other_resp = client.post("/users", json=other_profile)
     other_data = json.loads(other_resp.data.decode())

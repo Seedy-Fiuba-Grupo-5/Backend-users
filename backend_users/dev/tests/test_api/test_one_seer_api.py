@@ -39,7 +39,8 @@ def test_dada_una_db_con_usuario_de_id_1_sin_proyectos_donde_es_veedor_get_a_see
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -71,7 +72,8 @@ def test_dada_una_db_con_usuario_de_id_1_post_a_seers_barra_id_1_con_token_incor
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -105,7 +107,8 @@ def test_dada_una_db_con_usuario_de_id_1_post_a_seers_barra_id_1_con_el_cuerpo_c
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -152,7 +155,8 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -200,7 +204,8 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -244,7 +249,8 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -288,7 +294,8 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -334,7 +341,8 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -380,7 +388,8 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -425,7 +434,8 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -469,7 +479,8 @@ def test_dada_una_db_con_usuario_de_id_1_veedor_de_un_proyecto_con_id_1_al_hacer
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",

@@ -32,7 +32,8 @@ def test_userprojectdbmodel_get_projects_of_user_id_devuelve_lista_vacia_cuando_
     user_id = UserDBModel.add_user(name="un nombre",
                                    lastname="un apellido",
                                    email="un email",
-                                   password="una password")
+                                   password="una password",
+                                   expo_token="IGNOREXPO")
     id_project_list = UserProjectDBModel.get_projects_of_user_id(user_id)
     assert len(id_project_list) == 0
 
@@ -52,7 +53,8 @@ def test_userprojectdbmodel_get_projects_of_user_id_devuelve_lista_de_ids_de_pro
     user_id = UserDBModel.add_user(name="un nombre",
                                    lastname="un apellido",
                                    email="un email",
-                                   password="una password")
+                                   password="una password",
+                                   expo_token="IGNOREXPO")
     project_id = 19
     id_projects_list = UserProjectDBModel.add_project_to_user_id(
         user_id, project_id)
@@ -91,7 +93,8 @@ def test_userprojectdbmodel_add_project_devuelve_lista_con_proyectos_cuando_el_p
     user_id = UserDBModel.add_user(name="un nombre",
                                    lastname="un apellido",
                                    email="un email",
-                                   password="una password")
+                                   password="una password",
+                                   expo_token="IGNOREXPO")
     project_id = 19
     id_projects_list = UserProjectDBModel.add_project_to_user_id(
         user_id, project_id)

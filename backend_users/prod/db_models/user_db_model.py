@@ -51,7 +51,8 @@ class UserDBModel(db.Model):
                  email,
                  password,
                  seer2,
-                 active=True,
+                 expo_token,
+                 active=True
                  ):
 
         self.name = name
@@ -60,6 +61,7 @@ class UserDBModel(db.Model):
         self.password = password
         self.active = active
         self.seer = seer2
+        self.expo_token = expo_token
 
     @staticmethod
     def add_expo_token(token,
@@ -101,9 +103,9 @@ class UserDBModel(db.Model):
         user = UserDBModel.query.filter_by(id=associated_id).first()
         return user.email
 
-    def update(self, name, lastName, email, password, seer):
+    def update(self, name, lastName, email, password, seer, expo_token):
         try:
-            self.__init__(name, lastName, email, password, seer)
+            self.__init__(name, lastName, email, password, seer, expo_token)
             db.session.commit()
         except exc.IntegrityError:
             db.session.rollback()
@@ -141,6 +143,7 @@ class UserDBModel(db.Model):
                  lastname,
                  email,
                  password,
+                 expo_token,
                  seer=False):
         encryptor = Encryptor()
         password_encry = encryptor.encrypt(password)
@@ -149,7 +152,8 @@ class UserDBModel(db.Model):
                                        lastname=lastname,
                                        email=email,
                                        password=password_encry,
-                                       seer2=seer))
+                                       seer2=seer,
+                                       expo_token=expo_token))
             db.session.commit()
             return UserDBModel.get_id(email,
                                       password)

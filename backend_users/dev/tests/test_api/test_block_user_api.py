@@ -25,7 +25,8 @@ def test_patchs_and_blocks_asociated_id_to_admin_in_empty_db(
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "tomate"
+        "password": "tomate",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -63,7 +64,8 @@ def test_patchs_blocks_and_unblocks_asociated_id_to_admin_in_empty_db(
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "tomate"
+        "password": "tomate",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",

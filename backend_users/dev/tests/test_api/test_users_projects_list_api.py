@@ -26,7 +26,8 @@ def test_get_a_url_user_barra_id_1_barra_projects_devuelve_proyectos_asociados_a
         "name": "un nombre",
         "lastName": "un apellido",
         "email": "un email",
-        "password": "una password"
+        "password": "una password",
+        "expo_token" : "IGNOREXPO"
     }
     response_register = client.post(
         "/users",

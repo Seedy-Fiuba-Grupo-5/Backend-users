@@ -27,7 +27,8 @@ def test_get_project_id_retorna_error_cuando_el_project_no_existe(
         'name': 'a name',
         'lastName': 'a last name',
         'email': email,
-        'password': password
+        'password': password,
+        'expo_token': "IGNOREXPO"
     }
     res = client.post('/users', json=body)
     data = json.loads(res.data.decode())
@@ -35,7 +36,8 @@ def test_get_project_id_retorna_error_cuando_el_project_no_existe(
     body = {
         'email': email,
         'password': password,
-        "expo_token": "a token"
+        'expo_token': "IGNOREXPO"
+
     }
     res = client.post('/users/login', json=body)
     data = json.loads(res.data.decode())
@@ -75,7 +77,8 @@ def test_get_project_id_retorna_info_del_proyecto_cuando_existe(
         'name': 'a name',
         'lastName': 'a last name',
         'email': email,
-        'password': password
+        'password': password,
+        'expo_token': "IGNOREXPO"
     }
     res = client.post('/users', json=body)
     data = json.loads(res.data.decode())
@@ -83,7 +86,7 @@ def test_get_project_id_retorna_info_del_proyecto_cuando_existe(
     body = {
         'email': email,
         'password': password,
-        "expo_token": "a token"
+        'expo_token':"IGNOREXPO"
     }
     res = client.post('/users/login', json=body)
     data = json.loads(res.data.decode())
@@ -127,7 +130,8 @@ def test_get_project_id_retorna_error_cuando_falta_el_token(
         'name': 'a name',
         'lastName': 'a last name',
         'email': email,
-        'password': password
+        'password': password,
+        'expo_token' : "IGNOREXPO"
     }
     res = client.post('/users', json=body)
     data = json.loads(res.data.decode())
@@ -135,7 +139,7 @@ def test_get_project_id_retorna_error_cuando_falta_el_token(
     body = {
         'email': email,
         'password': password,
-        "expo_token": "a token"
+        'expo_token':"IGNOREXPO"
     }
     res = client.post('/users/login', json=body)
     data = json.loads(res.data.decode())

@@ -3,8 +3,8 @@ from dev.aux_test import recreate_db
 
 
 def test_dado_post_users_login_con_email_y_password_validos_obtiene_id_y_token_valido(
-        test_app,
-        test_database):
+    test_app,
+    test_database):
     """
     Dado una base de datos.
     Y un usuario registrado:
@@ -23,24 +23,27 @@ def test_dado_post_users_login_con_email_y_password_validos_obtiene_id_y_token_v
         "id": <id>
         "token": <token>
     """
+
     session = recreate_db(test_database)
     client = test_app.test_client()
     body_prev = {
         "name": "a name",
         "lastName": "a last name",
         "email": "test@test.com",
-        "password": "a password"
+        "password": "a password",
+        "expo_token": "IGNOREXPO"
     }
     resp_prev = client.post(
         "/users",
         data=json.dumps(body_prev),
         content_type="application/json",
     )
+    assert resp_prev.status_code == 201
     data_prev = json.loads(resp_prev.data.decode())
     body = {
         "email": "test@test.com",
         "password": "a password",
-        "expo_token": "ExponentPushToken[11Nq5qN76-CXyBu2CzuLsJ]"
+        'expo_token': "IGNOREXPO"
     }
     response = client.post(
         "/users/login",
@@ -65,8 +68,8 @@ def test_dado_post_users_login_con_email_y_password_validos_obtiene_id_y_token_v
 
 
 def test_post_users_login_con_email_inexistente_entonces_error_404(
-        test_app,
-        test_database):
+    test_app,
+    test_database):
     """
     Dado una base de datos con un usuario registrado:
         name = "a name"
@@ -87,7 +90,8 @@ def test_post_users_login_con_email_inexistente_entonces_error_404(
         "name": "a name",
         "lastName": "a last name",
         "email": "test@test.com",
-        "password": "a password"
+        "password": "a password",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -97,7 +101,7 @@ def test_post_users_login_con_email_inexistente_entonces_error_404(
     body = {
         "email": "another@test.com",
         "password": "a password",
-        "expo_token": "ExponentPushToken[11Nq5qN76-CXyBu2CzuLsJ]"
+        "expo_token": "IGNOREXPO"
     }
     response = client.post(
         "/users/login",
@@ -110,8 +114,8 @@ def test_post_users_login_con_email_inexistente_entonces_error_404(
 
 
 def test_dado_email_fdimaria_registrado_y_password_tomate_cuando_POST_a_url_users_barra_login_el_email_y_la_palabra_de_pase_manzana_obtengo_un_error_401(
-        test_app,
-        test_database):
+    test_app,
+    test_database):
     """
     Dado una base de datos con un usuario registrado:
         name = "Franco Martin"
@@ -132,7 +136,8 @@ def test_dado_email_fdimaria_registrado_y_password_tomate_cuando_POST_a_url_user
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "tomate"
+        "password": "tomate",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -142,7 +147,7 @@ def test_dado_email_fdimaria_registrado_y_password_tomate_cuando_POST_a_url_user
     body = {
         "email": "fdimaria@fi.uba.ar",
         "password": "manzana",
-        "expo_token": "ExponentPushToken[11Nq5qN76-CXyBu2CzuLsJ]"
+        "expo_token": "IGNOREXPO"
     }
     response = client.post(
         "/users/login",
@@ -155,8 +160,8 @@ def test_dado_email_fdimaria_registrado_y_password_tomate_cuando_POST_a_url_user
 
 
 def test_dado_email_fdimaria_registrado_y_palabra_de_pase_tomate_cuando_POST_a_url_users_barra_login_email_fdimaria_obtengo_un_error(
-        test_app,
-        test_database):
+    test_app,
+    test_database):
     """
     Dado una base de datos con un usuario registrado:
         name = "Franco Martin"

@@ -15,11 +15,13 @@ def test_userdbmodel_add_user_dos_veces_al_mismo_usuario_devuelve_menos_1(
     session = recreate_db(test_database)
     assert 1 == UserDBModel.add_user(name="Franco", lastname="Di Maria",
                                      email="fdimaria@fi.uba.ar",
-                                     password="hola")
+                                     password="hola",
+                                     expo_token="IGNOREXPO")
     try:
         UserDBModel.add_user(name="Franco", lastname="Di Maria",
                              email="fdimaria@fi.uba.ar",
-                             password="hola")
+                             password="hola",
+                             expo_token="IGNOREXPO")
         assert False
     except RepeatedEmailError:
         assert True
@@ -44,7 +46,8 @@ def test_get_id_only_when_pass_and_user_is_correct(
     UserDBModel.add_user(name="Franco Martin",
                          lastname="Di Maria",
                          email="fdimaria@fi.uba.ar",
-                         password="hola")
+                         password="hola",
+                         expo_token="IGNOREXPO")
 
     session.commit()
     try:
@@ -81,6 +84,7 @@ def test_obtain_valid_id_from_database(test_app, test_database):
                             lastname="Di Maria",
                             email="fdimaria@fi.uba.ar",
                             password="hola",
-                            seer2=False))
+                            seer2=False,
+                            expo_token="IGNOREXPO"))
     session.commit()
     assert UserDBModel.check_id(1) is True

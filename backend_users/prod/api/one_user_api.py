@@ -65,7 +65,8 @@ class UserResource(BaseResource):
                 lastName=json.get('lastName', user.lastName),
                 email=json.get('email', user.email),
                 password=json.get('password', user.password),
-                seer=json.get('seer', user.seer)
+                seer=json.get('seer', user.seer),
+                expo_token=json.get('expo_token', user.expo_token)
             )
             user = UserDBModel.query.get(user_id)
             response_object = user.serialize()

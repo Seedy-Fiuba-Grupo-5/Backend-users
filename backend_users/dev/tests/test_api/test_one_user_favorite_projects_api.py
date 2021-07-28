@@ -39,7 +39,8 @@ def test_dada_una_db_con_usuario_de_id_1_sin_proyectos_favoritos_get_a_users_bar
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -72,7 +73,8 @@ def test_dada_una_db_con_usuario_de_id_1_post_a_users_barra_id_1_barra_favorites
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -118,7 +120,8 @@ def test_dada_una_db_con_usuario_de_id_1_con_un_proyecto_favorito_de_id_1_al_hac
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -165,7 +168,8 @@ def test_dada_una_db_con_usuario_de_id_1_con_un_proyecto_favorito_de_id_1_al_hac
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -210,7 +214,8 @@ def test_dada_una_db_con_usuario_de_id_1_con_un_proyecto_favorito_de_id_1_al_hac
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -254,7 +259,8 @@ def est_dada_una_db_con_usuario_de_id_1_con_un_proyecto_favorito_de_id_1_al_hace
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",

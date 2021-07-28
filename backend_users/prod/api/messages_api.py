@@ -73,11 +73,12 @@ class UsersListResource(BaseResource):
                                         data['message'])
             if data['message'] != "TESTEXPO":
                 token = UserDBModel.get_expo_token(data['id_1'])
-                requests.post(URL,
-                              json={"to": token,
-                                    "title": "Seedy Fiuba",
-                                    "body": "¡Tienes un nuevo mensaje del "
-                                            "usuario {}!".format(id_user)})
+                if token != "TESTEXPO":
+                    requests.post(URL,
+                                  json={"to": token,
+                                        "title": "Seedy Fiuba",
+                                        "body": "¡Tienes un nuevo mensaje del "
+                                                "usuario {}!".format(id_user)})
             response_object = {'user_1': data['id_1'],
                                'token': UserDBModel.encode_auth_token(
                                    data['id_1'])}
