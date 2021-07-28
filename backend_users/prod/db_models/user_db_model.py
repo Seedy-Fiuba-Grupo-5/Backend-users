@@ -96,6 +96,11 @@ class UserDBModel(db.Model):
         user = UserDBModel.query.filter_by(id=associated_id).first()
         return user.active
 
+    @staticmethod
+    def get_associated_email(associated_id):
+        user = UserDBModel.query.filter_by(id=associated_id).first()
+        return user.email
+
     def update(self, name, lastName, email, password, seer):
         try:
             self.__init__(name, lastName, email, password, seer)

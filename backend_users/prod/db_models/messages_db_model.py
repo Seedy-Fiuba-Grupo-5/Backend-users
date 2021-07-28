@@ -1,5 +1,6 @@
 import datetime
 from prod import db
+from prod.db_models.user_db_model import UserDBModel
 
 
 # Clase representativa del schema que almacena a cada uno de los
@@ -36,7 +37,11 @@ class MessagesDBModel(db.Model):
         self.date = datetime.datetime.now()
 
     def serialize(self):
+        email = ""
+        if self.text != "TESTMESSAGE":
+            email = UserDBModel.get_associated_email(self.owner)
         return {
+            "email": email,
             "id_1": self.id_1,
             "id_2": self.id_2,
             "text": self.text,

@@ -9,12 +9,12 @@ def test_get_messages_form_user_1_to_user_2(test_app,
     session = recreate_db(test_database)
     session.add(MessagesDBModel(id_1=1,
                                 id_2=2,
-                                text="fdimaria@fi.uba.ar",
+                                text="TESTMESSAGE",
                                 owner=1))
     session.commit()
     session.add(MessagesDBModel(id_1=1,
                                 id_2=2,
-                                text="fdimaria@fi.uba.ar",
+                                text="TESTMESSAGE",
                                 owner=2))
     session.commit()
     messages = MessagesDBModel.get_messages_from_user(1)
@@ -29,12 +29,12 @@ def test_get_messages_form_user_1_to_user_2_and_user_2_to_user_1(test_app,
     session = recreate_db(test_database)
     session.add(MessagesDBModel(id_1=1,
                                 id_2=2,
-                                text="fdimaria@fi.uba.ar",
+                                text="TESTMESSAGE",
                                 owner=1))
     session.commit()
     session.add(MessagesDBModel(id_1=2,
                                 id_2=1,
-                                text="fdimaria@fi.uba.ar",
+                                text="TESTMESSAGE",
                                 owner=2))
     session.commit()
     messages = MessagesDBModel.get_messages_from_user(1)
