@@ -8,6 +8,10 @@ from prod.schemas.message_representation import message_representation
 from prod.schemas.constants import MISSING_VALUES_ERROR, REPEATED_USER_ERROR
 from prod.schemas.constants import USER_NOT_FOUND_ERROR, MISSING_ARGS_ERROR
 from prod.schemas.message_code20 import message_code20
+import requests
+import os
+
+URL = os.getenv("URL")
 
 ns = Namespace(
     name='messages/<int:user_id>',
@@ -64,9 +68,16 @@ class UsersListResource(BaseResource):
             id_user = data['id_1']
             if token_decoded != id_user:
                 ns.abort(404, status=USER_NOT_FOUND_ERROR)
-            MessagesDBModel.add_message(data['id_1'],
+            MessagesDBModel.add_message(id_user,
                                         user_id,
                                         data['message'])
+            if data['message'] != "TESTEXPO":
+                token = UserDBModel.get_expo_token(data['id_1'])
+                requests.post(URL,
+                              json={"to": token,
+                                    "title": "Seedy Fiuba",
+                                    "body": "¡Tienes un nuevo mensaje del "
+                                            "usuario {}!".format(id_user)})
             response_object = {'user_1': data['id_1'],
                                'token': UserDBModel.encode_auth_token(
                                    data['id_1'])}

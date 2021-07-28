@@ -1,11 +1,12 @@
 import datetime
+
 import flask
 import jwt
 from prod import db
 from prod.db_models.black_list_db import BlacklistToken
-from sqlalchemy import exc
-from prod.exceptions import RepeatedEmailError, UserNotFoundError,\
+from prod.exceptions import RepeatedEmailError, UserNotFoundError, \
     WrongPasswordError
+from sqlalchemy import exc
 from prod.encryptor import Encryptor
 
 
@@ -38,6 +39,8 @@ class UserDBModel(db.Model):
     seer = db.Column(db.Boolean(),
                      default=False,
                      nullable=True)
+    expo_token = db.Column(db.String(900),
+                           default="")
 
     # Constructor de la clase.
     # PRE: Name tiene que ser un string de a lo sumo 128 caracteres, al igual
@@ -57,6 +60,18 @@ class UserDBModel(db.Model):
         self.password = password
         self.active = active
         self.seer = seer2
+
+    @staticmethod
+    def add_expo_token(token,
+                       associated_id):
+        user = UserDBModel.query.filter_by(id=associated_id).first()
+        user.expo_token = token
+        db.session.commit()
+
+    @staticmethod
+    def get_expo_token(associated_id):
+        user = UserDBModel.query.filter_by(id=associated_id).first()
+        return user.expo_token
 
     @staticmethod
     def flip_active_status(associated_id):

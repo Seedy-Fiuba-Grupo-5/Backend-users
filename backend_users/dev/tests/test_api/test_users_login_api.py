@@ -39,7 +39,8 @@ def test_dado_post_users_login_con_email_y_password_validos_obtiene_id_y_token_v
     data_prev = json.loads(resp_prev.data.decode())
     body = {
         "email": "test@test.com",
-        "password": "a password"
+        "password": "a password",
+        "expo_token": "ExponentPushToken[11Nq5qN76-CXyBu2CzuLsJ]"
     }
     response = client.post(
         "/users/login",
@@ -95,7 +96,8 @@ def test_post_users_login_con_email_inexistente_entonces_error_404(
     )
     body = {
         "email": "another@test.com",
-        "password": "a password"
+        "password": "a password",
+        "expo_token": "ExponentPushToken[11Nq5qN76-CXyBu2CzuLsJ]"
     }
     response = client.post(
         "/users/login",
@@ -139,7 +141,8 @@ def test_dado_email_fdimaria_registrado_y_password_tomate_cuando_POST_a_url_user
     )
     body = {
         "email": "fdimaria@fi.uba.ar",
-        "password": "manzana"
+        "password": "manzana",
+        "expo_token": "ExponentPushToken[11Nq5qN76-CXyBu2CzuLsJ]"
     }
     response = client.post(
         "/users/login",
