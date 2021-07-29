@@ -11,7 +11,6 @@ from prod.schemas.user_email_repeated import user_email_repeated
 from prod.schemas.user_login_code20 import user_login_code20
 from prod.schemas.user_login_not_found import user_login_not_found
 
-
 ns = Namespace(
     'users/login',
     description='Users login operations'
@@ -57,8 +56,11 @@ class UsersLoginResource(BaseResource):
             if UserDBModel.get_active_status(id) is False:
                 ns.abort(401,
                          status=USER_BLOCKED)
-            UserDBModel.add_expo_token(data['expo_token'],
-                                       id)
+            if UserDBModel.check_state_of_expo_token(data['expo_token']):
+                UserDBModel.change_expo_token(data['expo_token'], id)
+            else:
+                UserDBModel.add_expo_token(data['expo_token'],
+                                           id)
             token = UserDBModel.encode_auth_token(id)
             response_object = {
                 "email": data['email'], "id": id, "token": token}

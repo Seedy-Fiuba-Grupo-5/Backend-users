@@ -1,5 +1,6 @@
 import json
 from dev.aux_test import recreate_db
+from prod.db_models.user_db_model import UserDBModel
 
 
 def test_dado_post_users_login_con_email_y_password_validos_obtiene_id_y_token_valido(
@@ -182,7 +183,8 @@ def test_dado_email_fdimaria_registrado_y_palabra_de_pase_tomate_cuando_POST_a_u
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "tomate"
+        "password": "tomate",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -200,3 +202,60 @@ def test_dado_email_fdimaria_registrado_y_palabra_de_pase_tomate_cuando_POST_a_u
     assert data['status'] == 'missing_args'
     assert 'email' not in data['missing_args']
     assert 'password' in data['missing_args']
+
+def test_change_id_associated_to_token(test_app,
+                                       test_database):
+    session = recreate_db(test_database)
+    client = test_app.test_client()
+    body_prev = {
+        "name": "Franco Martin",
+        "lastName": "Di Maria",
+        "email": "fdimaria@fi.uba.ar",
+        "password": "tomate",
+        "expo_token": "2"
+    }
+    r = client.post(
+        "/users",
+        data=json.dumps(body_prev),
+        content_type="application/json",
+    )
+    assert r.status == '201 CREATED'
+    assert UserDBModel.get_user_id_with_expo_token("2") == 1
+    body = {
+        "email": "fdimaria@fi.uba.ar",
+        "password": "tomate",
+        "expo_token": "2"
+    }
+    r= client.post(
+        "/users/login",
+        data=json.dumps(body),
+        content_type="application/json",
+    )
+    assert r.status == '200 OK'
+    body_prev = {
+        "name": "Franco Martin",
+        "lastName": "Di Maria",
+        "email": "fdimaria2@fi.uba.ar",
+        "password": "tomate",
+        "expo_token": "2"
+    }
+    r = client.post(
+        "/users",
+        data=json.dumps(body_prev),
+        content_type="application/json",
+    )
+    assert r.status == '201 CREATED'
+    body = {
+        "email": "fdimaria@fi.uba.ar",
+        "password": "tomate",
+        "expo_token": "IGNOREXPO"
+    }
+    r = client.post(
+        "/users/login",
+        data=json.dumps(body),
+        content_type="application/json",
+    )
+    assert r.status == '200 OK'
+    assert UserDBModel.get_user_id_with_expo_token("2") == 2
+
+

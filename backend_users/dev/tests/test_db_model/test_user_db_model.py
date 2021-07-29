@@ -88,3 +88,16 @@ def test_obtain_valid_id_from_database(test_app, test_database):
                             expo_token="IGNOREXPO"))
     session.commit()
     assert UserDBModel.check_id(1) is True
+
+
+def test_get_id_associated_to_token(test_app, test_database):
+    session = recreate_db(test_database)
+    UserDBModel.add_user(name="Franco Martin",
+                         lastname="Di Maria",
+                         email="fdimaria@fi.uba.ar",
+                         password="hola",
+                         expo_token="2")
+
+    session.commit()
+    owner_id = UserDBModel.get_user_id_with_expo_token("2")
+    assert owner_id == 1

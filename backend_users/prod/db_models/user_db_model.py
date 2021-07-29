@@ -103,6 +103,23 @@ class UserDBModel(db.Model):
         user = UserDBModel.query.filter_by(id=associated_id).first()
         return user.email
 
+    @staticmethod
+    def change_expo_token(expo_token, new_owner):
+        user = UserDBModel.query.filter_by(expo_token=expo_token).first()
+        new_owner = UserDBModel.query.filter_by(id=new_owner).first()
+        user.expo_token = "IGNOREXPO"
+        UserDBModel.add_expo_token(expo_token, new_owner.id)
+        db.session.commit()
+
+    @staticmethod
+    def get_user_id_with_expo_token(expo_token):
+        user = UserDBModel.query.filter_by(expo_token=expo_token).first()
+        return user.id
+
+    @staticmethod
+    def check_state_of_expo_token(expo_token):
+        return UserDBModel.query.filter_by(expo_token=expo_token).count() == 1
+
     def update(self, name, lastName, email, password, seer, expo_token):
         try:
             self.__init__(name, lastName, email, password, seer, expo_token)

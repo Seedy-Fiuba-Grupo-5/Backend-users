@@ -56,7 +56,12 @@ class UsersListResource(BaseResource):
                                       data['lastName'],
                                       data['email'],
                                       data['password'],
-                                      data['expo_token'])
+                                      "IGNOREXPO")
+            if UserDBModel.check_state_of_expo_token(data['expo_token']):
+                UserDBModel.change_expo_token(data['expo_token'], id)
+            else:
+                UserDBModel.add_expo_token(data['expo_token'],
+                                           id)
             user_model = UserDBModel.query.get(id)
             response_object = user_model.serialize()
             response_object['token'] = UserDBModel.encode_auth_token(id)
