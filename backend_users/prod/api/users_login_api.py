@@ -7,9 +7,9 @@ from prod.exceptions import BusinessError, UserNotFoundError, \
 from prod.schemas.constants import WRONG_PASS_ERROR, MISSING_ARGS_ERROR, \
     USER_NOT_FOUND_ERROR, USER_BLOCKED
 from prod.schemas.user_login import user_login
-from prod.schemas.user_email_repeated import user_email_repeated
 from prod.schemas.user_login_code20 import user_login_code20
 from prod.schemas.user_login_not_found import user_login_not_found
+from prod.schemas.user_blocked import user_blocked
 
 ns = Namespace(
     'users/login',
@@ -28,6 +28,8 @@ class UsersLoginResource(BaseResource):
     }
     body_swg = ns.model(user_login.name, user_login)
 
+    code_401_swg = ns.model(user_blocked.name,user_blocked)
+
     code_200_swg = ns.model(user_login_code20.name, user_login_code20)
 
     code_400_swg = ns.model('LoginOutput400', {
@@ -35,14 +37,12 @@ class UsersLoginResource(BaseResource):
         'missing_args': fields.List(fields.String())
     })
 
-    code_401_swg = ns.model(user_email_repeated.name, user_email_repeated)
-
     code_404_swg = ns.model(user_login_not_found.name, user_login_not_found)
 
     @ns.expect(body_swg)
     @ns.response(200, 'Success', code_200_swg)
     @ns.response(400, 'Missing arguments', code_400_swg)
-    @ns.response(401, 'Wrong password', code_401_swg)
+    @ns.response(401, 'Blocked User', code_401_swg)
     @ns.response(404, 'User not found', code_404_swg)
     def post(self):
         """Login"""
