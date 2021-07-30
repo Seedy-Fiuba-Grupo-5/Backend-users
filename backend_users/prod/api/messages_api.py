@@ -15,7 +15,7 @@ URL = os.getenv("URL")
 
 ns = Namespace(
     name='messages/<int:user_id>',
-    description='All users related operations'
+    description='All users messages related operations'
 )
 
 
@@ -72,7 +72,7 @@ class UsersListResource(BaseResource):
                                         user_id,
                                         data['message'])
             if data['message'] != "TESTEXPO":
-                token = UserDBModel.get_expo_token(data['id_1'])
+                token = UserDBModel.get_expo_token(user_id)
                 if token != "TESTEXPO":
                     requests.post(URL,
                                   json={"to": token,
