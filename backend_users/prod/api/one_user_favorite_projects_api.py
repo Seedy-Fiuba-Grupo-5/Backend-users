@@ -6,6 +6,9 @@ from prod.db_models.user_db_model import UserDBModel
 from prod.schemas.constants import USER_NOT_FOUND_ERROR, USER_BLOCKED, \
     MISSING_VALUES_ERROR, INVALID_TOKEN
 from prod.schemas.project_not_found import PROJECT_NOT_FOUND
+from prod.schemas.user_login_not_found import user_login_not_found
+from prod.schemas.token_required import token_required
+from prod.schemas.user_blocked import user_blocked
 
 ns = Namespace(
     'users/<int:user_id>/favorites',
@@ -27,7 +30,11 @@ class UserFavoriteProjectsListResource(BaseResource):
             fields.Integer(description='One of the user projects id')
         )
     })
+    token_required_swg = ns.model(token_required.name, token_required)
+    code_404_swg = ns.model(user_login_not_found.name, user_login_not_found)
+    code_401_swg = ns.model(user_blocked.name, user_blocked)
 
+    @ns.response(404, "User not found", code_404_swg)
     @ns.response(200, 'Success', code_20x_swg)
     def get(self, user_id):
         """Get User's favorite projects"""
@@ -43,6 +50,8 @@ class UserFavoriteProjectsListResource(BaseResource):
         return response_object, 200
 
     @ns.expect(body_swg)
+    @ns.response(404, 'Required token', token_required_swg)
+    @ns.response(401, "User not found", code_401_swg)
     @ns.response(201, 'Success', code_20x_swg)
     def post(self, user_id):
         """Add project to user favorites"""
@@ -71,6 +80,8 @@ class UserFavoriteProjectsListResource(BaseResource):
 
     @ns.expect(body_swg)
     @ns.response(200, 'Success', code_20x_swg)
+    @ns.response(404, 'Required token', token_required_swg)
+    @ns.response(401, "User not found", code_401_swg)
     def delete(self, user_id):
         """Remove project to user favorites"""
         try:

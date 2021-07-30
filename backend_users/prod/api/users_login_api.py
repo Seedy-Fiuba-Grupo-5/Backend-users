@@ -28,7 +28,7 @@ class UsersLoginResource(BaseResource):
     }
     body_swg = ns.model(user_login.name, user_login)
 
-    code_401_swg = ns.model(user_blocked.name,user_blocked)
+    code_401_swg = ns.model(user_blocked.name, user_blocked)
 
     code_200_swg = ns.model(user_login_code20.name, user_login_code20)
 

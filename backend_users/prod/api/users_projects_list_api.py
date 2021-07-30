@@ -3,7 +3,7 @@ from flask import request
 from prod.db_models.user_db_model import UserDBModel
 from prod.api.base_resource import BaseResource
 from prod.db_models.user_project_db_model import UserProjectDBModel
-from prod.exceptions import BusinessError, UserNotFoundError, \
+from prod.exceptions import UserNotFoundError, \
     WrongPasswordError, UserBlockedError
 from prod.schemas.constants import WRONG_PASS_ERROR, MISSING_ARGS_ERROR, \
     USER_NOT_FOUND_ERROR, USER_BLOCKED
