@@ -17,7 +17,7 @@ ns = Namespace(
 
 @ns.route('')
 class AuthenticationResource(BaseResource):
-    REGISTER_FIELDS = ["token"]
+    REGISTER_FIELDS = ["token", "user_id"]
 
     body_swg = ns.model(token_representation.name, token_representation)
     code_200_swg = ns.model(valid_token.name, valid_token)
