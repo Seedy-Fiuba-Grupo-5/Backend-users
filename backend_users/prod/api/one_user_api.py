@@ -9,6 +9,7 @@ from prod.schemas.user_login_not_found import user_login_not_found
 from prod.schemas.user_email_repeated import user_email_repeated
 from prod.schemas.constants import USER_NOT_FOUND_ERROR, REPEATED_EMAIL_ERROR,\
     MISSING_VALUES_ERROR, USER_BLOCKED
+from prod.schemas.patch_user import patch_user
 
 ns = Namespace(
     'users/<int:user_id>',
@@ -27,6 +28,8 @@ class UserResource(BaseResource):
 
     body_swg = ns.model(admin_representation.name, admin_representation)
 
+    patch_swg = ns.model(patch_user.name, patch_user)
+
     code_200_swg = ns.model(user_code20.name, user_code20)
 
     code_404_swg = ns.model(user_login_not_found.name, user_login_not_found)
@@ -43,9 +46,9 @@ class UserResource(BaseResource):
         response_object = user.serialize()
         return response_object, 200
 
-    @ns.expect(body_swg)
+    @ns.expect(patch_swg)
     @ns.response(200, 'Success', code_200_swg)
-    @ns.response(404, USER_NOT_FOUND_ERROR, code_404_swg)
+    @ns.response(404, USER_NOT_FOUND_ERROR, patch_user)
     @ns.response(409, REPEATED_EMAIL_ERROR, code_409_swg)
     def patch(self, user_id):
         """Update user data"""
