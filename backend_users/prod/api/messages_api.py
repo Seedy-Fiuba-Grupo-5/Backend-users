@@ -71,6 +71,7 @@ class UsersListResource(BaseResource):
             MessagesDBModel.add_message(id_user,
                                         user_id,
                                         data['message'])
+            email = UserDBModel.get_associated_email(id_user)
             if data['message'] != "TESTEXPO":
                 token = UserDBModel.get_expo_token(user_id)
                 if token != "TESTEXPO":
@@ -78,7 +79,7 @@ class UsersListResource(BaseResource):
                                   json={"to": token,
                                         "title": "Seedy Fiuba",
                                         "body": "¡Tienes un nuevo mensaje del "
-                                                "usuario {}!".format(id_user)})
+                                                "usuario {}!".format(email)})
             response_object = {'user_1': data['id_1'],
                                'token': UserDBModel.encode_auth_token(
                                    data['id_1'])}
