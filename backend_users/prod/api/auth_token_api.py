@@ -6,7 +6,8 @@ from prod.schemas.valid_token import valid_token
 from prod.schemas.invalid_token import invalid_token
 from prod.schemas.missing_args import missing_args
 from prod.schemas.token_representation import token_representation
-from prod.schemas.constants import MISSING_ARGS, VALID_TOKEN, INVALID_TOKEN
+from prod.schemas.constants import MISSING_ARGS, VALID_TOKEN, INVALID_TOKEN,\
+    USER_NOT_FOUND
 
 
 ns = Namespace(
@@ -45,5 +46,5 @@ class AuthenticationResource(BaseResource):
             encoded = UserDBModel.encode_auth_token(decoded)
             response = {'status': VALID_TOKEN, 'token': encoded}
             return response, 200
-        response = {'status': INVALID_TOKEN}
-        return response, 404
+        response = {'status': USER_NOT_FOUND}
+        return response, 401
