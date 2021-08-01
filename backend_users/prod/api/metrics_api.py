@@ -31,12 +31,12 @@ class MetricsResource(BaseResource):
         list_of_blocked = \
             [user.id for user in UserDBModel.query.all() if
              user.active is False]
-        list_of_seer = [user.user_id for user in SeerProjectDBModel.query.all() if
-                        user.accepted is True]
+        list_of_seer = list(set([user.user_id for user in SeerProjectDBModel.query.all() if
+                        user.accepted is True]))
         response_object['percentage_blocked'] = \
             len(list_of_blocked) / len(list_of_user)
         list_of_user_with_projects = \
-            [user.user_id for user in UserProjectDBModel.query.all()]
+            list(set([user.user_id for user in UserProjectDBModel.query.all()]))
         response_object['percentage_with_project'] = \
             len(list_of_user_with_projects) / len(list_of_user)
         response_object['percentage_seer'] = \
