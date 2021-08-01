@@ -5,6 +5,8 @@
 [![Develop](https://github.com/Seedy-Fiuba-Grupo-5/Backend-users/actions/workflows/develop.yml/badge.svg?branch=develop)](https://github.com/Seedy-Fiuba-Grupo-5/Backend-users/actions/workflows/develop.yml)
 [![codecov](https://codecov.io/gh/Seedy-Fiuba-Grupo-5/Backend-users/branch/develop/graph/badge.svg)](https://codecov.io/gh/Seedy-Fiuba-Grupo-5/Backend-users/branch/develop)
 
+Servicio de usuarios de Seedyfiuba
+
 ## Tecnologias
 - Flask (framework del servicio web)
 - Postgres (base de datos)
