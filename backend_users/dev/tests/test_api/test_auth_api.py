@@ -17,18 +17,19 @@ def test_get_correct_encode_and_decode_of_id(test_app,
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
         data=json.dumps(body),
         content_type="application/json"
     )
-    body = {"token": UserDBModel.encode_auth_token(1)}
+    body = {'user_id': 1,
+            "token": UserDBModel.encode_auth_token(1)}
     response = client.post(
         'users/auth',
         data=json.dumps(body),
         content_type="application/json"
     )
     assert response.status_code == 200
-    print(response)

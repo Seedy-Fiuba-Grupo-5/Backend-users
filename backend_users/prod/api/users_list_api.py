@@ -2,7 +2,11 @@ from flask_restx import Namespace, fields
 from flask import request
 from prod.api.base_resource import BaseResource
 from prod.db_models.user_db_model import UserDBModel
-from prod.exceptions import BusinessError, RepeatedEmailError
+from prod.exceptions import BusinessError, RepeatedEmailError, UserBlockedError
+from prod.schemas.user_representation import user_representation
+from prod.schemas.user_code20 import user_code20
+from prod.schemas.user_repeated import user_repeated
+from prod.schemas.constants import MISSING_VALUES_ERROR, REPEATED_USER_ERROR
 
 ns = Namespace(
     name='users',
@@ -12,34 +16,18 @@ ns = Namespace(
 
 @ns.route('')
 class UsersListResource(BaseResource):
-    REGISTER_FIELDS = ("name", "lastName", "email", "password")
-    MISSING_VALUES_ERROR = 'missing_args'
-    REPEATED_USER_ERROR = 'repeated_email'
+    REGISTER_FIELDS = ("name", "lastName", "email", "password", "expo_token")
 
     code_status = {
-        RepeatedEmailError: (409, REPEATED_USER_ERROR)
+        RepeatedEmailError: (409, REPEATED_USER_ERROR),
+        UserBlockedError: (406, 'user_blocked')
     }
 
-    body_swg = ns.model('One user input', {
-        "name": fields.String(required=True, description="The user name"),
-        "lastName": fields.String(
-            required=True, description="The user last name"),
-        "email": fields.String(required=True, description="The user email"),
-        "active": fields.Boolean(required=True, description="The user status")
-    })
+    body_swg = ns.model(user_representation.name, user_representation)
 
-    code_20x_swg = ns.model('One user output 20x', {
-        "id": fields.Integer(description='The user id'),
-        "name": fields.String(description="The user name"),
-        "lastName": fields.String(description="The user last name"),
-        "email": fields.String(description="The user email"),
-        "active": fields.Boolean(description="The user status")
-    })
+    code_20x_swg = ns.model(user_code20.name, user_code20)
 
-    code_400_swg = ns.model('One user output 400', {
-        'status': fields.String(example=MISSING_VALUES_ERROR),
-        'missing_args': fields.List(fields.String())
-    })
+    code_400_swg = ns.model(user_repeated.name, user_repeated)
 
     code_409_swg = ns.model('UserOutput409', {
         'status': fields.String(example=REPEATED_USER_ERROR)
@@ -61,15 +49,22 @@ class UsersListResource(BaseResource):
         try:
             data = request.get_json()
             missing_args = self.missing_values(data, self.REGISTER_FIELDS)
-            if missing_args != []:
-                ns.abort(400, status=self.MISSING_VALUES_ERROR,
+            if missing_args:
+                ns.abort(400, status=MISSING_VALUES_ERROR,
                          missing_args=missing_args)
             id = UserDBModel.add_user(data['name'],
                                       data['lastName'],
                                       data['email'],
-                                      data['password'])
+                                      data['password'],
+                                      "IGNOREXPO")
+            if UserDBModel.check_state_of_expo_token(data['expo_token']):
+                UserDBModel.change_expo_token(data['expo_token'], id)
+            else:
+                UserDBModel.add_expo_token(data['expo_token'],
+                                           id)
             user_model = UserDBModel.query.get(id)
             response_object = user_model.serialize()
+            response_object['token'] = UserDBModel.encode_auth_token(id)
             return response_object, 201
         except BusinessError as e:
             code, status = self.code_status[e.__class__]

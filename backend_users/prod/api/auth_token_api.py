@@ -1,7 +1,13 @@
-from flask_restx import Namespace, fields
+from flask_restx import Namespace
+from flask import request
 from prod.api.base_resource import BaseResource
 from prod.db_models.user_db_model import UserDBModel
-from flask import request
+from prod.schemas.valid_token import valid_token
+from prod.schemas.invalid_token import invalid_token
+from prod.schemas.missing_args import missing_args
+from prod.schemas.token_representation import token_representation
+from prod.schemas.constants import MISSING_ARGS, VALID_TOKEN, INVALID_TOKEN,\
+    USER_NOT_FOUND
 
 
 ns = Namespace(
@@ -12,39 +18,33 @@ ns = Namespace(
 
 @ns.route('')
 class AuthenticationResource(BaseResource):
-    REGISTER_FIELDS = ["token"]
-    VALID_TOKEN = 'valid_token'
-    MISSING_ARGS_ERROR = 'missing_args'
-    INVALID_TOKEN_ERROR = 'invalid_token'
-    body_swg = ns.model('AuthenticationResourceInput', {
-        'token': fields.String()
-    })
-    code_200_swg = ns.model('AuthenticationResourceOutput200', {
-        "status": fields.String(example=VALID_TOKEN),
-    })
-    code_400_swg = ns.model('AuthenticationResourceOutput400', {
-        'status': fields.String(example=MISSING_ARGS_ERROR)
-    })
-    code_401_swg = ns.model('AuthenticationResourceOutput401', {
-        'status': fields.String(example=INVALID_TOKEN_ERROR)
-    })
+    REGISTER_FIELDS = ["token", "user_id"]
+
+    body_swg = ns.model(token_representation.name, token_representation)
+    code_200_swg = ns.model(valid_token.name, valid_token)
+    code_400_swg = ns.model(missing_args.name, missing_args)
+    code_401_swg = ns.model(invalid_token.name, invalid_token)
 
     @ns.expect(body_swg)
     @ns.response(200, 'Success', code_200_swg)
-    @ns.response(400, 'Missing arguments', code_400_swg)
-    @ns.response(401, 'The token is invalid', code_401_swg)
+    @ns.response(400, MISSING_ARGS, code_400_swg)
+    @ns.response(401, INVALID_TOKEN, code_401_swg)
     def post(self):
         """Validate token"""
         data = request.get_json()
         missing_args = self.missing_values(data, self.REGISTER_FIELDS)
-        if missing_args != []:
-            response = {'status': self.MISSING_ARGS_ERROR}
+        if missing_args:
+            response = {'status': MISSING_ARGS}
             return response, 400
         token = data["token"]
         token = bytes(token, encoding='utf8')
         decoded = UserDBModel.decode_auth_token(token)
+        if decoded != data['user_id']:
+            response = {'status': INVALID_TOKEN}
+            return response, 401
         if UserDBModel.check_id(decoded):
-            response = {'status': self.VALID_TOKEN}
+            encoded = UserDBModel.encode_auth_token(decoded)
+            response = {'status': VALID_TOKEN, 'token': encoded}
             return response, 200
-        response = {'status': self.INVALID_TOKEN_ERROR}
-        return response, 404
+        response = {'status': USER_NOT_FOUND}
+        return response, 401

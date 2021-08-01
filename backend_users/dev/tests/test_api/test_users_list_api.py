@@ -1,5 +1,6 @@
 import json
 from dev.aux_test import recreate_db
+from prod.db_models.user_db_model import UserDBModel
 
 
 def test_db_vacia_post_users_name_franco_martin_last_name_di_maria_email_fdimaria_password_tomate_entonces_registra_nuevo_usuario_con_id_1(
@@ -26,7 +27,8 @@ def test_db_vacia_post_users_name_franco_martin_last_name_di_maria_email_fdimari
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "tomate"
+        "password": "tomate",
+        "expo_token": "IGNOREXPO"
     }
     response = client.post(
         "/users",
@@ -35,7 +37,7 @@ def test_db_vacia_post_users_name_franco_martin_last_name_di_maria_email_fdimari
     )
     assert response.status_code == 201
     register_info = json.loads(response.data.decode())
-    assert len(register_info) == 5
+    assert len(register_info) == 7
     assert register_info["name"] == "Franco Martin"
     assert register_info["lastName"] == "Di Maria"
     assert register_info["email"] == "fdimaria@fi.uba.ar"
@@ -68,7 +70,8 @@ def test_db_con_mail_fdimaria_registrado_post_users_name_franco_martin_last_name
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "tomate"
+        "password": "tomate",
+        "expo_token": "IGNOREXPO"
     }
     # Primer registro
     client.post(
@@ -140,7 +143,8 @@ def test_db_con_unico_usuario_name_Franco_Martin_last_name_Di_Maria_mail_fdimari
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -193,13 +197,15 @@ def test_db_con_usuario1_name_Franco_Martin_last_name_Di_Maria_email_fdimaria_pa
         "name": "Franco Martin",
         "lastName": "Di Maria",
         "email": "fdimaria@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     body_2 = {
         "name": "Brian",
         "lastName": "Zambelli Tello",
         "email": "bzambelli@fi.uba.ar",
-        "password": "hola"
+        "password": "hola",
+        "expo_token": "IGNOREXPO"
     }
     client.post(
         "/users",
@@ -225,3 +231,47 @@ def test_db_con_usuario1_name_Franco_Martin_last_name_Di_Maria_email_fdimaria_pa
     assert user_brian["lastName"] == "Zambelli Tello"
     assert user_brian["email"] == "bzambelli@fi.uba.ar"
     assert user_brian["id"] == 2
+
+def test_change_expo_token_when_register(test_app,
+                                       test_database):
+    session = recreate_db(test_database)
+    client = test_app.test_client()
+    body_prev = {
+        "name": "Franco Martin",
+        "lastName": "Di Maria",
+        "email": "fdimaria@fi.uba.ar",
+        "password": "tomate",
+        "expo_token": "2"
+    }
+    r = client.post(
+        "/users",
+        data=json.dumps(body_prev),
+        content_type="application/json",
+    )
+    assert r.status == '201 CREATED'
+    assert UserDBModel.get_user_id_with_expo_token("2") == 1
+    body = {
+        "email": "fdimaria@fi.uba.ar",
+        "password": "tomate",
+        "expo_token": "2"
+    }
+    r = client.post(
+        "/users/login",
+        data=json.dumps(body),
+        content_type="application/json",
+    )
+    assert r.status == '200 OK'
+    body_prev = {
+        "name": "Franco Martin",
+        "lastName": "Di Maria",
+        "email": "fdimaria2@fi.uba.ar",
+        "password": "tomate",
+        "expo_token": "2"
+    }
+    r = client.post(
+        "/users",
+        data=json.dumps(body_prev),
+        content_type="application/json",
+    )
+    assert r.status == '201 CREATED'
+    assert UserDBModel.get_user_id_with_expo_token("2") == 2

@@ -1,12 +1,13 @@
 import datetime
+
 import flask
 import jwt
 from prod import db
 from prod.db_models.black_list_db import BlacklistToken
-from sqlalchemy import Column
-from sqlalchemy import exc
-from prod.exceptions import RepeatedEmailError, UserNotFoundError,\
+from prod.exceptions import RepeatedEmailError, UserNotFoundError, \
     WrongPasswordError
+from sqlalchemy import exc
+from prod.encryptor import Encryptor
 
 
 # Clase representativa del schema que almacena a cada uno de los
@@ -35,6 +36,12 @@ class UserDBModel(db.Model):
     password = db.Column(db.String(128),
                          nullable=False)
 
+    seer = db.Column(db.Boolean(),
+                     default=False,
+                     nullable=True)
+    expo_token = db.Column(db.String(900),
+                           default="")
+
     # Constructor de la clase.
     # PRE: Name tiene que ser un string de a lo sumo 128 caracteres, al igual
     # que password, lastname y email.
@@ -42,29 +49,94 @@ class UserDBModel(db.Model):
                  name,
                  lastname,
                  email,
-                 password):
+                 password,
+                 seer2,
+                 expo_token,
+                 active=True
+                 ):
+
         self.name = name
         self.lastName = lastname
         self.email = email
         self.password = password
+        self.active = active
+        self.seer = seer2
+        self.expo_token = expo_token
 
-    def update(self, name, lastName, email, password):
+    @staticmethod
+    def add_expo_token(token,
+                       associated_id):
+        user = UserDBModel.query.filter_by(id=associated_id).first()
+        user.expo_token = token
+        db.session.commit()
+
+    @staticmethod
+    def get_expo_token(associated_id):
+        user = UserDBModel.query.filter_by(id=associated_id).first()
+        return user.expo_token
+
+    @staticmethod
+    def flip_active_status(associated_id):
+        user = UserDBModel.query.filter_by(id=associated_id).first()
+        if not user.active:
+            user.active = True
+        else:
+            user.active = False
+        db.session.commit()
+
+    @staticmethod
+    def flip_seer_status(associated_id):
+        user = UserDBModel.query.filter_by(id=associated_id).first()
+        if not user.seer:
+            user.seer = True
+        else:
+            user.seer = False
+        db.session.commit()
+
+    @staticmethod
+    def get_active_status(associated_id):
+        user = UserDBModel.query.filter_by(id=associated_id).first()
+        return user.active
+
+    @staticmethod
+    def get_associated_email(associated_id):
+        user = UserDBModel.query.filter_by(id=associated_id).first()
+        return user.email
+
+    @staticmethod
+    def change_expo_token(expo_token, new_owner):
+        user = UserDBModel.query.filter_by(expo_token=expo_token).first()
+        new_owner = UserDBModel.query.filter_by(id=new_owner).first()
+        user.expo_token = "IGNOREXPO"
+        UserDBModel.add_expo_token(expo_token, new_owner.id)
+        db.session.commit()
+
+    @staticmethod
+    def get_user_id_with_expo_token(expo_token):
+        user = UserDBModel.query.filter_by(expo_token=expo_token).first()
+        return user.id
+
+    @staticmethod
+    def check_state_of_expo_token(expo_token):
+        return UserDBModel.query.filter_by(expo_token=expo_token).count() == 1
+
+    def update(self, name, lastName, email, password, seer, expo_token):
         try:
-            self.__init__(name, lastName, email, password)
+            self.__init__(name, lastName, email, password, seer, expo_token)
             db.session.commit()
         except exc.IntegrityError:
             db.session.rollback()
             raise RepeatedEmailError
 
     # Funcion que devuelve los datos relevantes de un usuario, serializado
-
     def serialize(self):
         return {
             "id": self.id,
             "name": self.name,
             "lastName": self.lastName,
             "email": self.email,
-            "active": self.active
+            "active": self.active,
+            "seer": self.seer
         }
 
     @staticmethod
@@ -72,7 +144,9 @@ class UserDBModel(db.Model):
         user_model = UserDBModel.query.filter_by(email=email).first()
         if user_model is None:
             raise UserNotFoundError
-        if password != user_model.password:
+        encryptor = Encryptor()
+        password_db = encryptor.decrypt(user_model.password)
+        if password != password_db:
             raise WrongPasswordError
         return user_model.id
 
@@ -85,12 +159,18 @@ class UserDBModel(db.Model):
                  name,
                  lastname,
                  email,
-                 password):
+                 password,
+                 expo_token,
+                 seer=False):
+        encryptor = Encryptor()
+        password_encry = encryptor.encrypt(password)
         try:
             db.session.add(UserDBModel(name=name,
                                        lastname=lastname,
                                        email=email,
-                                       password=password))
+                                       password=password_encry,
+                                       seer2=seer,
+                                       expo_token=expo_token))
             db.session.commit()
             return UserDBModel.get_id(email,
                                       password)
@@ -98,8 +178,10 @@ class UserDBModel(db.Model):
             db.session.rollback()
             raise RepeatedEmailError
 
-    @staticmethod
-    def encode_auth_token(user_id):
+    EXPIRATION_TIME = 86400  # 1 dia = 86400 segundos
+
+    @classmethod
+    def encode_auth_token(cls, user_id):
         """
         Generates the Auth Token
         :return: string
@@ -107,7 +189,7 @@ class UserDBModel(db.Model):
         payload = {
             'exp': datetime.datetime.utcnow() +
             datetime.timedelta(days=0,
-                               seconds=5000),
+                               seconds=cls.EXPIRATION_TIME),
             'iat': datetime.datetime.utcnow(),
             'sub': user_id
         }
@@ -136,51 +218,3 @@ class UserDBModel(db.Model):
             return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:
             return 'Invalid token. Please log in again.'
-
-
-# Clase representativa del schema que almacena a cada uno de los
-# usuarios en el sistema junto con los id de los proyectos que posee
-class UserProjectDBModel(db.Model):
-    __tablename__ = "user_project"
-
-    user_id = Column(db.Integer,
-                     db.ForeignKey('users.id'),
-                     primary_key=True)
-
-    project_id = db.Column(db.Integer,
-                           primary_key=True)
-
-    # Constructor de la clase.
-    # PRE: Ambos id deben corresponderse con los creados en sus respectivas
-    # bases de datos
-    def __init__(self,
-                 user_id,
-                 project_id):
-        self.user_id = user_id
-        self.project_id = project_id
-
-    # Funcion que devuelve el par id_usuario, id_proyecto.
-    def serialize(self):
-        return {
-            "user_id": self.user_id,
-            "project_id": self.project_id
-        }
-
-    @classmethod
-    def add_project_to_user_id(cls,
-                               user_id,
-                               project_id):
-        try:
-            db.session.add(UserProjectDBModel(user_id, project_id))
-            db.session.commit()
-        except exc.IntegrityError:
-            db.session.rollback()
-            # TODO: Considerar levantar un excepcion.
-        return UserProjectDBModel.get_projects_of_user_id(user_id)
-
-    @staticmethod
-    def get_projects_of_user_id(user_id):
-        projects_query = UserProjectDBModel.query.filter_by(user_id=user_id)
-        id_projects_list = \
-            [user_project.project_id for user_project in projects_query.all()]
-        return id_projects_list
