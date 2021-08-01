@@ -6,6 +6,7 @@ from prod.db_models.black_list_db import BlacklistToken
 from sqlalchemy import exc
 from prod.exceptions import RepeatedEmailError, UserNotFoundError,\
     WrongPasswordError
+from prod.encryptor import Encryptor
 
 
 # Clase representativa del schema que almacena a cada uno de los
@@ -70,7 +71,9 @@ class AdminDBModel(db.Model):
         user_model = AdminDBModel.query.filter_by(email=email).first()
         if user_model is None:
             raise UserNotFoundError
-        if password != user_model.password:
+        encryptor = Encryptor()
+        password_db = encryptor.decrypt(user_model.password)
+        if password != password_db:
             raise WrongPasswordError
         return user_model.id
 
@@ -84,11 +87,13 @@ class AdminDBModel(db.Model):
                  lastname,
                  email,
                  password):
+        encryptor = Encryptor()
+        password_encry = encryptor.encrypt(password)
         try:
             db.session.add(AdminDBModel(name=name,
                                         lastname=lastname,
                                         email=email,
-                                        password=password))
+                                        password=password_encry))
             db.session.commit()
             return AdminDBModel.get_id(email,
                                        password)
